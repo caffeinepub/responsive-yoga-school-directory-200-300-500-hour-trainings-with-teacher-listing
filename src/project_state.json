@@ -1,14 +1,21 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 15,
-  "summary": "Build a fully responsive WordPress Yoga Schools Directory for Yoga Alliance teacher training programs (200/300/500 hours), including school listings with associated teacher information, custom branding using the provided logo, an FAQ section on each school page, a Google Map option per school, and a similar-schools list on school detail pages.",
+  "projectStateVersion": 39,
+  "summary": "Build a fully responsive WordPress Yoga Schools Directory for Yoga Alliance teacher training programs (200/300/500 hours), including school listings with associated teacher information, custom branding using the provided logo, an FAQ section on each school page, a Google Map option per school, a similar-schools list on school detail pages, and a new School Review section on school detail pages.",
   "architectural_notes": [
-    "WordPress-based directory website with responsive design requirements."
+    "WordPress-based directory website with responsive design requirements.",
+    "UI styling requirement: use a white background site-wide (\"everywhere\"), not just on the directory page, while maintaining readable contrast."
   ],
   "known_issues": [
-    "Production deployment failed with a deployment error (Version 1 could not be deployed to production)."
+    "Production deployment failed with a deployment error (Version 1 could not be deployed to production).",
+    "Users see \"Failed to load schools. Please try again later.\" indicating the frontend cannot fetch school listings from the backend (actor/load error, backend error, or empty/unseeded data).",
+    "Schools are still not showing in the UI; users continue to see \"Failed to load schools. Please try again later.\" after the latest deployment (Version 9).",
+    "After deploying Version 15, users still see \"Failed to load schools. Please try again later.\" (schools not loading / frontend fetch still failing).",
+    "School listing cards have unwanted top margin (spacing) that the user wants removed/adjusted.",
+    "\"View details\" element needs additional bottom margin/spacing (layout tweak requested).",
+    "After deploying Draft Version 18, the Directory page still shows \"Failed to load schools. Please try again later.\" (schools not loading / frontend fetch still failing)."
   ],
-  "isFixRequest": false,
+  "isFixRequest": true,
   "existing_features": [
     {
       "id": "feature-build-a-fully-responsive-frontend-directory-ui-that-lists-yoga-schools-and-allows-filtering-by-training-hour-categories-200-300-500",
@@ -137,6 +144,166 @@
         "REQ-20"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-create-a-reusable-styled-about-school-section-component-title-description-english-text-and-render-it-on-every-school-detail-page-school-schoolid-the-section-must-visually-match-existing-school-page-sections-by-using-the-same-card-based-styling-and-spacing-conventions-the-title-must-read-about-school-and-the-description-must-be-a-readable-paragraph-when-no-school-specific-about-text-exists-show-a-sensible-default-english-description-that-can-reference-the-current-school-s-name-location",
+      "title": "Create a reusable, styled \"About School\" section component (title + description, English text) and render it on every School Detail page (`/school/$schoolId`). The section must visually match existing school page sections by using the same Card-based styling and spacing conventions. The title must read \"About School\" and the description must be a readable paragraph; when no school-specific about text exists, show a sensible default English description that can reference the current school’s name/location.",
+      "reqIds": [
+        "REQ-21"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-redesign-the-school-detail-page-training-programs-section-ui-to-match-the-style-of-the-provided-reference-uploaded-image-by-presenting-each-training-as-a-distinct-modern-course-card-with-stronger-hierarchy-and-richer-metadata-presentation-while-still-using-the-existing-backend-training-data-hours-description",
+      "title": "Redesign the School Detail page “Training Programs” section UI to match the style of the provided reference (uploaded image) by presenting each training as a distinct, modern course card with stronger hierarchy and richer metadata presentation, while still using the existing backend Training data (hours + description).",
+      "reqIds": [
+        "REQ-22"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-reusable-react-component-for-the-upgraded-trainings-ui-e-g-frontend-src-components-school-schooltrainingcoursessection-tsx-and-integrate-it-into-frontend-src-pages-schooldetailpage-tsx-replacing-the-current-inline-training-programs-rendering-block",
+      "title": "Add a reusable React component for the upgraded trainings UI (e.g., `frontend/src/components/school/SchoolTrainingCoursesSection.tsx`) and integrate it into `frontend/src/pages/SchoolDetailPage.tsx`, replacing the current inline “Training Programs” rendering block.",
+      "reqIds": [
+        "REQ-23"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-include-two-call-to-action-buttons-in-each-training-card-view-curriculum-and-inquire-now-with-graceful-accessible-fallback-behavior-when-no-real-links-actions-are-available-in-the-current-data-model",
+      "title": "Include two call-to-action buttons in each training card (“View Curriculum” and “Inquire Now”) with graceful, accessible fallback behavior when no real links/actions are available in the current data model.",
+      "reqIds": [
+        "REQ-24"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-harden-the-frontend-schools-fetch-so-failures-produce-actionable-diagnostics-while-keeping-user-facing-messaging-in-english-and-avoid-showing-a-generic-error-when-the-backend-simply-returns-an-empty-array",
+      "title": "Harden the frontend schools fetch so failures produce actionable diagnostics while keeping user-facing messaging in English, and avoid showing a generic error when the backend simply returns an empty array.",
+      "reqIds": [
+        "REQ-27"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-enable-the-view-curriculum-button-in-frontend-src-components-school-schooltrainingcoursessection-tsx-and-make-it-open-a-dedicated-curriculum-experience-for-the-selected-training-instead-of-being-disabled-using-a-ux-modeled-after-the-uploaded-reference-image-course-header-highlights-pricing-accommodation-style-blocks-where-appropriate-and-optimized-for-best-user-experience",
+      "title": "Enable the “View Curriculum” button in `frontend/src/components/school/SchoolTrainingCoursesSection.tsx` and make it open a dedicated curriculum experience for the selected training (instead of being disabled), using a UX modeled after the uploaded reference image (course header + highlights + pricing/accommodation-style blocks where appropriate) and optimized for best user experience.",
+      "reqIds": [
+        "REQ-28"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-new-curriculum-route-and-page-so-the-curriculum-view-is-deep-linkable-and-works-with-browser-navigation-back-forward-e-g-a-route-under-the-existing-school-detail-context-such-as-school-schoolid-training-trainingid-or-an-equivalent-route-pattern-consistent-with-the-current-tanstack-router-setup-in-frontend-src-app-tsx",
+      "title": "Add a new curriculum route and page so the curriculum view is deep-linkable and works with browser navigation (back/forward), e.g. a route under the existing school detail context such as `/school/$schoolId/training/$trainingId` (or an equivalent route pattern consistent with the current TanStack Router setup in `frontend/src/App.tsx`).",
+      "reqIds": [
+        "REQ-29"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-design-the-curriculum-view-content-to-work-with-the-current-backend-data-model-trainings-provide-hours-and-description-by-deriving-or-presenting-meaningful-sections-without-requiring-backend-changes-include-a-well-structured-layout-similar-to-the-reference-for-example-course-highlights-and-pricing-accommodation-blocks-and-clearly-label-any-placeholder-demo-values-as-such-if-real-data-is-unavailable",
+      "title": "Design the curriculum view content to work with the current backend data model (Trainings provide `hours` and `description`) by deriving or presenting meaningful sections without requiring backend changes. Include a well-structured layout similar to the reference (for example: Course Highlights and Pricing & Accommodation blocks), and clearly label any placeholder/demo values as such if real data is unavailable.",
+      "reqIds": [
+        "REQ-30"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-reusable-frontend-school-reviews-section-component-and-integrate-it-into-frontend-src-pages-schooldetailpage-tsx-so-each-school-detail-page-displays-existing-reviews-and-allows-authenticated-users-to-submit-a-new-review",
+      "title": "Create a reusable frontend School Reviews section component and integrate it into `frontend/src/pages/SchoolDetailPage.tsx` so each school detail page displays existing reviews and allows authenticated users to submit a new review.",
+      "reqIds": [
+        "REQ-32"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-react-query-hooks-for-fetching-and-submitting-school-reviews-that-use-the-existing-actor-infrastructure-frontend-src-hooks-useactor-ts-and-provide-robust-user-friendly-error-handling-in-english",
+      "title": "Add React Query hooks for fetching and submitting school reviews that use the existing actor infrastructure (`frontend/src/hooks/useActor.ts`) and provide robust, user-friendly error handling in English.",
+      "reqIds": [
+        "REQ-33"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-the-additional-required-directory-pages-as-dedicated-routes-in-the-existing-tanstack-router-setup-so-the-directory-experience-includes-standard-supporting-pages-beyond-the-listing-and-detail-views",
+      "title": "Create the additional required directory pages as dedicated routes in the existing TanStack Router setup, so the directory experience includes standard supporting pages beyond the listing and detail views.",
+      "reqIds": [
+        "REQ-34"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-directory-page-styling-so-the-directory-background-is-white-in-light-mode-and-adjust-color-placement-as-needed-to-maintain-readable-contrast-and-a-clean-layout",
+      "title": "Update the directory page styling so the directory background is white in light mode, and adjust color/placement as needed to maintain readable contrast and a clean layout.",
+      "reqIds": [
+        "REQ-35"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-simple-navigation-entry-points-to-the-new-directory-supporting-pages-from-the-existing-layout-so-users-can-discover-them",
+      "title": "Add simple navigation entry points to the new directory supporting pages from the existing layout so users can discover them.",
+      "reqIds": [
+        "REQ-36"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-global-app-styling-so-that-all-pages-and-the-overall-layout-use-a-white-background-in-light-mode-not-just-the-directory-page-including-the-body-background-route-content-area-header-footer-surfaces-and-any-page-level-wrappers-that-currently-inherit-a-non-white-background-keep-dark-mode-behavior-intact-unless-it-is-necessary-to-ensure-readable-contrast",
+      "title": "Update the global app styling so that all pages and the overall layout use a white background in light mode (not just the Directory page), including the body background, route content area, header/footer surfaces, and any page-level wrappers that currently inherit a non-white background. Keep dark mode behavior intact unless it is necessary to ensure readable contrast.",
+      "reqIds": [
+        "REQ-37"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-school-listing-card-ui-frontend-src-components-directory-schoolcard-tsx-to-render-a-demo-thumbnail-image-for-each-school-above-the-school-name-location-using-a-consistent-aspect-ratio-responsive-sizing-and-accessible-alt-text-in-english",
+      "title": "Update the school listing card UI (`frontend/src/components/directory/SchoolCard.tsx`) to render a demo thumbnail image for each school above the school name/location, using a consistent aspect ratio, responsive sizing, and accessible `alt` text in English.",
+      "reqIds": [
+        "REQ-38"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-small-set-of-generated-demo-school-thumbnail-images-under-frontend-public-assets-generated-and-wire-the-directory-listing-to-select-a-deterministic-thumbnail-per-school-e-g-by-stable-mapping-from-school-id-with-a-sensible-default-fallback-without-routing-images-through-the-backend",
+      "title": "Add a small set of generated demo school thumbnail images under `frontend/public/assets/generated/` and wire the Directory listing to select a deterministic thumbnail per school (e.g., by stable mapping from `school.id`, with a sensible default fallback) without routing images through the backend.",
+      "reqIds": [
+        "REQ-39"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-improve-frontend-diagnostics-for-the-school-loading-failure-so-the-console-logs-include-actionable-details-method-name-error-object-and-whether-an-actor-exists-while-keeping-the-user-facing-message-in-english-as-failed-to-load-schools-please-try-again-later",
+      "title": "Improve frontend diagnostics for the school loading failure so the console logs include actionable details (method name, error object, and whether an actor exists), while keeping the user-facing message in English as \"Failed to load schools. Please try again later.\"",
+      "reqIds": [
+        "REQ-42"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-remove-the-unwanted-top-spacing-above-the-thumbnail-image-in-the-school-listing-card-component-so-each-card-s-image-is-flush-with-the-top-border-of-the-card-no-extra-top-margin-padding-matching-the-issue-shown-in-the-uploaded-screenshot",
+      "title": "Remove the unwanted top spacing above the thumbnail image in the school listing card component so each card’s image is flush with the top border of the card (no extra top margin/padding), matching the issue shown in the uploaded screenshot.",
+      "reqIds": [
+        "REQ-43"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-additional-bottom-spacing-below-the-view-details-call-to-action-on-each-school-listing-card-by-increasing-bottom-padding-margin-in-frontend-src-components-directory-schoolcard-tsx-either-on-the-cardfooter-container-or-the-button-so-the-button-does-not-appear-flush-with-the-bottom-edge-of-the-card",
+      "title": "Add additional bottom spacing below the \"View Details\" call-to-action on each school listing card by increasing bottom padding/margin in `frontend/src/components/directory/SchoolCard.tsx` (either on the `CardFooter` container or the `Button`) so the button does not appear flush with the bottom edge of the card.",
+      "reqIds": [
+        "REQ-44"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-frontend-directory-error-state-to-provide-a-user-actionable-retry-control-while-keeping-the-existing-user-facing-message-in-english-the-retry-must-re-run-the-schools-query-without-requiring-a-full-page-refresh",
+      "title": "Update the frontend Directory error state to provide a user-actionable retry control while keeping the existing user-facing message in English. The retry must re-run the schools query without requiring a full page refresh.",
+      "reqIds": [
+        "REQ-47"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -236,6 +403,110 @@
       "id": "AR-17",
       "summary": "Add a \"Similar Schools\" list/section (e.g., on school detail pages) to help users discover related schools",
       "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-18",
+      "summary": "Add a styled \"About School\" section (title + description) to every school detail page",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-19",
+      "summary": "Improve the Training & Courses section UI/UX on school pages (presentation and content of trainings/courses)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-20",
+      "summary": "Fix the backend school listing query path so the Directory page can successfully fetch schools via `searchSchoolsByName('')` without trapping or failing at runtime.",
+      "reqIds": [
+        "REQ-25"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-21",
+      "summary": "Add idempotent backend demo-data seeding so the directory has schools to display by default after deployment/upgrade, and ensure the seeded data is discoverable via the existing frontend fetch path `searchSchoolsByName('')`.",
+      "reqIds": [
+        "REQ-26"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-22",
+      "summary": "Improve \"View Curriculum\" CTA behavior/UX so clicking it opens a dedicated curriculum view (e.g., modal/drawer/page) modeled after the provided reference, with an enhanced user experience",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-23",
+      "summary": "Create a School Review section (e.g., on each school detail page) so users can view and/or leave reviews for a school",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-24",
+      "summary": "Add backend support for school reviews by extending `backend/main.mo` with a Review data model and public canister methods to create and list reviews by school.",
+      "reqIds": [
+        "REQ-31"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-25",
+      "summary": "Create any required directory pages (additional pages/routes needed for the directory experience beyond current pages)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-26",
+      "summary": "Update directory page styling so the directory background is white and adjust color/placement in the UI as needed",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-27",
+      "summary": "Use demo images for schools so the school list can display school photos/thumbnails (for preview/testing)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-28",
+      "summary": "Fix the root cause of the Directory page failing to load schools by ensuring the backend `searchSchoolsByName(\"\")` call does not error at runtime and consistently returns a list (possibly empty) for anonymous users.",
+      "reqIds": [
+        "REQ-40"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-29",
+      "summary": "Add idempotent backend demo-data seeding so the directory has schools to display by default after deployment/upgrade, and ensure the seeded data is discoverable via the existing frontend fetch path `searchSchoolsByName('')`.",
+      "reqIds": [
+        "REQ-41"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-30",
+      "summary": "Add bottom margin/spacing below the \"View details\" element (likely the button/link on school listing cards) to improve layout",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-31",
+      "summary": "Fix the backend `searchSchoolsByName(\"\")` path so it never traps/rejects for anonymous users and consistently returns a `[School]` (possibly empty), ensuring the Directory page can load schools without triggering the generic failure banner.",
+      "reqIds": [
+        "REQ-45"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-32",
+      "summary": "Ensure the backend has idempotent demo/seed data available immediately after installation and after upgrades so the Directory page has schools to display by default. Seeding must be safe to run multiple times without trapping due to duplicates, and seeded schools must be discoverable via the existing frontend fetch path `searchSchoolsByName(\"\")`.",
+      "reqIds": [
+        "REQ-46"
+      ],
       "status": "pending"
     }
   ],

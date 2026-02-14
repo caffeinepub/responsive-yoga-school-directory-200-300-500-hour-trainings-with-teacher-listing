@@ -1,65 +1,54 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-14T12:37:52.147Z",
+  "generatedAt": "2026-02-14T15:47:45.992Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
     "total": 3,
-    "implemented": 3,
+    "implemented": 1,
     "items": [
       {
-        "id": "REQ-18",
-        "summary": "Add a Google Maps location option on the School Detail page (`/school/$schoolId`) that lets users view the school’s location on Google Maps using the existing `school.location` text field.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/SchoolDetailPage.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/SchoolDetailPage.tsx"
-        ]
+        "id": "REQ-45",
+        "summary": "Fix the backend `searchSchoolsByName(\"\")` path so it never traps/rejects for anonymous users and consistently returns a `[School]` (possibly empty), ensuring the Directory page can load schools without triggering the generic failure banner.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
       },
       {
-        "id": "REQ-19",
-        "summary": "Implement the Google Maps option as a reusable React component (e.g., `frontend/src/components/school/SchoolMapSection.tsx`) that can render either a responsive embedded map iframe or a link-only fallback without requiring any API key.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/school/SchoolMapSection.tsx",
-          "frontend/src/pages/SchoolDetailPage.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/school/SchoolMapSection.tsx",
-          "frontend/src/pages/SchoolDetailPage.tsx"
-        ]
+        "id": "REQ-46",
+        "summary": "Ensure the backend has idempotent demo/seed data available immediately after installation and after upgrades so the Directory page has schools to display by default. Seeding must be safe to run multiple times without trapping due to duplicates, and seeded schools must be discoverable via the existing frontend fetch path `searchSchoolsByName(\"\")`.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
       },
       {
-        "id": "REQ-20",
-        "summary": "Add a “Similar Schools” section to the School Detail page that lists a small set of other schools related to the current school (excluding the current school), and allows navigation to each similar school’s detail page.",
+        "id": "REQ-47",
+        "summary": "Update the frontend Directory error state to provide a user-actionable retry control while keeping the existing user-facing message in English. The retry must re-run the schools query without requiring a full page refresh.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/hooks/useSimilarSchools.ts",
-          "frontend/src/components/school/SimilarSchoolsSection.tsx",
-          "frontend/src/pages/SchoolDetailPage.tsx"
+          "frontend/src/pages/DirectoryPage.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/hooks/useSimilarSchools.ts",
-          "frontend/src/components/school/SimilarSchoolsSection.tsx",
-          "frontend/src/pages/SchoolDetailPage.tsx"
+          "frontend/src/pages/DirectoryPage.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
+    "backend/main.mo",
+    "backend/migration.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/components/school/SchoolMapSection.tsx",
-    "frontend/src/components/school/SimilarSchoolsSection.tsx",
-    "frontend/src/hooks/useSimilarSchools.ts",
-    "frontend/src/pages/SchoolDetailPage.tsx",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "frontend/src/pages/DirectoryPage.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

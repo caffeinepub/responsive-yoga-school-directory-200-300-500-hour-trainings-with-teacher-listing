@@ -89,13 +89,13 @@ export class ExternalBlob {
         return this;
     }
 }
-export type SchoolId = string;
 export interface Training {
     id: TrainingId;
     hours: bigint;
     description: string;
     schoolId: SchoolId;
 }
+export type SchoolId = string;
 export interface School {
     id: SchoolId;
     name: string;
@@ -110,20 +110,43 @@ export interface Teacher {
     specialization: string;
 }
 export type TeacherId = string;
+export interface Review {
+    reviewerName: string;
+    comment: string;
+    schoolId: SchoolId;
+    rating: bigint;
+}
 export interface backendInterface {
+    addReview(schoolId: SchoolId, reviewerName: string, rating: bigint, comment: string): Promise<void>;
     addSchool(id: SchoolId, name: string, location: string, videoUrl: string | null): Promise<void>;
     addTeacher(id: TeacherId, name: string, specialization: string, schoolId: SchoolId): Promise<void>;
     addTraining(id: TrainingId, hours: bigint, description: string, schoolId: SchoolId): Promise<void>;
+    getReviewsForSchool(schoolId: SchoolId): Promise<Array<Review>>;
     getSchool(id: SchoolId): Promise<School>;
     getTeacher(id: TeacherId): Promise<Teacher>;
     getTeachersBySchool(schoolId: SchoolId): Promise<Array<Teacher>>;
     getTraining(id: TrainingId): Promise<Training>;
     getTrainingsBySchool(schoolId: SchoolId): Promise<Array<Training>>;
     searchSchoolsByName(nameQuery: string): Promise<Array<School>>;
+    seedSchools(): Promise<void>;
 }
 import type { School as _School, SchoolId as _SchoolId } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private _uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}
+    async addReview(arg0: SchoolId, arg1: string, arg2: bigint, arg3: string): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.addReview(arg0, arg1, arg2, arg3);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.addReview(arg0, arg1, arg2, arg3);
+            return result;
+        }
+    }
     async addSchool(arg0: SchoolId, arg1: string, arg2: string, arg3: string | null): Promise<void> {
         if (this.processError) {
             try {
@@ -163,6 +186,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.addTraining(arg0, arg1, arg2, arg3);
+            return result;
+        }
+    }
+    async getReviewsForSchool(arg0: SchoolId): Promise<Array<Review>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getReviewsForSchool(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getReviewsForSchool(arg0);
             return result;
         }
     }
@@ -248,6 +285,20 @@ export class Backend implements backendInterface {
         } else {
             const result = await this.actor.searchSchoolsByName(arg0);
             return from_candid_vec_n5(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async seedSchools(): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.seedSchools();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.seedSchools();
+            return result;
         }
     }
 }

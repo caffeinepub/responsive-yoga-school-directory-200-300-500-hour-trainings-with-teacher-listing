@@ -1,11 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Add a Google Maps location option and a Similar Schools section to School Detail pages.
+**Goal:** Stop the Directory page from repeatedly showing “Failed to load schools” by making the backend schools search reliable for anonymous users and ensuring demo/seed schools exist after deploys/upgrades, plus add an in-page retry action.
 
 **Planned changes:**
-- Add a Location/Map section on `/school/$schoolId` that uses the existing `school.location` text to provide an “Open in Google Maps” external link (new tab) and a graceful empty state when location is missing.
-- Create a reusable `SchoolMapSection` React component that builds a valid Google Maps URL from a provided location string and can render a responsive embedded iframe or a link-only fallback without any API key.
-- Add a “Similar Schools” section on the School Detail page that suggests a small set of other schools (excluding the current one) from existing data, shows each school’s name and location, links to its detail page, and displays an English empty state when none are found.
+- Backend: Make `searchSchoolsByName("")` always succeed for anonymous callers and always return a `[School]` (including `[]` when no schools exist), without trapping/rejecting.
+- Backend: Add idempotent seed/demo data initialization so a fresh deploy and subsequent upgrades/redeploys result in a non-empty school list discoverable via `searchSchoolsByName("")`, without duplicate-key traps when seeding runs multiple times.
+- Frontend: Keep the existing English error message exactly as-is, and add a clearly labeled “Retry” control that triggers a React Query refetch of the schools query (no full page refresh required).
 
-**User-visible outcome:** On a school’s detail page, users can open the school location in Google Maps (and optionally view an embedded map when available), and can browse and navigate to a list of similar schools.
+**User-visible outcome:** The Directory page reliably loads schools by default after deploy/upgrade; if loading fails, the page shows the same error message plus a “Retry” button that can recover and load the schools list once the backend is available.

@@ -6,13 +6,16 @@ import ImageGallerySection from '@/components/school/ImageGallerySection';
 import SchoolVideoEmbedSection from '@/components/school/SchoolVideoEmbedSection';
 import SchoolMapSection from '@/components/school/SchoolMapSection';
 import SimilarSchoolsSection from '@/components/school/SimilarSchoolsSection';
+import AboutSchoolSection from '@/components/school/AboutSchoolSection';
+import SchoolTrainingCoursesSection from '@/components/school/SchoolTrainingCoursesSection';
+import SchoolReviewsSection from '@/components/school/SchoolReviewsSection';
 import { defaultSchoolFAQs } from '@/components/school/faqContent';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { ArrowLeft, MapPin, GraduationCap, AlertCircle } from 'lucide-react';
+import { ArrowLeft, MapPin, AlertCircle } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 
 export default function SchoolDetailPage() {
@@ -73,36 +76,17 @@ export default function SchoolDetailPage() {
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Main Content */}
         <div className="space-y-6 lg:col-span-2">
-          {/* Training Programs */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <GraduationCap className="h-5 w-5" />
-                Training Programs
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {trainings && trainings.length > 0 ? (
-                <div className="space-y-4">
-                  {trainings.map((training) => (
-                    <div
-                      key={training.id}
-                      className="rounded-lg border bg-muted/30 p-4 transition-colors hover:bg-muted/50"
-                    >
-                      <div className="mb-2 flex items-center justify-between">
-                        <Badge variant="default" className="text-base">
-                          {Number(training.hours)} Hours
-                        </Badge>
-                      </div>
-                      <p className="text-sm text-muted-foreground">{training.description}</p>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-muted-foreground">No training programs listed.</p>
-              )}
-            </CardContent>
-          </Card>
+          {/* About School Section */}
+          <AboutSchoolSection 
+            schoolName={school.name}
+            location={school.location}
+          />
+
+          {/* Courses & Training Section */}
+          <SchoolTrainingCoursesSection trainings={trainings || []} schoolId={schoolId} />
+
+          {/* Reviews Section */}
+          <SchoolReviewsSection schoolId={schoolId} />
 
           {/* Teachers Section */}
           <Card>

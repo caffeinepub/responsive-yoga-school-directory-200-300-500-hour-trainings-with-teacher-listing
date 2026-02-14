@@ -11,6 +11,12 @@ import { IDL } from '@icp-sdk/core/candid';
 export const SchoolId = IDL.Text;
 export const TeacherId = IDL.Text;
 export const TrainingId = IDL.Text;
+export const Review = IDL.Record({
+  'reviewerName' : IDL.Text,
+  'comment' : IDL.Text,
+  'schoolId' : SchoolId,
+  'rating' : IDL.Nat,
+});
 export const School = IDL.Record({
   'id' : SchoolId,
   'name' : IDL.Text,
@@ -31,6 +37,7 @@ export const Training = IDL.Record({
 });
 
 export const idlService = IDL.Service({
+  'addReview' : IDL.Func([SchoolId, IDL.Text, IDL.Nat, IDL.Text], [], []),
   'addSchool' : IDL.Func(
       [SchoolId, IDL.Text, IDL.Text, IDL.Opt(IDL.Text)],
       [],
@@ -38,12 +45,14 @@ export const idlService = IDL.Service({
     ),
   'addTeacher' : IDL.Func([TeacherId, IDL.Text, IDL.Text, SchoolId], [], []),
   'addTraining' : IDL.Func([TrainingId, IDL.Nat, IDL.Text, SchoolId], [], []),
+  'getReviewsForSchool' : IDL.Func([SchoolId], [IDL.Vec(Review)], ['query']),
   'getSchool' : IDL.Func([SchoolId], [School], ['query']),
   'getTeacher' : IDL.Func([TeacherId], [Teacher], ['query']),
   'getTeachersBySchool' : IDL.Func([SchoolId], [IDL.Vec(Teacher)], ['query']),
   'getTraining' : IDL.Func([TrainingId], [Training], ['query']),
   'getTrainingsBySchool' : IDL.Func([SchoolId], [IDL.Vec(Training)], ['query']),
   'searchSchoolsByName' : IDL.Func([IDL.Text], [IDL.Vec(School)], ['query']),
+  'seedSchools' : IDL.Func([], [], []),
 });
 
 export const idlInitArgs = [];
@@ -52,6 +61,12 @@ export const idlFactory = ({ IDL }) => {
   const SchoolId = IDL.Text;
   const TeacherId = IDL.Text;
   const TrainingId = IDL.Text;
+  const Review = IDL.Record({
+    'reviewerName' : IDL.Text,
+    'comment' : IDL.Text,
+    'schoolId' : SchoolId,
+    'rating' : IDL.Nat,
+  });
   const School = IDL.Record({
     'id' : SchoolId,
     'name' : IDL.Text,
@@ -72,6 +87,7 @@ export const idlFactory = ({ IDL }) => {
   });
   
   return IDL.Service({
+    'addReview' : IDL.Func([SchoolId, IDL.Text, IDL.Nat, IDL.Text], [], []),
     'addSchool' : IDL.Func(
         [SchoolId, IDL.Text, IDL.Text, IDL.Opt(IDL.Text)],
         [],
@@ -79,6 +95,7 @@ export const idlFactory = ({ IDL }) => {
       ),
     'addTeacher' : IDL.Func([TeacherId, IDL.Text, IDL.Text, SchoolId], [], []),
     'addTraining' : IDL.Func([TrainingId, IDL.Nat, IDL.Text, SchoolId], [], []),
+    'getReviewsForSchool' : IDL.Func([SchoolId], [IDL.Vec(Review)], ['query']),
     'getSchool' : IDL.Func([SchoolId], [School], ['query']),
     'getTeacher' : IDL.Func([TeacherId], [Teacher], ['query']),
     'getTeachersBySchool' : IDL.Func([SchoolId], [IDL.Vec(Teacher)], ['query']),
@@ -89,6 +106,7 @@ export const idlFactory = ({ IDL }) => {
         ['query'],
       ),
     'searchSchoolsByName' : IDL.Func([IDL.Text], [IDL.Vec(School)], ['query']),
+    'seedSchools' : IDL.Func([], [], []),
   });
 };
 

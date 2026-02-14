@@ -1,74 +1,21 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Google Maps location option and Similar Schools section on School Detail",
+  "title": "Directory: add actionable retry control for school-load failures",
   "requirements": [
     {
-      "id": "REQ-18",
-      "summary": "Show a Location/Map section on the School Detail page that opens the school location in Google Maps using the existing school.location field.",
+      "id": "REQ-47",
+      "summary": "Add a Retry action to the Directory error banner that refetches the schools React Query without a full page refresh, while keeping the existing English error message unchanged.",
       "acceptanceCriteria": [
-        "On `frontend/src/pages/SchoolDetailPage.tsx`, a new Location/Map section is visible when `school.location` is present.",
-        "The map option includes an external link that opens Google Maps in a new tab for the school location, with `rel=\"noreferrer noopener\"`.",
-        "The map option includes a clear, English label (e.g., \"Open in Google Maps\").",
-        "If `school.location` is empty/unavailable, the UI shows a graceful English empty state message and does not render a broken link or iframe.",
-        "All user-facing text added for this feature is in English."
+        "When the Directory page is in an error state, it still displays exactly the message: \"Failed to load schools. Please try again later.\"",
+        "The error UI includes a clearly labeled \"Retry\" action that triggers a React Query refetch for the schools query.",
+        "If the backend becomes available, clicking \"Retry\" loads and renders the schools grid without a full page reload."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/SchoolDetailPage.tsx",
+          "path": "frontend/src/pages/DirectoryPage.tsx",
           "operation": "modify",
-          "description": "Render a new Location/Map section that uses `school.location` and the new reusable `SchoolMapSection` component; ensure the external Google Maps link opens in a new tab with `rel=\"noreferrer noopener\"`, and show an English empty state when `school.location` is missing/blank. Use existing shadcn-ui Card/Button styling patterns for consistency; verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-19",
-      "summary": "Implement the Google Maps option as a reusable component that can render a responsive embed iframe or a link-only fallback without an API key.",
-      "acceptanceCriteria": [
-        "A reusable component exists under `frontend/src/components/school/` and is used by `SchoolDetailPage.tsx`.",
-        "The component produces a valid Google Maps URL from a provided location string (URL-encoded).",
-        "The embedded map (if rendered) is responsive and preserves a sensible aspect ratio (e.g., 16:9) within the page layout.",
-        "The iframe has an accessible `title` attribute in English (e.g., \"Map of {school name}\").",
-        "No backend changes are required to support this feature."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/school/SchoolMapSection.tsx",
-          "operation": "create",
-          "description": "Create a reusable `SchoolMapSection` component that accepts at least `location` and `schoolName` and can render (a) a responsive embedded Google Maps iframe (16:9 aspect ratio) using URL-based embedding (no API key), and (b) a link-only fallback that opens Google Maps in a new tab. URL-encode the location when building map URLs and set an English `title` on the iframe (e.g., \"Map of {schoolName}\"). Use existing shadcn-ui Card/Button components for layout/actions; verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/pages/SchoolDetailPage.tsx",
-          "operation": "modify",
-          "description": "Wire `SchoolMapSection` into the School Detail page so the map section is driven by `school.location` and `school.name`, and so that link/embed rendering is controlled by the component props (no API key, URL-based only). Use existing shadcn-ui components already imported in the page where appropriate; verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-20",
-      "summary": "Add a Similar Schools section to the School Detail page that derives and displays a small set of related schools (excluding the current school) with navigation to each school detail page.",
-      "acceptanceCriteria": [
-        "The Similar Schools section appears on `frontend/src/pages/SchoolDetailPage.tsx` and does not include the current school.",
-        "Similar schools are derived from existing backend data already available in the app (e.g., other schools returned by `searchSchoolsByName('')` and optionally compared using shared training hours via `getTrainingsBySchool`).",
-        "Each similar school item shows at least the school name and location and includes a clear action to navigate to `/school/$schoolId` for that school.",
-        "If no similar schools can be determined, show a graceful empty state message in English (e.g., \"No similar schools found.\").",
-        "The section is responsive and visually consistent with existing card-based UI patterns used in the directory."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useSimilarSchools.ts",
-          "operation": "create",
-          "description": "Add a React hook that derives a small set of similar schools for a given `schoolId` using existing backend capabilities already used in the app: fetch the full school list via `searchSchoolsByName('')`, exclude the current school, and optionally improve ranking by comparing training hours via `getTrainingsBySchool` (while keeping requests bounded to a small set). Return a stable, limited list (e.g., 3–6) plus loading/error state for rendering."
-        },
-        {
-          "path": "frontend/src/components/school/SimilarSchoolsSection.tsx",
-          "operation": "create",
-          "description": "Create a `SimilarSchoolsSection` component that uses `useSimilarSchools` to render a responsive, card-based list consistent with the directory UI. Each item must show at least school name and location and provide a clear action to navigate to `/school/$schoolId` (prefer reusing the existing `frontend/src/components/directory/SchoolCard.tsx` for visual consistency). Show an English empty state (e.g., \"No similar schools found.\") when the list is empty. Use existing shadcn-ui Card/typography patterns; verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/pages/SchoolDetailPage.tsx",
-          "operation": "modify",
-          "description": "Wire the new `SimilarSchoolsSection` into the School Detail page layout (main content area or sidebar) and pass the current `school.id` so the section excludes the current school and enables navigation to other schools’ detail pages. Ensure all new user-facing strings are in English and the section remains responsive; verify the component's usage instructions before implementing."
+          "description": "Update the Directory error state UI to include a clearly labeled \"Retry\" control that calls the React Query refetch function returned by useSchools(selectedHours). Ensure the existing error message string remains exactly unchanged and that retry does not require a full page reload. If using shadcn-ui (e.g., Button) for the control, verify the component's usage instructions before implementing."
         }
       ]
     }

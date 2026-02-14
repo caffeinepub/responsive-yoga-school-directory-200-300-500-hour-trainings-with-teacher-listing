@@ -2,10 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-add-a-google-maps-location-option-on-the-school-detail-page-school-schoolid-that-lets-users-view-the-school-s-location-on-google-maps-using-the-existing-school-location-text-field",
-      "featureTitle": "Add a Google Maps location option on the School Detail page (`/school/$schoolId`) that lets users view the school’s location on Google Maps using the existing `school.location` text field.",
+      "featureId": "feature-update-the-frontend-directory-error-state-to-provide-a-user-actionable-retry-control-while-keeping-the-existing-user-facing-message-in-english-the-retry-must-re-run-the-schools-query-without-requiring-a-full-page-refresh",
+      "featureTitle": "Update the frontend Directory error state to provide a user-actionable retry control while keeping the existing user-facing message in English. The retry must re-run the schools query without requiring a full page refresh.",
       "files": [
-        "frontend/src/pages/SchoolDetailPage.tsx"
+        "frontend/src/pages/DirectoryPage.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -15,46 +15,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-18"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-implement-the-google-maps-option-as-a-reusable-react-component-e-g-frontend-src-components-school-schoolmapsection-tsx-that-can-render-either-a-responsive-embedded-map-iframe-or-a-link-only-fallback-without-requiring-any-api-key",
-      "featureTitle": "Implement the Google Maps option as a reusable React component (e.g., `frontend/src/components/school/SchoolMapSection.tsx`) that can render either a responsive embedded map iframe or a link-only fallback without requiring any API key.",
-      "files": [
-        "frontend/src/components/school/SchoolMapSection.tsx",
-        "frontend/src/pages/SchoolDetailPage.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-19"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-a-similar-schools-section-to-the-school-detail-page-that-lists-a-small-set-of-other-schools-related-to-the-current-school-excluding-the-current-school-and-allows-navigation-to-each-similar-school-s-detail-page",
-      "featureTitle": "Add a “Similar Schools” section to the School Detail page that lists a small set of other schools related to the current school (excluding the current school), and allows navigation to each similar school’s detail page.",
-      "files": [
-        "frontend/src/components/school/SimilarSchoolsSection.tsx",
-        "frontend/src/hooks/useSimilarSchools.ts",
-        "frontend/src/pages/SchoolDetailPage.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-20"
+        "REQ-47"
       ],
       "confidence": "high"
     }

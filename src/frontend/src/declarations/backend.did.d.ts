@@ -10,6 +10,12 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
+export interface Review {
+  'reviewerName' : string,
+  'comment' : string,
+  'schoolId' : SchoolId,
+  'rating' : bigint,
+}
 export interface School {
   'id' : SchoolId,
   'name' : string,
@@ -32,6 +38,7 @@ export interface Training {
 }
 export type TrainingId = string;
 export interface _SERVICE {
+  'addReview' : ActorMethod<[SchoolId, string, bigint, string], undefined>,
   'addSchool' : ActorMethod<
     [SchoolId, string, string, [] | [string]],
     undefined
@@ -41,12 +48,14 @@ export interface _SERVICE {
     [TrainingId, bigint, string, SchoolId],
     undefined
   >,
+  'getReviewsForSchool' : ActorMethod<[SchoolId], Array<Review>>,
   'getSchool' : ActorMethod<[SchoolId], School>,
   'getTeacher' : ActorMethod<[TeacherId], Teacher>,
   'getTeachersBySchool' : ActorMethod<[SchoolId], Array<Teacher>>,
   'getTraining' : ActorMethod<[TrainingId], Training>,
   'getTrainingsBySchool' : ActorMethod<[SchoolId], Array<Training>>,
   'searchSchoolsByName' : ActorMethod<[string], Array<School>>,
+  'seedSchools' : ActorMethod<[], undefined>,
 }
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];
