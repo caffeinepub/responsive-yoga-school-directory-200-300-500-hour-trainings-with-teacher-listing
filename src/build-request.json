@@ -1,0 +1,83 @@
+{
+  "kind": "build_request",
+  "title": "Add Google Maps location option and Similar Schools section on School Detail pages",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-18",
+      "text": "Add a Google Maps location option on the School Detail page (`/school/$schoolId`) that lets users view the school’s location on Google Maps using the existing `school.location` text field.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-6"
+        ],
+        "quotes": [
+          "very good also  add school Google Map option and similar school list"
+        ]
+      },
+      "acceptanceCriteria": [
+        "On `frontend/src/pages/SchoolDetailPage.tsx`, a new Location/Map section is visible when `school.location` is present.",
+        "The map option includes an external link that opens Google Maps in a new tab for the school location, with `rel=\"noreferrer noopener\"`.",
+        "The map option includes a clear, English label (e.g., \"Open in Google Maps\").",
+        "If `school.location` is empty/unavailable, the UI shows a graceful English empty state message and does not render a broken link or iframe.",
+        "All user-facing text added for this feature is in English."
+      ]
+    },
+    {
+      "id": "REQ-19",
+      "text": "Implement the Google Maps option as a reusable React component (e.g., `frontend/src/components/school/SchoolMapSection.tsx`) that can render either a responsive embedded map iframe or a link-only fallback without requiring any API key.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-6"
+        ],
+        "quotes": [
+          "add school Google Map option"
+        ]
+      },
+      "acceptanceCriteria": [
+        "A reusable component exists under `frontend/src/components/school/` and is used by `SchoolDetailPage.tsx`.",
+        "The component produces a valid Google Maps URL from a provided location string (URL-encoded).",
+        "The embedded map (if rendered) is responsive and preserves a sensible aspect ratio (e.g., 16:9) within the page layout.",
+        "The iframe has an accessible `title` attribute in English (e.g., \"Map of {school name}\").",
+        "No backend changes are required to support this feature."
+      ]
+    },
+    {
+      "id": "REQ-20",
+      "text": "Add a “Similar Schools” section to the School Detail page that lists a small set of other schools related to the current school (excluding the current school), and allows navigation to each similar school’s detail page.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-6"
+        ],
+        "quotes": [
+          "add ... similar school list"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The Similar Schools section appears on `frontend/src/pages/SchoolDetailPage.tsx` and does not include the current school.",
+        "Similar schools are derived from existing backend data already available in the app (e.g., other schools returned by `searchSchoolsByName('')` and optionally compared using shared training hours via `getTrainingsBySchool`).",
+        "Each similar school item shows at least the school name and location and includes a clear action to navigate to `/school/$schoolId` for that school.",
+        "If no similar schools can be determined, show a graceful empty state message in English (e.g., \"No similar schools found.\").",
+        "The section is responsive and visually consistent with existing card-based UI patterns used in the directory."
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not edit any immutable frontend paths: `frontend/src/hooks/useInternetIdentity.ts`, `frontend/src/hooks/useInternetIdentity.tsx`, `frontend/src/hooks/useActor.ts`, `frontend/src/main.tsx`, or any files under `frontend/src/components/ui`.",
+    "Keep the backend as a single Motoko actor in `backend/main.mo`; do not introduce additional backend services.",
+    "Do not require any Google Maps API key or third-party SDK; use URL-based map rendering/linking only.",
+    "Use English for any new user-facing text."
+  ],
+  "nonGoals": [
+    "Adding a full interactive map with pins, custom styles, or geocoding APIs.",
+    "Storing latitude/longitude in the backend or adding new backend fields solely for mapping.",
+    "Adding real-time location features or user geolocation.",
+    "Changing existing directory filtering behavior unrelated to similar-school suggestions."
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}

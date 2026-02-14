@@ -1,0 +1,68 @@
+{
+  "kind": "coverage_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-14T12:37:52.147Z",
+  "sources": {
+    "buildRequest": true,
+    "implementationPlan": true
+  },
+  "requirements": {
+    "total": 3,
+    "implemented": 3,
+    "items": [
+      {
+        "id": "REQ-18",
+        "summary": "Add a Google Maps location option on the School Detail page (`/school/$schoolId`) that lets users view the school’s location on Google Maps using the existing `school.location` text field.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/SchoolDetailPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/SchoolDetailPage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-19",
+        "summary": "Implement the Google Maps option as a reusable React component (e.g., `frontend/src/components/school/SchoolMapSection.tsx`) that can render either a responsive embedded map iframe or a link-only fallback without requiring any API key.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/school/SchoolMapSection.tsx",
+          "frontend/src/pages/SchoolDetailPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/school/SchoolMapSection.tsx",
+          "frontend/src/pages/SchoolDetailPage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-20",
+        "summary": "Add a “Similar Schools” section to the School Detail page that lists a small set of other schools related to the current school (excluding the current school), and allows navigation to each similar school’s detail page.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/hooks/useSimilarSchools.ts",
+          "frontend/src/components/school/SimilarSchoolsSection.tsx",
+          "frontend/src/pages/SchoolDetailPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/hooks/useSimilarSchools.ts",
+          "frontend/src/components/school/SimilarSchoolsSection.tsx",
+          "frontend/src/pages/SchoolDetailPage.tsx"
+        ]
+      }
+    ]
+  },
+  "changedFiles": [
+    "build-request.json",
+    "feature_evidence.json",
+    "frontend-file-summaries.txt",
+    "frontend-implementation-plan.json",
+    "frontend/src/components/school/SchoolMapSection.tsx",
+    "frontend/src/components/school/SimilarSchoolsSection.tsx",
+    "frontend/src/hooks/useSimilarSchools.ts",
+    "frontend/src/pages/SchoolDetailPage.tsx",
+    "project_state.json",
+    "scratch/component-selection.json",
+    "spec.md",
+    "spec_vs_diff_report.json"
+  ]
+}

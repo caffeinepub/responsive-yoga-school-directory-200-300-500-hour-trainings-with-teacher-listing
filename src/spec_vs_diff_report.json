@@ -1,0 +1,26 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-14T12:37:52.144Z",
+  "summary": "Map and Similar Schools components/hooks were added and wired into the School Detail page, but the embedded Google Maps iframe implementation appears to rely on a Google Maps Embed API URL format that requires an API key, conflicting with the no-API-key requirement.",
+  "missing_requirements": [
+    {
+      "id": "REQ-19",
+      "requirement": "Implement the Google Maps option as a reusable component that can render a responsive embedded map iframe or link-only fallback without requiring any API key or third-party SDK.",
+      "reason": "The embedded iframe URL uses `https://www.google.com/maps/embed/v1/place?key=&q=...`, which is a Google Maps Embed API endpoint that requires an API key; providing an empty `key=` does not satisfy the requirement to avoid API keys and may result in a broken embed.",
+      "evidence": [
+        "frontend/src/components/school/SchoolMapSection.tsx"
+      ]
+    }
+  ],
+  "hallucinated_features": [],
+  "confidence": 0.78,
+  "changed_files": [
+    "frontend-file-summaries.txt",
+    "frontend/src/components/school/SchoolMapSection.tsx",
+    "frontend/src/components/school/SimilarSchoolsSection.tsx",
+    "frontend/src/hooks/useSimilarSchools.ts",
+    "frontend/src/pages/SchoolDetailPage.tsx",
+    "project_state.json"
+  ]
+}

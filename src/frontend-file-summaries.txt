@@ -1,0 +1,21 @@
+{
+  "frontend/src/App.tsx": "Main application component with TanStack Router setup, theme provider, and layout structure including Header and Footer components.",
+  "frontend/src/pages/DirectoryPage.tsx": "Directory listing page with filter controls for 200/300/500-hour training programs, responsive grid of school cards, and loading/error/empty states.",
+  "frontend/src/pages/SchoolDetailPage.tsx": "School detail page displaying comprehensive school information including training programs, teachers, video embed, location map with Google Maps integration, photo gallery, FAQ sections, and a sidebar with quick info and similar schools recommendations.",
+  "frontend/src/components/directory/SchoolCard.tsx": "Reusable school card component showing school name, location, training programs, and teacher count with navigation to detail page.",
+  "frontend/src/components/directory/TeacherList.tsx": "Teacher list component displaying teacher cards with avatar, name, and specialization in a responsive layout.",
+  "frontend/src/components/layout/Header.tsx": "Sticky header component with logo, navigation, and theme toggle functionality.",
+  "frontend/src/components/layout/Footer.tsx": "Footer component with copyright, attribution to caffeine.ai with UTM tracking, and love icon.",
+  "frontend/src/hooks/useSchools.ts": "React Query hook for fetching and filtering schools by training hours with client-side filtering logic.",
+  "frontend/src/hooks/useSchoolDetails.ts": "React Query hook for fetching detailed school information including teachers and trainings for the detail page.",
+  "frontend/src/hooks/useSchoolCardData.ts": "React Query hook for fetching training and teacher data for individual school cards in the directory listing.",
+  "frontend/src/index.css": "Global styles with earthy sage green and terracotta color palette using OKLCH color system for both light and dark modes.",
+  "frontend/tailwind.config.js": "Tailwind configuration with custom fonts (Inter, Lora), extended color tokens, border radius, and shadow utilities for yoga-inspired design.",
+  "frontend/src/components/school/faqContent.ts": "Exports FAQ data structure and default school FAQ content with common questions about yoga teacher training programs.",
+  "frontend/src/components/school/FAQSection.tsx": "Reusable FAQ component that renders questions and answers using Accordion UI with expand/collapse functionality in a Card layout.",
+  "frontend/src/components/school/ImageGallerySection.tsx": "Reusable image gallery component that displays a responsive grid of thumbnails (1-3 columns) with a Dialog-based lightbox for viewing larger images, includes keyboard dismissal and meaningful alt text for 8 default yoga studio photos.",
+  "frontend/src/components/school/SchoolVideoEmbedSection.tsx": "Reusable YouTube video embed component that displays a responsive 16:9 iframe using youtube-nocookie.com, parses various YouTube URL formats and raw video IDs, and shows a fallback message when no valid video is provided.",
+  "frontend/src/components/school/SchoolMapSection.tsx": "Reusable component that displays a school's location with a Google Maps link button and optional embedded map iframe (16:9 aspect ratio), with graceful empty state handling when location is unavailable.",
+  "frontend/src/hooks/useSimilarSchools.ts": "React Query hook that finds similar schools by comparing training program hours, scoring and ranking schools based on matching programs, and returning a limited set of top matches excluding the current school.",
+  "frontend/src/components/school/SimilarSchoolsSection.tsx": "Component that displays a responsive grid of similar school cards using the useSimilarSchools hook, with loading skeletons and empty state messaging when no similar schools are found."
+}

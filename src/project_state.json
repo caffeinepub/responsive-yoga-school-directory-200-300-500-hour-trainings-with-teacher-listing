@@ -1,0 +1,246 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 15,
+  "summary": "Build a fully responsive WordPress Yoga Schools Directory for Yoga Alliance teacher training programs (200/300/500 hours), including school listings with associated teacher information, custom branding using the provided logo, an FAQ section on each school page, a Google Map option per school, and a similar-schools list on school detail pages.",
+  "architectural_notes": [
+    "WordPress-based directory website with responsive design requirements."
+  ],
+  "known_issues": [
+    "Production deployment failed with a deployment error (Version 1 could not be deployed to production)."
+  ],
+  "isFixRequest": false,
+  "existing_features": [
+    {
+      "id": "feature-build-a-fully-responsive-frontend-directory-ui-that-lists-yoga-schools-and-allows-filtering-by-training-hour-categories-200-300-500",
+      "title": "Build a fully responsive frontend directory UI that lists yoga schools and allows filtering by training hour categories (200/300/500).",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-show-each-school-s-teachers-on-the-school-listing-experience-school-card-and-or-school-detail-page-so-users-can-see-teachers-associated-with-a-school",
+      "title": "Show each school’s teachers on the school listing experience (school card and/or school detail page) so users can see teachers associated with a school.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-apply-the-provided-logo-logo-school-webp-as-the-app-s-primary-brand-mark-in-the-ui-e-g-top-navigation-header-and-ensure-it-renders-crisply-across-responsive-layouts",
+      "title": "Apply the provided logo (logo_school_.webp) as the app’s primary brand mark in the UI (e.g., top navigation/header) and ensure it renders crisply across responsive layouts.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-establish-a-coherent-visual-theme-for-the-directory-colors-typography-spacing-component-styling-and-apply-it-consistently-across-all-pages-and-states",
+      "title": "Establish a coherent visual theme for the directory (colors, typography, spacing, component styling) and apply it consistently across all pages and states.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-responsive-banner-section-at-the-top-of-the-school-listing-page-directorypage-that-visually-reads-as-a-page-banner-full-width-within-the-container-prominent-background-image-and-text-overlay-replacing-or-upgrading-the-current-plain-text-hero-section-so-it-still-displays-the-existing-title-and-subtitle",
+      "title": "Add a responsive banner section at the top of the school listing page (DirectoryPage) that visually reads as a page banner (full-width within the container, prominent background image, and text overlay), replacing or upgrading the current plain text \"Hero Section\" so it still displays the existing title and subtitle.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-the-required-banner-image-as-a-generated-static-asset-under-frontend-public-assets-generated-and-reference-it-from-the-directorypage-banner-background",
+      "title": "Add the required banner image as a generated static asset under frontend/public/assets/generated and reference it from the DirectoryPage banner background.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-an-faq-section-to-the-school-detail-page-route-school-schoolid-that-displays-a-list-of-frequently-asked-questions-and-answers-in-english-using-an-accessible-expand-collapse-ui",
+      "title": "Add an FAQ section to the School Detail page (route: `/school/$schoolId`) that displays a list of frequently asked questions and answers in English using an accessible expand/collapse UI.",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-the-faq-section-as-a-reusable-component-and-integrate-it-into-frontend-src-pages-schooldetailpage-tsx-without-changing-any-immutable-ui-component-source-files-under-frontend-src-components-ui",
+      "title": "Implement the FAQ section as a reusable component and integrate it into `frontend/src/pages/SchoolDetailPage.tsx` without changing any immutable UI component source files under `frontend/src/components/ui`.",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-reusable-image-gallery-section-component-for-yoga-schools-and-integrate-it-into-the-school-detail-page-route-school-schoolid-so-users-can-browse-multiple-photos-for-a-school",
+      "title": "Add a reusable Image Gallery section component for yoga schools and integrate it into the School Detail page route (`/school/$schoolId`) so users can browse multiple photos for a school.",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-static-set-of-generated-gallery-images-under-frontend-public-assets-generated-and-wire-the-image-gallery-section-to-use-these-images-at-minimum-as-default-demo-photos-without-routing-images-through-the-backend",
+      "title": "Add a static set of generated gallery images under `frontend/public/assets/generated/` and wire the Image Gallery section to use these images (at minimum as default/demo photos) without routing images through the backend.",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-reusable-school-video-embed-section-component-that-can-render-an-embedded-youtube-video-from-a-provided-youtube-url-or-video-id-with-a-responsive-16-9-layout-accessible-title-attributes-and-a-graceful-empty-invalid-state-message-in-english",
+      "title": "Create a reusable School video embed section component that can render an embedded YouTube video from a provided YouTube URL or video ID, with a responsive 16:9 layout, accessible title attributes, and a graceful empty/invalid state message in English.",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-integrate-the-youtube-video-embed-section-into-the-school-detail-page-route-school-schoolid-so-each-school-page-displays-a-video-section-alongside-the-existing-content-sections",
+      "title": "Integrate the YouTube video embed section into the School Detail page route (/school/$schoolId) so each school page displays a video section alongside the existing content sections.",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-wire-the-school-detail-page-to-use-the-school-s-optional-youtube-video-url-from-backend-data-when-rendering-the-video-embed-section",
+      "title": "Wire the School Detail page to use the school’s optional YouTube video URL from backend data when rendering the video embed section.",
+      "reqIds": [
+        "REQ-17"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-google-maps-location-option-on-the-school-detail-page-school-schoolid-that-lets-users-view-the-school-s-location-on-google-maps-using-the-existing-school-location-text-field",
+      "title": "Add a Google Maps location option on the School Detail page (`/school/$schoolId`) that lets users view the school’s location on Google Maps using the existing `school.location` text field.",
+      "reqIds": [
+        "REQ-18"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-the-google-maps-option-as-a-reusable-react-component-e-g-frontend-src-components-school-schoolmapsection-tsx-that-can-render-either-a-responsive-embedded-map-iframe-or-a-link-only-fallback-without-requiring-any-api-key",
+      "title": "Implement the Google Maps option as a reusable React component (e.g., `frontend/src/components/school/SchoolMapSection.tsx`) that can render either a responsive embedded map iframe or a link-only fallback without requiring any API key.",
+      "reqIds": [
+        "REQ-19"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-similar-schools-section-to-the-school-detail-page-that-lists-a-small-set-of-other-schools-related-to-the-current-school-excluding-the-current-school-and-allows-navigation-to-each-similar-school-s-detail-page",
+      "title": "Add a “Similar Schools” section to the School Detail page that lists a small set of other schools related to the current school (excluding the current school), and allows navigation to each similar school’s detail page.",
+      "reqIds": [
+        "REQ-20"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Create a fully responsive WordPress Yoga Schools Directory site",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Support Yoga Alliance teacher training course categories/filters (200/300/500 hours) in the directory",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Display each school's teachers on the school listing/detail page",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Apply provided logo/branding to the WordPress directory site",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Create backend data models and APIs for a Yoga Schools Directory, including schools, associated teachers, and Yoga Alliance teacher training offerings (200/300/500 hours).",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Add 6 demo yoga schools to the directory (seed/demo content)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Add seed/demo content so the directory contains 6 demo yoga schools by default, and ensure they appear in the existing directory UI without requiring manual data entry. The seeded demo schools must be created in the Motoko backend using the existing data model (School, Training, Teacher) and be discoverable via the existing frontend fetch path (i.e., `searchSchoolsByName('')`). Each demo school must include: (1) a unique stable `id`, English `name`, and English `location`; (2) at least one training record associated to that school; (3) at least one teacher associated to that school. Across the 6 schools, trainings must collectively cover the 200/300/500 hour categories so the hour filters have matching results. Seeding must be idempotent (safe to run multiple times without trapping due to duplicates).",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Add a banner section to the school listing page",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Add an FAQ section on each school page (school detail page)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Add an image gallery section (e.g., on each school detail page) to display multiple photos for a yoga school",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-11",
+      "summary": "Add a YouTube video embed section (e.g., on each school detail page) so schools can display an embedded video",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-14",
+      "summary": "Extend the backend School data model to support an optional YouTube video URL per school, and expose it through the existing school fetch path used by the School Detail page.",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-15",
+      "summary": "If the canister has existing stable state, implement a conditional state migration so the new School field is populated safely for existing stored schools (defaulting to null/none).",
+      "reqIds": [
+        "REQ-16"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-16",
+      "summary": "Add a Google Map option on each school page to show the school location (map embed/link)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-17",
+      "summary": "Add a \"Similar Schools\" list/section (e.g., on school detail pages) to help users discover related schools",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "Responsive Yoga School Directory (200/300/500-hour Trainings) with Teacher Listings and Custom Logo Branding",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}
