@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 97,
+  "projectStateVersion": 105,
   "summary": "Build a fully responsive Yoga Schools Directory with school listings, teacher information, custom branding using the provided logo, an FAQ section on each school page, a Google Map option per school, a similar-schools list on school detail pages, a School Review section, an Admin Dashboard (authenticated) to manage directory data without touching code, a Blog section with demo blog posts, and training course hour options including 100/200/300/500-hour YTT.",
   "architectural_notes": [
     "WordPress-based directory website with responsive design requirements.",
@@ -26,7 +26,7 @@
     "Blog archive (Blog list) featured image has unwanted margin/spacing that needs to be removed/adjusted.",
     "After deploying Version 35, schools and blog posts are not showing in the UI (directory listings and blog section appear empty or fail to load)."
   ],
-  "isFixRequest": true,
+  "isFixRequest": false,
   "existing_features": [
     {
       "id": "feature-build-a-fully-responsive-frontend-directory-ui-that-lists-yoga-schools-and-allows-filtering-by-training-hour-categories-200-300-500",
@@ -755,6 +755,46 @@
         "REQ-131"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-update-the-school-photo-slider-ui-to-display-4-images-visible-at-the-same-time-and-show-the-count-of-remaining-photos-e-g-see-photos-5-for-any-additional-images-beyond-the-first-four-matching-the-behavior-shown-in-the-uploaded-reference-image-6-png-apply-this-to-the-school-directory-listing-card-media-area-frontend-src-components-directory-schoolcard-tsx-and-keep-all-user-facing-labels-accessibility-text-in-english",
+      "title": "Update the school photo slider UI to display 4 images visible at the same time and show the count of remaining photos (e.g., “See photos 5”) for any additional images beyond the first four, matching the behavior shown in the uploaded reference (image-6.png). Apply this to the school directory listing card media area (`frontend/src/components/directory/SchoolCard.tsx`) and keep all user-facing labels/accessibility text in English.",
+      "reqIds": [
+        "REQ-132"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-revert-the-directory-listing-schoolcard-media-area-frontend-src-components-directory-schoolcard-tsx-to-the-previous-simpler-image-style-by-removing-the-4-image-grid-slider-behavior-and-rendering-only-a-single-thumbnail-image-per-school-no-paging-dots-no-previous-next-controls-no-multi-tile-layout-the-thumbnail-selection-must-remain-deterministic-and-continue-to-prefer-curated-media-when-available-with-a-safe-fallback-to-the-existing-deterministic-demo-thumbnail-logic",
+      "title": "Revert the Directory listing SchoolCard media area (`frontend/src/components/directory/SchoolCard.tsx`) to the previous simpler image style by removing the 4-image grid/slider behavior and rendering only a single thumbnail image per school (no paging dots, no previous/next controls, no multi-tile layout). The thumbnail selection must remain deterministic and continue to prefer curated media when available, with a safe fallback to the existing deterministic demo thumbnail logic.",
+      "reqIds": [
+        "REQ-133"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-school-detail-page-banner-carousel-frontend-src-components-school-schoolprofilebanner-tsx-used-by-frontend-src-pages-schooldetailpage-tsx-so-the-banner-displays-4-images-visible-at-the-same-time-in-a-slider-paged-grid-and-shows-the-remaining-photo-count-on-the-4th-tile-when-more-than-4-images-exist-e-g-see-photos-remaining-count-this-4-up-slider-behavior-must-apply-only-to-the-school-detail-banner-area-not-to-directory-schoolcards",
+      "title": "Update the School Detail page banner carousel (`frontend/src/components/school/SchoolProfileBanner.tsx`, used by `frontend/src/pages/SchoolDetailPage.tsx`) so the banner displays 4 images visible at the same time in a slider/paged grid, and shows the remaining photo count on the 4th tile when more than 4 images exist (e.g., “See photos” + remaining count). This 4-up slider behavior must apply only to the School Detail banner area, not to Directory SchoolCards.",
+      "reqIds": [
+        "REQ-134"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-school-detail-page-banner-ui-component-frontend-src-components-school-schoolprofilebanner-tsx-to-avoid-the-current-collage-style-2x2-image-grid-and-instead-render-a-single-row-4-tile-photo-strip-that-visually-matches-the-uploaded-reference-image-7-png",
+      "title": "Update the School Detail page banner UI (component: `frontend/src/components/school/SchoolProfileBanner.tsx`) to avoid the current collage-style 2x2 image grid and instead render a single-row, 4-tile photo strip that visually matches the uploaded reference (`image-7.png`).",
+      "reqIds": [
+        "REQ-138"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-adjust-the-school-detail-banner-pagination-controls-in-frontend-src-components-school-schoolprofilebanner-tsx-to-match-the-reference-interaction-pattern-keep-left-right-navigation-arrows-for-multi-page-photo-sets-and-replace-the-current-centered-remaining-count-overlay-with-a-compact-see-photos-count-style-control-on-the-last-visible-tile-when-additional-photos-exist",
+      "title": "Adjust the School Detail banner pagination/controls in `frontend/src/components/school/SchoolProfileBanner.tsx` to match the reference interaction pattern: keep left/right navigation arrows for multi-page photo sets, and replace the current centered remaining-count overlay with a compact “See photos {count}” style control on the last visible tile when additional photos exist.",
+      "reqIds": [
+        "REQ-139"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -1225,12 +1265,6 @@
       "status": "pending"
     },
     {
-      "id": "AR-75",
-      "summary": "Add an image slider/carousel to each School Card in the directory listing (cycle through multiple school photos)",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
       "id": "AR-76",
       "summary": "Configure custom domain yogaschooldirectory.com for the deployed Internet Computer app (DNS guidance + ic-domains/.well-known setup)",
       "reqIds": [],
@@ -1309,6 +1343,36 @@
       "summary": "Implement stable persistence for directory data in `backend/main.mo` so Schools, Teachers, Trainings, Reviews, UserProfiles, and BlogPosts survive canister upgrades (use `system func preupgrade()` to store stable snapshots and `system func postupgrade()` to restore in-memory structures), without erasing existing stored records.",
       "reqIds": [
         "REQ-130"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-89",
+      "summary": "Revert Directory School Card media styling to the previous look; apply the 4-images-visible slider (with remaining count) only to the School Detail page banner/hero area.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-90",
+      "summary": "Update `backend/main.mo` so the canister always has browseable School data for anonymous users immediately after canister install and after upgrades, and so school/blog directory data persists across upgrades (no resets to empty).",
+      "reqIds": [
+        "REQ-135"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-91",
+      "summary": "Expand backend demo seeding in `backend/main.mo` so that seeded demo schools include associated Teachers and Trainings, and seeded Trainings collectively cover the hour categories 100/200/300/500 so frontend hour filters return results.",
+      "reqIds": [
+        "REQ-136"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-92",
+      "summary": "Harden public browsing methods in `backend/main.mo` used by the Directory listing so they never trap during normal anonymous browsing; when data is missing or inputs are invalid, return safe typed empty results instead of trapping.",
+      "reqIds": [
+        "REQ-137"
       ],
       "status": "pending"
     }

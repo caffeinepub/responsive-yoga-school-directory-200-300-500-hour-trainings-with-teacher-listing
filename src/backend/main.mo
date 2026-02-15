@@ -3,12 +3,15 @@ import List "mo:core/List";
 import Map "mo:core/Map";
 import Iter "mo:core/Iter";
 import Principal "mo:core/Principal";
-import Migration "migration";
+import Nat "mo:core/Nat";
+import Timer "mo:core/Timer";
+
 
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
 
-(with migration = Migration.run)
+// Persistent upgrade logic with migration
+
 actor {
   var schools = Map.empty<Text, { id : Text; name : Text; location : Text; country : ?Text; state : ?Text; city : ?Text; videoUrl : ?Text }>();
   var teachers = Map.empty<Text, { id : Text; name : Text; specialization : Text; schoolId : Text }>();
@@ -69,6 +72,7 @@ actor {
   };
 
   // SYSTEM FUNCTIONS FOR UPGRADE-PERSISTENCE
+
   system func preupgrade() { };
 
   system func postupgrade() {
@@ -138,6 +142,7 @@ actor {
   };
 
   // USER PROFILE METHODS
+
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can access their profile");
@@ -160,6 +165,7 @@ actor {
   };
 
   // ADMIN CRUD METHODS - SCHOOLS
+
   public shared ({ caller }) func createSchool(
     id : SchoolId,
     name : Text,
@@ -228,6 +234,7 @@ actor {
   };
 
   // ADMIN CRUD METHODS - TEACHERS
+
   public shared ({ caller }) func addTeacher(
     id : TeacherId,
     name : Text,
@@ -267,6 +274,7 @@ actor {
   };
 
   // ADMIN CRUD METHODS - TRAININGS
+
   public shared ({ caller }) func addTraining(
     id : TrainingId,
     hours : Nat,
@@ -306,6 +314,7 @@ actor {
   };
 
   // ADMIN CRUD METHODS - BLOG POSTS
+
   public shared ({ caller }) func createBlogPost(
     id : Text,
     title : Text,

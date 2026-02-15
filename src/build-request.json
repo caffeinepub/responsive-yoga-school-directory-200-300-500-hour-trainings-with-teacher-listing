@@ -1,75 +1,58 @@
 {
   "kind": "build_request",
-  "title": "Fix Directory schools not showing by ensuring backend always serves seeded school data",
-  "priority": "high",
+  "title": "Update School Detail banner to match single-row photo strip (no collage) like provided reference",
+  "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-129",
-      "text": "Fix the root cause of the Directory page showing no schools by ensuring the Motoko backend always has browseable School data for anonymous users immediately after canister install and after upgrades, and that `searchSchoolsByName(\"\")` reliably returns a `[School]` without trapping.",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "schools are not showing fix this issue"
-        ]
-      },
-      "acceptanceCriteria": [
-        "After a fresh canister install (no prior state), calling `searchSchoolsByName(\"\")` returns a non-empty `[School]` (at least 6 demo schools) for an anonymous caller.",
-        "After a canister upgrade, calling `searchSchoolsByName(\"\")` still returns schools (does not depend on manual Admin actions).",
-        "Demo seeding is idempotent: redeploying/upgrading multiple times does not trap due to duplicate IDs and does not create duplicate demo records.",
-        "Seeded demo data includes at least one Training and at least one Teacher per demo school; across all seeded trainings, the hour categories 100/200/300/500 are represented so frontend filters can match results.",
-        "`searchSchoolsByName(\"\")`, `getTeachersBySchool`, and `getTrainingsBySchool` do not trap during normal anonymous browsing; when data is missing they return safe empty arrays."
-      ]
-    },
-    {
-      "id": "REQ-130",
-      "text": "Implement stable persistence for directory data in `backend/main.mo` so Schools, Teachers, Trainings, Reviews, UserProfiles, and BlogPosts survive canister upgrades (use `system func preupgrade()` to store stable snapshots and `system func postupgrade()` to restore in-memory structures), without erasing existing stored records.",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "schools are not showing fix this issue"
-        ]
-      },
-      "acceptanceCriteria": [
-        "After creating or updating records (e.g., via existing admin methods), a canister upgrade preserves Schools/Teachers/Trainings/Reviews/UserProfiles/BlogPosts and they remain queryable afterward.",
-        "Upgrade logic does not overwrite or clear existing non-demo data; demo seeding only adds missing demo records when appropriate.",
-        "No `Runtime.trap` occurs during `preupgrade()`/`postupgrade()` in normal operation (including when state is empty)."
-      ]
-    },
-    {
-      "id": "REQ-131",
-      "text": "Ensure the frontend Directory experience (`frontend/src/hooks/useSchools.ts` + `frontend/src/pages/DirectoryPage.tsx`) correctly renders schools once the backend returns seeded data, and does not show the destructive error banner for the normal empty-directory case (i.e., a successful backend response of an empty array).",
+      "id": "REQ-138",
+      "text": "Update the School Detail page banner UI (component: `frontend/src/components/school/SchoolProfileBanner.tsx`) to avoid the current collage-style 2x2 image grid and instead render a single-row, 4-tile photo strip that visually matches the uploaded reference (`image-7.png`).",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "recent-messages-user-1"
         ],
         "quotes": [
-          "schools are not showing fix this issue"
+          "very good need some improvement like dont show like image  collage  you should show like this"
         ]
       },
       "acceptanceCriteria": [
-        "When `actor.searchSchoolsByName(\"\")` succeeds and returns a non-empty array, the Directory page displays the school grid with cards.",
-        "When `actor.searchSchoolsByName(\"\")` succeeds and returns `[]`, the Directory page shows the existing empty state (not the destructive error banner).",
-        "When `actor.searchSchoolsByName(\"\")` fails (throws), the Directory page shows the existing English error message \"Failed to load schools. Please try again later.\" and the Retry button re-runs the query without a full refresh."
+        "On desktop/wide layouts, the banner shows 4 images in a single horizontal row (not a 2x2 grid).",
+        "Images use `object-cover` and do not appear stretched; each tile maintains a consistent aspect ratio.",
+        "If only 1 image is available, the banner renders a single full-width image tile gracefully (no empty tiles).",
+        "The existing dark gradient readability overlay, school name, and location remain present and readable over the images.",
+        "All user-facing and accessibility text introduced/changed remains in English."
+      ]
+    },
+    {
+      "id": "REQ-139",
+      "text": "Adjust the School Detail banner pagination/controls in `frontend/src/components/school/SchoolProfileBanner.tsx` to match the reference interaction pattern: keep left/right navigation arrows for multi-page photo sets, and replace the current centered remaining-count overlay with a compact “See photos {count}” style control on the last visible tile when additional photos exist.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "recent-messages-user-1"
+        ],
+        "quotes": [
+          "dont show like image  collage  you should show like this"
+        ]
+      },
+      "acceptanceCriteria": [
+        "When more than 4 banner images exist, left/right navigation arrows are available and usable (mouse + keyboard) with English `aria-label`s (e.g., “Previous photos”, “Next photos”).",
+        "When more than 4 images exist, the 4th tile displays a compact overlay control that communicates the remaining count in the format “See photos {remainingCount}” (English).",
+        "The “See photos {remainingCount}” overlay does not block the school name/location overlay readability (no overlapping that makes the title/location hard to read).",
+        "The banner layout remains stable (no layout shift) when navigating pages.",
+        "No changes are made to Directory listing SchoolCards; this change applies only to the School Detail banner."
       ]
     }
   ],
   "constraints": [
-    "Backend must remain a single Motoko actor in `backend/main.mo`; do not introduce additional backend services.",
-    "Only create `backend/migration.mo` if required by the platform migration policy and existing stable state changes.",
-    "Do not modify any files under `frontend/src/components/ui` or any frontend immutable paths listed in SYSTEM_CONTEXT.",
-    "Use English for any user-facing text."
+    "Do not modify any files under `frontend/src/components/ui` (immutable UI component sources).",
+    "Keep all user-facing text and accessibility labels in English.",
+    "Do not introduce new backend methods or data requirements for this change."
   ],
   "nonGoals": [
-    "Redesigning the Directory page UI/visual theme beyond what is necessary to confirm schools render again.",
-    "Adding new third-party services, external databases, or non-Internet-Identity authentication.",
-    "Implementing real-time updates (WebSockets/push) for directory listings."
+    "Do not change the Directory page hero/banner behavior.",
+    "Do not reintroduce any collage/multi-tile behavior into `frontend/src/components/directory/SchoolCard.tsx` (directory cards).",
+    "Do not route images through the backend; continue using existing curated/static image URLs already provided by current logic."
   ],
   "imageRequirements": {
     "required": [],

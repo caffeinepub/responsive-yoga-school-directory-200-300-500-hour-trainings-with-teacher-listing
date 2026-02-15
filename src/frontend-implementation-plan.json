@@ -1,26 +1,41 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Fix Directory empty/error rendering when school list is empty vs backend failure",
+  "title": "School Detail banner: single-row 4-tile strip + “See photos {count}” control",
   "requirements": [
     {
-      "id": "REQ-131",
-      "summary": "Ensure Directory page renders schools from backend, treats successful empty results as empty state (not error), and supports retry on failures without full refresh.",
+      "id": "REQ-138",
+      "summary": "Update School Detail banner to render a single-row, 4-tile photo strip (no 2x2 collage) while preserving existing gradient + title/location overlays.",
       "acceptanceCriteria": [
-        "When `actor.searchSchoolsByName(\"\")` succeeds and returns a non-empty array, the Directory page displays the school grid with cards.",
-        "When `actor.searchSchoolsByName(\"\")` succeeds and returns `[]`, the Directory page shows the existing empty state (not the destructive error banner).",
-        "When `actor.searchSchoolsByName(\"\")` fails (throws), the Directory page shows the existing English error message \"Failed to load schools. Please try again later.\" and the Retry button re-runs the query without a full refresh."
+        "On desktop/wide layouts, the banner shows 4 images in a single horizontal row (not a 2x2 grid).",
+        "Images use `object-cover` and do not appear stretched; each tile maintains a consistent aspect ratio.",
+        "If only 1 image is available, the banner renders a single full-width image tile gracefully (no empty tiles).",
+        "The existing dark gradient readability overlay, school name, and location remain present and readable over the images.",
+        "All user-facing and accessibility text introduced/changed remains in English."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useSchools.ts",
+          "path": "frontend/src/components/school/SchoolProfileBanner.tsx",
           "operation": "modify",
-          "description": "Adjust the React Query behavior so a previously-thrown error does not cause the Directory to show a destructive error banner when a subsequent successful response returns an empty array (e.g., ensure UI can distinguish \"no data yet\" vs \"successful empty\"). Keep thrown errors reserved for genuine failures; continue returning `[]` for non-fatal anonymous browsing conditions. Verify the component's usage instructions before implementing."
-        },
+          "description": "Replace the current 2x2 grid banner layout with a single horizontal row layout that displays up to 4 visible tiles per page (flex/grid columns), ensuring each tile uses object-cover and consistent height; handle 1-image case as a single full-width tile; keep the existing gradient overlay plus school name/location overlay readable and positioned consistently."
+        }
+      ]
+    },
+    {
+      "id": "REQ-139",
+      "summary": "Adjust School Detail banner controls to keep left/right arrows and show a compact “See photos {remainingCount}” control on the last visible tile when additional photos exist.",
+      "acceptanceCriteria": [
+        "When more than 4 banner images exist, left/right navigation arrows are available and usable (mouse + keyboard) with English `aria-label`s (e.g., “Previous photos”, “Next photos”).",
+        "When more than 4 images exist, the 4th tile displays a compact overlay control that communicates the remaining count in the format “See photos {remainingCount}” (English).",
+        "The “See photos {remainingCount}” overlay does not block the school name/location overlay readability (no overlapping that makes the title/location hard to read).",
+        "The banner layout remains stable (no layout shift) when navigating pages.",
+        "No changes are made to Directory listing SchoolCards; this change applies only to the School Detail banner."
+      ],
+      "file_operations": [
         {
-          "path": "frontend/src/pages/DirectoryPage.tsx",
+          "path": "frontend/src/components/school/SchoolProfileBanner.tsx",
           "operation": "modify",
-          "description": "Refine error-banner gating to show the destructive error banner only for genuine query failures (not merely when the schools array is empty). Ensure the Retry button triggers `refetch()` and updates the list without a full page refresh. Verify the component's usage instructions before implementing."
+          "description": "Update pagination UI/behavior: keep previous/next arrow buttons with English aria-labels and keyboard support; replace the existing centered/full-tile remaining-count overlay with a compact “See photos {remainingCount}” control rendered on the last visible tile when more photos exist (e.g., positioned away from the bottom-left title/location overlay to avoid readability overlap); ensure page navigation does not change banner dimensions or tile sizing to prevent layout shift."
         }
       ]
     }

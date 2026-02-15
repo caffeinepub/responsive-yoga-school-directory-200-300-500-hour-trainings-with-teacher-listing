@@ -1,53 +1,45 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-15T16:00:02.555Z",
+  "generatedAt": "2026-02-15T16:45:57.953Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 3,
-    "implemented": 1,
+    "total": 2,
+    "implemented": 2,
     "items": [
       {
-        "id": "REQ-129",
-        "summary": "Fix the root cause of the Directory page showing no schools by ensuring the Motoko backend always has browseable School data for anonymous users immediately after canister install and after upgrades, and that `searchSchoolsByName(\"\")` reliably returns a `[School]` without trapping.",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-130",
-        "summary": "Implement stable persistence for directory data in `backend/main.mo` so Schools, Teachers, Trainings, Reviews, UserProfiles, and BlogPosts survive canister upgrades (use `system func preupgrade()` to store stable snapshots and `system func postupgrade()` to restore in-memory structures), without erasing existing stored records.",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-131",
-        "summary": "Ensure the frontend Directory experience (`frontend/src/hooks/useSchools.ts` + `frontend/src/pages/DirectoryPage.tsx`) correctly renders schools once the backend returns seeded data, and does not show the destructive error banner for the normal empty-directory case (i.e., a successful backend response of an empty array).",
+        "id": "REQ-138",
+        "summary": "Update the School Detail page banner UI (component: `frontend/src/components/school/SchoolProfileBanner.tsx`) to avoid the current collage-style 2x2 image grid and instead render a single-row, 4-tile photo strip that visually matches the uploaded reference (`image-7.png`).",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/hooks/useSchools.ts",
-          "frontend/src/pages/DirectoryPage.tsx"
+          "frontend/src/components/school/SchoolProfileBanner.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/hooks/useSchools.ts",
-          "frontend/src/pages/DirectoryPage.tsx"
+          "frontend/src/components/school/SchoolProfileBanner.tsx"
+        ]
+      },
+      {
+        "id": "REQ-139",
+        "summary": "Adjust the School Detail banner pagination/controls in `frontend/src/components/school/SchoolProfileBanner.tsx` to match the reference interaction pattern: keep left/right navigation arrows for multi-page photo sets, and replace the current centered remaining-count overlay with a compact “See photos {count}” style control on the last visible tile when additional photos exist.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/school/SchoolProfileBanner.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/school/SchoolProfileBanner.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
-    "backend/main.mo",
-    "backend/migration.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/hooks/useSchools.ts",
-    "frontend/src/pages/DirectoryPage.tsx",
+    "frontend/src/components/school/SchoolProfileBanner.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

@@ -1,50 +1,39 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-15T16:00:02.550Z",
-  "summary": "REQ-131 frontend behavior for distinguishing empty results vs true errors appears implemented in useSchools.ts and DirectoryPage.tsx. Backend changes do not yet satisfy the core seeding and upgrade-persistence requirements: demo seeding only covers Schools (not Teachers/Trainings), only runs in postupgrade (not fresh install), and stable persistence via preupgrade/postupgrade snapshots is not implemented (preupgrade is empty and no stable state restoration is shown).",
+  "generatedAt": "2026-02-15T16:45:57.948Z",
+  "summary": "Diff shows SchoolProfileBanner refactored to paginate images in groups of 4 and render a single horizontal row with object-cover, including a graceful single-image full-width case. However, the diff is truncated before the new 4th-tile “See photos {remainingCount}” control and before any arrow button markup/aria-labels are visible, so full REQ-139 compliance cannot be confirmed from provided evidence. Additional non-requested changes include error/fallback UI for broken images and modifications to meta/state summary files.",
   "missing_requirements": [
     {
-      "id": "REQ-129",
-      "requirement": "Backend must always have browseable seeded School data immediately after fresh install and after upgrades; seeding must be idempotent; include at least one Training and one Teacher per demo school and ensure hour categories 100/200/300/500 are represented; searchSchoolsByName(\"\")/getTeachersBySchool/getTrainingsBySchool must not trap and return safe arrays when missing.",
-      "reason": "The diff shows demo seeding only in system func postupgrade() and only seeds 6 demo schools. There is no evidence of seeding on fresh install, no seeding of Teachers or Trainings, and no evidence that seeded trainings cover 100/200/300/500. Also, the diff summary does not show changes ensuring getTeachersBySchool/getTrainingsBySchool/searchSchoolsByName return safe empty arrays when data is missing (file is truncated).",
+      "id": "REQ-139",
+      "requirement": "Replace the centered remaining-count overlay with a compact “See photos {remainingCount}” control on the 4th tile when additional photos exist, and ensure left/right navigation arrows are usable (mouse + keyboard) with English aria-labels; layout remains stable when navigating.",
+      "reason": "While pagination math, keyboard ArrowLeft/ArrowRight handling, and a comment indicating a compact overlay are present, the diff is truncated before the overlay’s actual rendered text (“See photos {remainingCount}”) and before any arrow button elements/aria-labels are shown. Therefore the required control text, remaining count format, arrow usability via UI controls, and aria-label compliance cannot be verified from the provided diff summary.",
       "evidence": [
-        "backend/main.mo (system func postupgrade() seeds only demoSchools; no teachers/trainings seeding shown)"
-      ]
-    },
-    {
-      "id": "REQ-130",
-      "requirement": "Implement stable persistence in backend/main.mo for Schools, Teachers, Trainings, Reviews, UserProfiles, and BlogPosts using preupgrade/postupgrade snapshots, preserving existing records and avoiding traps.",
-      "reason": "system func preupgrade() is empty in the diff, and there is no evidence of stable variables/snapshots or restoration logic for the listed datasets. The shown postupgrade() only seeds demo schools when schools.size()==0 and does not restore persisted data.",
-      "evidence": [
-        "backend/main.mo (\"system func preupgrade() { }\"; postupgrade() contains only demo school seeding)"
+        "frontend/src/components/school/SchoolProfileBanner.tsx (truncated: overlay section cut off after '{isLastTile && (', arrow buttons not shown)"
       ]
     }
   ],
   "hallucinated_features": [
     {
-      "description": "Added extra Directory page UI behaviors (scroll-to-results / scroll-to-filters CTAs, focus management, additional hero buttons/icons) beyond what is necessary to confirm schools render again.",
-      "reason": "REQ-131 focuses on correct rendering and error/empty-state handling; the diff introduces new hero CTA buttons and scrolling/focus behavior not requested and potentially constitutes UI redesign beyond necessity (a stated non-goal).",
+      "description": "Image load error handling with per-tile fallback placeholder icon (ImageOff) and error-state reset on page change.",
+      "reason": "BuildRequest did not ask for broken-image handling or placeholder UI; it only specified layout/controls changes for the banner.",
       "evidence": [
-        "frontend/src/pages/DirectoryPage.tsx (scrollToResults/scrollToFilters, new hero CTAs, added icons)"
+        "frontend/src/components/school/SchoolProfileBanner.tsx"
       ]
     },
     {
-      "description": "Introduced backend/migration.mo passthrough migration module.",
-      "reason": "BuildRequest constraint says to create backend/migration.mo only if required by platform migration policy and existing stable state changes; the diff adds it, but no corresponding stable-state migration logic is evidenced in backend/main.mo (preupgrade is empty).",
+      "description": "Modified project meta/state tracking files (frontend-file-summaries.txt and project_state.json).",
+      "reason": "BuildRequest only requested updating SchoolProfileBanner banner layout/controls and included constraints about not modifying UI component sources and not changing other page behavior; updating these meta files was not requested.",
       "evidence": [
-        "backend/migration.mo",
-        "backend/main.mo (imports Migration; preupgrade empty)"
+        "frontend-file-summaries.txt",
+        "project_state.json"
       ]
     }
   ],
-  "confidence": 0.72,
+  "confidence": 0.62,
   "changed_files": [
-    "backend/main.mo",
-    "backend/migration.mo",
     "frontend-file-summaries.txt",
-    "frontend/src/hooks/useSchools.ts",
-    "frontend/src/pages/DirectoryPage.tsx",
+    "frontend/src/components/school/SchoolProfileBanner.tsx",
     "project_state.json"
   ]
 }

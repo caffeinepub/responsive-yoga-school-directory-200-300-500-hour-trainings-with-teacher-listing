@@ -1,12 +1,13 @@
 # Specification
 
 ## Summary
-**Goal:** Fix the Directory page showing no schools by ensuring the backend always has browseable seeded School data for anonymous users after install/upgrade, persists directory data across upgrades, and the frontend renders (and errors) correctly based on backend results.
+**Goal:** Update the School Detail page banner to display a single-row, 4-tile photo strip (no collage) and adjust photo navigation/overlays to match the provided reference.
 
 **Planned changes:**
-- Update the Motoko backend seeding so demo Schools are always available immediately after canister install and after upgrades, with idempotent behavior (no duplicates/traps) and required related demo data (Teachers/Trainings with 100/200/300/500 hour categories).
-- Add stable persistence in `backend/main.mo` using `preupgrade()`/`postupgrade()` to snapshot and restore Schools, Teachers, Trainings, Reviews, UserProfiles, and BlogPosts without clearing existing records.
-- Make backend directory queries safe for anonymous browsing by returning empty arrays (not trapping) when related data is missing for `searchSchoolsByName("")`, `getTeachersBySchool`, and `getTrainingsBySchool`.
-- Adjust the frontend Directory data-fetching/rendering so a successful empty array shows the existing empty state (not the destructive error banner), while real failures still show the existing error message and Retry re-runs the query.
+- Update `frontend/src/components/school/SchoolProfileBanner.tsx` to render banner images as a single horizontal row of up to 4 tiles on desktop/wide layouts (not a 2x2 grid), using `object-cover` with consistent tile aspect handling.
+- Ensure the banner degrades gracefully when fewer images exist (e.g., 1 image renders as a single full-width tile; no empty placeholders).
+- Keep the existing dark gradient readability overlay and ensure school name and location remain visible and readable over the banner images.
+- Adjust banner controls for multi-page photo sets: keep left/right navigation arrows (mouse + keyboard) with English `aria-label`s, and replace the centered remaining-count overlay with a compact “See photos {remainingCount}” overlay on the last visible (4th) tile when additional photos exist.
+- Ensure the “See photos {remainingCount}” overlay placement does not interfere with the school name/location overlay and that navigation does not cause layout shift.
 
-**User-visible outcome:** The Directory reliably shows seeded schools for anonymous users after install and after upgrades, and the page displays either a school grid, an empty state, or a recoverable error state depending on the backend response.
+**User-visible outcome:** On the School Detail page, users see a clean 4-photo horizontal banner strip like the reference, can page through more photos using arrows, and can see a “See photos {count}” cue on the last tile when additional photos are available.

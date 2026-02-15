@@ -68,7 +68,7 @@ export default function SchoolDetailPage() {
     ? buildLocationBreadcrumbs(school.country, school.state, school.city)
     : [];
 
-  // Get curated gallery images if available
+  // Get curated gallery images if available for banner
   const curatedGallery = getCuratedGalleryImages(school.id);
   
   // Build banner images array from curated gallery with defensive normalization
@@ -130,19 +130,19 @@ export default function SchoolDetailPage() {
                   {teachers && teachers.length > 0 && (
                     <div>
                       <p className="text-sm font-medium text-muted-foreground">Teachers</p>
-                      <p className="mt-1 flex items-center gap-2 text-base">
-                        <Users className="h-4 w-4" />
-                        {teachers.length} {teachers.length === 1 ? 'Teacher' : 'Teachers'}
-                      </p>
+                      <div className="mt-1 flex items-center gap-2">
+                        <Users className="h-4 w-4 text-primary" />
+                        <p className="text-base">{teachers.length} {teachers.length === 1 ? 'Teacher' : 'Teachers'}</p>
+                      </div>
                     </div>
                   )}
                   {trainings && trainings.length > 0 && (
                     <div>
                       <p className="text-sm font-medium text-muted-foreground">Training Programs</p>
-                      <p className="mt-1 flex items-center gap-2 text-base">
-                        <GraduationCap className="h-4 w-4" />
-                        {trainings.length} {trainings.length === 1 ? 'Program' : 'Programs'}
-                      </p>
+                      <div className="mt-1 flex items-center gap-2">
+                        <GraduationCap className="h-4 w-4 text-primary" />
+                        <p className="text-base">{trainings.length} {trainings.length === 1 ? 'Program' : 'Programs'}</p>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -150,7 +150,11 @@ export default function SchoolDetailPage() {
             </Card>
 
             {trainings && trainings.length > 0 && (
-              <SchoolTrainingCoursesSection trainings={trainings} schoolId={school.id} />
+              <SchoolTrainingCoursesSection 
+                trainings={trainings} 
+                schoolId={school.id}
+                onInquire={handleInquire}
+              />
             )}
 
             {teachers && teachers.length > 0 && (
@@ -165,19 +169,21 @@ export default function SchoolDetailPage() {
               </Card>
             )}
 
-            <SchoolReviewsSection schoolId={school.id} />
+            <ImageGallerySection />
+
+            {school.videoUrl && (
+              <SchoolVideoEmbedSection videoUrl={school.videoUrl} />
+            )}
 
             <FAQSection faqs={defaultSchoolFAQs} />
 
-            <ImageGallerySection images={curatedGallery || undefined} />
+            <SchoolReviewsSection schoolId={school.id} />
           </div>
 
           <div className="space-y-8">
             <div ref={inquiryFormRef}>
               <SchoolInquiryFormSection schoolName={school.name} />
             </div>
-
-            {school.videoUrl && <SchoolVideoEmbedSection videoUrl={school.videoUrl} />}
 
             <SchoolMapSection location={displayLocation} schoolName={school.name} />
 

@@ -2,11 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-ensure-the-frontend-directory-experience-frontend-src-hooks-useschools-ts-frontend-src-pages-directorypage-tsx-correctly-renders-schools-once-the-backend-returns-seeded-data-and-does-not-show-the-destructive-error-banner-for-the-normal-empty-directory-case-i-e-a-successful-backend-response-of-an-empty-array",
-      "featureTitle": "Ensure the frontend Directory experience (`frontend/src/hooks/useSchools.ts` + `frontend/src/pages/DirectoryPage.tsx`) correctly renders schools once the backend returns seeded data, and does not show the destructive error banner for the normal empty-directory case (i.e., a successful backend response of an empty array).",
+      "featureId": "feature-update-the-school-detail-page-banner-ui-component-frontend-src-components-school-schoolprofilebanner-tsx-to-avoid-the-current-collage-style-2x2-image-grid-and-instead-render-a-single-row-4-tile-photo-strip-that-visually-matches-the-uploaded-reference-image-7-png",
+      "featureTitle": "Update the School Detail page banner UI (component: `frontend/src/components/school/SchoolProfileBanner.tsx`) to avoid the current collage-style 2x2 image grid and instead render a single-row, 4-tile photo strip that visually matches the uploaded reference (`image-7.png`).",
       "files": [
-        "frontend/src/hooks/useSchools.ts",
-        "frontend/src/pages/DirectoryPage.tsx"
+        "frontend/src/components/school/SchoolProfileBanner.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -17,7 +16,26 @@
         "authorization@4.0.0"
       ],
       "testIds": [
-        "REQ-131"
+        "REQ-138"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-adjust-the-school-detail-banner-pagination-controls-in-frontend-src-components-school-schoolprofilebanner-tsx-to-match-the-reference-interaction-pattern-keep-left-right-navigation-arrows-for-multi-page-photo-sets-and-replace-the-current-centered-remaining-count-overlay-with-a-compact-see-photos-count-style-control-on-the-last-visible-tile-when-additional-photos-exist",
+      "featureTitle": "Adjust the School Detail banner pagination/controls in `frontend/src/components/school/SchoolProfileBanner.tsx` to match the reference interaction pattern: keep left/right navigation arrows for multi-page photo sets, and replace the current centered remaining-count overlay with a compact “See photos {count}” style control on the last visible tile when additional photos exist.",
+      "files": [
+        "frontend/src/components/school/SchoolProfileBanner.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
+      ],
+      "testIds": [
+        "REQ-139"
       ],
       "confidence": "high"
     }
