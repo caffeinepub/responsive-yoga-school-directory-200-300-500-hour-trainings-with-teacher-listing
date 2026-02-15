@@ -1,11 +1,12 @@
 # Specification
 
 ## Summary
-**Goal:** Add configurable, accessible social profile links to the site header and footer.
+**Goal:** Make the School Detail profile banner display a multi-image carousel that matches the interactive style of the directory School Card media carousel while keeping the current overlay content and behavior.
 
 **Planned changes:**
-- Create a reusable Social Links component driven by a single centralized configuration, rendering only social items with non-empty URLs and nothing when all URLs are empty.
-- Add a “Follow us” label plus a horizontal row of social icons/links to the global footer, matching existing footer typography and muted styling without breaking current footer links.
-- Add social icons/links to the global header in a space-efficient way that preserves desktop and mobile navigation layouts (desktop near existing controls; mobile accessible via the dropdown/menu if needed).
+- Update `frontend/src/components/school/SchoolProfileBanner.tsx` to support a banner image carousel when multiple images are provided, including accessible Previous/Next controls, keyboard navigation consistent with the School Card carousel, and a graceful image-load failure fallback.
+- Keep the existing banner gradient overlay readability treatment, school name + location display, and optional “Inquire Now” button behavior unchanged.
+- Update `frontend/src/pages/SchoolDetailPage.tsx` to pass curated gallery images from `getCuratedGalleryImages(school.id)` into the School Profile banner when available, falling back to the existing default banner image when not.
+- Ensure any newly added aria-labels and any visible fallback messaging for the banner are in English.
 
-**User-visible outcome:** Visitors can quickly open the site’s social profiles from both the header and footer, with consistent styling and accessible, secure new-tab links.
+**User-visible outcome:** On a school’s detail page, the top banner can be browsed as a carousel through curated school images (with accessible controls and keyboard support), and schools without curated images continue to show the existing single default banner.

@@ -20,6 +20,7 @@ import { formatStructuredLocation, hasStructuredLocation } from '@/lib/locationF
 import { buildLocationBreadcrumbs } from '@/lib/locationRoutes';
 import { useNavigate } from '@tanstack/react-router';
 import { defaultSchoolFAQs } from '@/components/school/faqContent';
+import { getCuratedGalleryImages } from '@/lib/curatedSchoolMedia';
 
 export default function SchoolDetailPage() {
   const { schoolId } = useParams({ from: '/school/$schoolId' });
@@ -67,12 +68,21 @@ export default function SchoolDetailPage() {
     ? buildLocationBreadcrumbs(school.country, school.state, school.city)
     : [];
 
+  // Get curated gallery images if available
+  const curatedGallery = getCuratedGalleryImages(school.id);
+  
+  // Build banner images array from curated gallery
+  const bannerImages = curatedGallery && curatedGallery.length > 0
+    ? curatedGallery.map(img => ({ src: img.src, alt: img.alt }))
+    : undefined;
+
   return (
     <div className="min-h-screen bg-background">
       <SchoolProfileBanner
         schoolName={school.name}
         location={displayLocation}
         onInquire={handleInquire}
+        bannerImages={bannerImages}
       />
 
       <div className="container mx-auto px-4 py-12">
@@ -153,7 +163,7 @@ export default function SchoolDetailPage() {
               </Card>
             )}
 
-            <ImageGallerySection />
+            <ImageGallerySection images={curatedGallery ?? undefined} />
 
             {school.videoUrl && <SchoolVideoEmbedSection videoUrl={school.videoUrl} />}
 

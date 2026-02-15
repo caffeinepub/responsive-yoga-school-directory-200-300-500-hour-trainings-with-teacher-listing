@@ -14,7 +14,7 @@ export const socialLinks: SocialLink[] = [
     icon: SiFacebook,
   },
   {
-    label: 'X (Twitter)',
+    label: 'X',
     href: '', // Empty by default - configure as needed
     icon: SiX,
   },

@@ -1,16 +1,20 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 67,
+  "projectStateVersion": 85,
   "summary": "Build a fully responsive Yoga Schools Directory with school listings, teacher information, custom branding using the provided logo, an FAQ section on each school page, a Google Map option per school, a similar-schools list on school detail pages, a School Review section, an Admin Dashboard (authenticated) to manage directory data without touching code, a Blog section with demo blog posts, and training course hour options including 100/200/300/500-hour YTT.",
   "architectural_notes": [
     "WordPress-based directory website with responsive design requirements.",
     "UI styling requirement: use a white background site-wide (\"everywhere\"), not just on the directory page, while maintaining readable contrast.",
     "Backend must seed demo schools/teachers/trainings automatically via canister install/upgrade system hooks so `searchSchoolsByName(\"\")` has data immediately after deploy/upgrade.",
     "Add an authenticated Admin Dashboard (likely using Internet Identity) so admins can CRUD schools/teachers/trainings/reviews via UI rather than code changes.",
-    "Support structured location fields (country/state/city) and enable deep-linkable URLs for location and course pages for promotion."
+    "Support structured location fields (country/state/city) and enable deep-linkable URLs for location and course pages for promotion.",
+    "Frontend uses TanStack Router; avoid circular dependencies where the router is created in a scope that is also referenced by the root route component (can cause app to render a blank screen).",
+    "Need a workflow to ingest school details (text, photos, video links) from an external website URL and map them into the directory’s School/Teacher/Training models (likely store media as URLs or static assets, not fetched from backend at runtime).",
+    "Potential content source: Google Business Profile share link for a school (images + reviews) to be curated/seeded into the directory.",
+    "Consider reusing existing School gallery/curated media mapping as the source for the School Profile banner background and for a School Card image slider (frontend-only; no backend image routing).",
+    "Custom domain to connect: yogaschooldirectory.com (requires IC domain configuration via ic-domains/.well-known and DNS records at registrar)."
   ],
   "known_issues": [
-    "Production deployment failed with a deployment error (Version 1 could not be deployed to production).",
     "Users see \"Failed to load schools. Please try again later.\" indicating the frontend cannot fetch school listings from the backend (actor/load error, backend error, or empty/unseeded data).",
     "Schools are still not showing in the UI; users continue to see \"Failed to load schools. Please try again later.\" after the latest deployment (Version 9).",
     "After deploying Version 15, users still see \"Failed to load schools. Please try again later.\" (schools not loading / frontend fetch still failing).",
@@ -19,7 +23,8 @@
     "After deploying Draft Version 18, the Directory page still shows \"Failed to load schools. Please try again later.\" (schools not loading / frontend fetch still failing).",
     "Directory page error \"Failed to load schools. Please try again later.\" is likely caused by backend having zero seeded schools (no automatic seeding on install/upgrade), leading to empty results and/or follow-on traps when fetching trainings/teachers.",
     "Blog post featured image has unwanted top margin/spacing that needs to be removed/adjusted.",
-    "Blog archive (Blog list) featured image has unwanted margin/spacing that needs to be removed/adjusted."
+    "Blog archive (Blog list) featured image has unwanted margin/spacing that needs to be removed/adjusted.",
+    "After deploying Version 35, schools and blog posts are not showing in the UI (directory listings and blog section appear empty or fail to load)."
   ],
   "isFixRequest": false,
   "existing_features": [
@@ -558,6 +563,142 @@
         "REQ-94"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-ensure-the-social-links-ui-renders-a-distinct-platform-icon-for-each-configured-social-link-e-g-facebook-x-instagram-linkedin-youtube-anywhere-social-links-are-displayed-global-header-and-global-footer-using-the-existing-reusable-sociallinks-component-and-centralized-configuration-in-frontend-src-config-sociallinks-ts",
+      "title": "Ensure the social links UI renders a distinct platform icon for each configured social link (e.g., Facebook, X, Instagram, LinkedIn, YouTube) anywhere social links are displayed (global header and global footer), using the existing reusable `SocialLinks` component and centralized configuration in `frontend/src/config/socialLinks.ts`.",
+      "reqIds": [
+        "REQ-95"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-verify-the-project-has-the-required-icon-library-dependency-to-support-platform-icons-used-by-frontend-src-config-sociallinks-ts-e-g-react-icons-and-ensure-builds-do-not-fail-due-to-missing-icon-imports",
+      "title": "Verify the project has the required icon library dependency to support platform icons used by `frontend/src/config/socialLinks.ts` (e.g., `react-icons`), and ensure builds do not fail due to missing icon imports.",
+      "reqIds": [
+        "REQ-96"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-fix-the-blank-white-screen-by-removing-the-circular-tanstack-router-dependency-in-frontend-src-app-tsx-where-rootroute-renders-a-routerprovider-router-router-before-router-is-created-update-the-routing-setup-so-the-root-route-renders-the-shared-layout-and-an-outlet-and-the-routerprovider-is-only-rendered-once-at-the-top-level-of-app",
+      "title": "Fix the blank white screen by removing the circular TanStack Router dependency in `frontend/src/App.tsx` where `rootRoute` renders a `<RouterProvider router={router} />` before `router` is created. Update the routing setup so the root route renders the shared layout and an `Outlet`, and the `RouterProvider` is only rendered once at the top level of `App`.",
+      "reqIds": [
+        "REQ-97"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-minimal-user-friendly-router-error-boundary-or-equivalent-top-level-render-fallback-supported-by-the-current-tanstack-router-setup-so-that-if-a-route-component-throws-during-initial-render-the-app-shows-an-english-error-message-and-a-way-to-navigate-back-to-the-home-page-instead-of-rendering-a-blank-screen",
+      "title": "Add a minimal, user-friendly router error boundary (or equivalent top-level render fallback supported by the current TanStack Router setup) so that if a route component throws during initial render, the app shows an English error message and a way to navigate back to the Home page instead of rendering a blank screen.",
+      "reqIds": [
+        "REQ-98"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-make-the-blog-data-fetching-hooks-resilient-so-the-blog-section-does-not-fail-when-the-actor-is-still-initializing-update-frontend-src-hooks-useblogposts-ts-so-that-when-actor-is-not-available-yet-the-hook-does-not-throw-an-exception-it-should-wait-until-enabled-conditions-are-met-and-or-return-a-safe-empty-value-while-loading-similar-to-how-useschools-returns-when-no-actor-is-present",
+      "title": "Make the Blog data-fetching hooks resilient so the Blog section does not fail when the actor is still initializing.\n\nUpdate `frontend/src/hooks/useBlogPosts.ts` so that when `actor` is not available yet, the hook does not throw an exception; it should wait until enabled conditions are met and/or return a safe empty value while loading, similar to how `useSchools` returns `[]` when no actor is present.",
+      "reqIds": [
+        "REQ-100"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-improve-blog-page-ux-for-empty-error-states-so-users-can-recover-without-a-full-refresh-and-the-messaging-matches-the-yoga-directory-domain-update-frontend-src-pages-blogpage-tsx-to-add-a-visible-retry-control-in-the-error-state-that-re-runs-the-blog-posts-query-no-full-page-refresh-replace-the-current-driving-schools-driver-education-empty-state-and-page-description-copy-with-english-copy-relevant-to-yoga-teacher-training-and-yoga-schools",
+      "title": "Improve Blog page UX for empty/error states so users can recover without a full refresh and the messaging matches the Yoga directory domain.\n\nUpdate `frontend/src/pages/BlogPage.tsx` to:\n- Add a visible retry control in the error state that re-runs the blog posts query (no full page refresh).\n- Replace the current “driving schools/driver education” empty-state and page description copy with English copy relevant to yoga teacher training and yoga schools.",
+      "reqIds": [
+        "REQ-101"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-an-explore-call-to-action-in-the-school-detail-page-courses-section-component-frontend-src-components-school-schooltrainingcoursessection-tsx-that-scrolls-jumps-the-user-to-the-course-cards-area-on-the-current-school-detail-page-without-adding-any-new-backend-functionality",
+      "title": "Add an \"Explore\" call-to-action in the School Detail page Courses section (component: `frontend/src/components/school/SchoolTrainingCoursesSection.tsx`) that scrolls/jumps the user to the course cards area on the current School Detail page, without adding any new backend functionality.",
+      "reqIds": [
+        "REQ-102"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-training-hour-levels-explained-ui-in-frontend-src-components-directory-directoryinfosections-tsx-to-visually-match-the-uploaded-reference-image-image-3-png-more-closely-keeping-the-existing-english-content-and-the-four-levels-100-200-300-500-intact",
+      "title": "Update the \"Training Hour Levels Explained\" UI in `frontend/src/components/directory/DirectoryInfoSections.tsx` to visually match the uploaded reference image (`image-3.png`) more closely, keeping the existing English content and the four levels (100/200/300/500) intact.",
+      "reqIds": [
+        "REQ-103"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-curated-photos-for-the-new-school-as-static-assets-under-frontend-public-assets-generated-and-wire-the-ui-so-the-new-school-s-directory-thumbnail-and-school-detail-photo-gallery-use-those-curated-images-without-routing-images-through-the-backend",
+      "title": "Add curated photos for the new school as static assets under `frontend/public/assets/generated/` and wire the UI so the new school’s directory thumbnail and School detail Photo Gallery use those curated images (without routing images through the backend).",
+      "reqIds": [
+        "REQ-107"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-additional-curated-school-photo-assets-sourced-from-the-same-google-business-profile-as-static-images-under-frontend-public-assets-generated-and-extend-the-curated-media-mapping-for-schoolid-vinyasa-yogashala-in-frontend-src-lib-curatedschoolmedia-ts-so-the-school-s-directory-thumbnail-and-school-detail-photo-gallery-can-use-the-curated-set",
+      "title": "Add additional curated school photo assets (sourced from the same Google Business Profile) as static images under frontend/public/assets/generated and extend the curated media mapping for schoolId \"vinyasa-yogashala\" in frontend/src/lib/curatedSchoolMedia.ts so the school’s directory thumbnail and School Detail photo gallery can use the curated set.",
+      "reqIds": [
+        "REQ-109"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-frontend-src-components-school-schoolprofilebanner-tsx-to-support-using-a-school-photo-from-that-school-s-gallery-curated-media-as-the-banner-background-instead-of-always-using-the-single-static-banner-image-the-banner-must-keep-the-existing-overlay-readability-treatment-dark-gradient-the-school-name-location-and-the-existing-optional-inquire-now-button-behavior",
+      "title": "Update `frontend/src/components/school/SchoolProfileBanner.tsx` to support using a school photo (from that school’s gallery/curated media) as the banner background instead of always using the single static banner image. The banner must keep the existing overlay readability treatment (dark gradient), the school name + location, and the existing optional “Inquire Now” button behavior.",
+      "reqIds": [
+        "REQ-110"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-wire-the-school-detail-page-banner-to-reuse-the-school-s-gallery-media-update-frontend-src-pages-schooldetailpage-tsx-so-it-selects-a-banner-background-image-from-available-curated-gallery-images-via-getcuratedgalleryimages-school-id-and-passes-it-into-schoolprofilebanner-prefer-the-first-curated-gallery-image-when-available-and-fall-back-to-the-existing-default-banner-when-not",
+      "title": "Wire the School Detail page banner to reuse the school’s gallery media: update `frontend/src/pages/SchoolDetailPage.tsx` so it selects a banner background image from available curated gallery images (via `getCuratedGalleryImages(school.id)`) and passes it into `SchoolProfileBanner`. Prefer the first curated gallery image when available, and fall back to the existing default banner when not.",
+      "reqIds": [
+        "REQ-111"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-an-image-slider-carousel-to-each-directory-school-card-update-frontend-src-components-directory-schoolcard-tsx-so-the-media-area-at-the-top-of-the-card-can-cycle-through-multiple-images-similar-to-the-uploaded-reference-use-curated-gallery-images-when-available-for-that-school-otherwise-fall-back-to-a-safe-set-of-existing-demo-images-at-minimum-include-the-current-thumbnail-so-the-slider-always-has-at-least-1-image-provide-accessible-previous-next-controls-and-ensure-the-slider-does-not-break-card-layout",
+      "title": "Add an image slider/carousel to each directory School Card: update `frontend/src/components/directory/SchoolCard.tsx` so the media area at the top of the card can cycle through multiple images (similar to the uploaded reference). Use curated gallery images when available for that school; otherwise fall back to a safe set of existing demo images (at minimum include the current thumbnail so the slider always has at least 1 image). Provide accessible previous/next controls and ensure the slider does not break card layout.",
+      "reqIds": [
+        "REQ-112"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-custom-domain-verification-for-the-internet-computer-boundary-nodes-by-creating-the-static-asset-file-frontend-public-well-known-ic-domains-that-contains-the-domain-yogaschooldirectory-com-ascii-lowercase-on-its-own-line-so-the-deployed-app-can-be-served-from-that-custom-domain",
+      "title": "Add custom domain verification for the Internet Computer boundary nodes by creating the static asset file `frontend/public/.well-known/ic-domains` that contains the domain `yogaschooldirectory.com` (ASCII, lowercase) on its own line, so the deployed app can be served from that custom domain.",
+      "reqIds": [
+        "REQ-113"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-school-profile-banner-component-frontend-src-components-school-schoolprofilebanner-tsx-so-it-can-display-a-carousel-slider-of-multiple-photos-visually-and-interactively-similar-to-the-existing-directory-school-card-media-carousel-while-preserving-the-existing-overlay-readability-treatment-school-name-location-and-optional-inquire-now-button-behavior",
+      "title": "Update the School Profile banner component (`frontend/src/components/school/SchoolProfileBanner.tsx`) so it can display a carousel/slider of multiple photos (visually and interactively similar to the existing directory School Card media carousel), while preserving the existing overlay readability treatment, school name + location, and optional “Inquire Now” button behavior.",
+      "reqIds": [
+        "REQ-114"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-wire-the-school-detail-page-frontend-src-pages-schooldetailpage-tsx-to-pass-a-list-of-curated-gallery-images-when-available-via-getcuratedgalleryimages-school-id-into-the-school-profile-banner-so-the-banner-carousel-uses-the-same-curated-media-as-the-school-card-with-a-sensible-fallback-to-the-existing-default-banner-image-when-curated-images-are-not-present",
+      "title": "Wire the School Detail page (`frontend/src/pages/SchoolDetailPage.tsx`) to pass a list of curated gallery images (when available via `getCuratedGalleryImages(school.id)`) into the School Profile banner so the banner carousel uses the same curated media as the School Card, with a sensible fallback to the existing default banner image when curated images are not present.",
+      "reqIds": [
+        "REQ-115"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-keep-user-facing-text-in-english-for-any-new-accessibility-labels-or-fallback-messaging-introduced-by-the-school-profile-banner-carousel",
+      "title": "Keep user-facing text in English for any new accessibility labels or fallback messaging introduced by the School Profile banner carousel.",
+      "reqIds": [
+        "REQ-116"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -948,6 +1089,100 @@
     {
       "id": "AR-63",
       "summary": "Add social profile links to the website (e.g., header/footer social icons linking to social profiles)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-64",
+      "summary": "Add platform-specific icons for each social link in the header/footer social links component",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-65",
+      "summary": "Fix the root cause of Schools and Blog posts not appearing by ensuring the Motoko backend persists directory/blog data across upgrades and always has demo content available after install/upgrade.\n\nUpdate `backend/main.mo` to:\n- Persist Schools, Teachers, Trainings, Reviews, UserProfiles, and BlogPosts across canister upgrades using stable storage (e.g., store stable arrays in `preupgrade()` and restore Maps/Lists in `postupgrade()`).\n- Add automatic, idempotent demo-data seeding for both schools (with teachers + trainings) and blog posts when the canister is empty (or missing required demo records) after install/upgrade.\n- Ensure all public query methods used by the frontend (`searchSchoolsByName(\"\")`, `getAllBlogPosts`, `getBlogPost`, `getTrainingsBySchool`, `getTeachersBySchool`) never trap during normal anonymous browsing and consistently return typed values (possibly empty arrays / null).",
+      "reqIds": [
+        "REQ-99"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-66",
+      "summary": "Add an \"Explore\" button entry point in the School Detail page Courses/Training section (or nearby) that scrolls/jumps users to the course cards on that school page (no new backend functionality).",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-67",
+      "summary": "Import/scrape school information (including photos and video) from an external website link (e.g., https://vinyasayogashala.com/) and create/list the school in the directory",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-68",
+      "summary": "Create a new School record in the Motoko backend for the yoga school represented by https://vinyasayogashala.com/ (e.g., \"Vinyasa Yogashala\"), using information curated from that website, and ensure it is returned by the existing public listing query `searchSchoolsByName(\"\")` so it appears in the directory list.",
+      "reqIds": [
+        "REQ-104"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-69",
+      "summary": "Create at least one Training and at least one Teacher associated with the new school, with hours/training details and teacher details curated from https://vinyasayogashala.com/, so the School card and School detail page can render meaningful related content.",
+      "reqIds": [
+        "REQ-105"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-70",
+      "summary": "Populate the new school’s `videoUrl` field in the backend with the most appropriate yoga school video link curated from https://vinyasayogashala.com/ (e.g., a YouTube URL if present), so the existing School Video section renders on that school’s detail page.",
+      "reqIds": [
+        "REQ-106"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-71",
+      "summary": "Ingest/scrape the school’s images from the provided Google Business Profile share link and use them as the school’s photos/thumbnail assets in the directory UI",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-72",
+      "summary": "Import and seed ~15 school reviews from the provided Google Business Profile share link into the directory’s School Reviews section for that school",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-73",
+      "summary": "Seed 15 reviews for the school represented by the Google Business Profile share link https://share.google/4aqW2R1Mjlyy1K0hg so that they appear in the School Reviews section for that school (schoolId: \"vinyasa-yogashala\"). The seeded reviews must be added in an idempotent way so redeploys/upgrades do not create duplicate reviews.",
+      "reqIds": [
+        "REQ-108"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-74",
+      "summary": "Use a school gallery image as the School Detail page banner background (reuse gallery media for the banner/hero)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-75",
+      "summary": "Add an image slider/carousel to each School Card in the directory listing (cycle through multiple school photos)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-76",
+      "summary": "Configure custom domain yogaschooldirectory.com for the deployed Internet Computer app (DNS guidance + ic-domains/.well-known setup)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-77",
+      "summary": "Update the School Detail page banner (School Profile banner/hero) to visually match the School Card media style (e.g., use similar imagery treatment such as curated photos and/or carousel-style presentation)",
       "reqIds": [],
       "status": "pending"
     }

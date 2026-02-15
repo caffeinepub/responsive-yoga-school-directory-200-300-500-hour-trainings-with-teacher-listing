@@ -4,12 +4,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertCircle, BookOpen } from 'lucide-react';
+import { AlertCircle, BookOpen, RefreshCw } from 'lucide-react';
 import { getDisplayExcerpt } from '../lib/blogContent';
 
 export default function BlogPage() {
   const navigate = useNavigate();
-  const { data: posts, isLoading, isError, error } = useGetAllBlogPosts();
+  const { data: posts, isLoading, isError, error, refetch, isRefetching } = useGetAllBlogPosts();
 
   if (isLoading) {
     return (
@@ -42,8 +42,29 @@ export default function BlogPage() {
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Error Loading Blog Posts</AlertTitle>
-          <AlertDescription>
-            {error instanceof Error ? error.message : 'Failed to load blog posts. Please try again later.'}
+          <AlertDescription className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <span>
+              {error instanceof Error ? error.message : 'Failed to load blog posts. Please try again.'}
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => refetch()}
+              disabled={isRefetching}
+              className="shrink-0"
+            >
+              {isRefetching ? (
+                <>
+                  <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                  Retrying...
+                </>
+              ) : (
+                <>
+                  <RefreshCw className="mr-2 h-4 w-4" />
+                  Retry
+                </>
+              )}
+            </Button>
           </AlertDescription>
         </Alert>
       </div>
@@ -58,7 +79,7 @@ export default function BlogPage() {
           <BookOpen className="h-4 w-4" />
           <AlertTitle>No Blog Posts Yet</AlertTitle>
           <AlertDescription>
-            Check back soon for articles about driving schools, road safety tips, and more.
+            Check back soon for articles about yoga teacher training, mindfulness practices, and insights from experienced yoga instructors.
           </AlertDescription>
         </Alert>
       </div>
@@ -70,7 +91,7 @@ export default function BlogPage() {
       <div className="mb-8">
         <h1 className="mb-2 text-4xl font-bold">Blog</h1>
         <p className="text-lg text-muted-foreground">
-          Insights, tips, and stories from the world of driver education
+          Insights, tips, and stories from the world of yoga teacher training
         </p>
       </div>
 

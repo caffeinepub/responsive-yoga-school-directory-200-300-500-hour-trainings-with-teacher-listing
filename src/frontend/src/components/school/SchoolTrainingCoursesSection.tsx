@@ -1,8 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { GraduationCap, Clock, FileText, Mail } from 'lucide-react';
+import { GraduationCap, Clock, FileText, Mail, ArrowDown } from 'lucide-react';
 import { useNavigate } from '@tanstack/react-router';
+import { useRef } from 'react';
 import type { Training } from '@/backend';
 
 interface SchoolTrainingCoursesSectionProps {
@@ -17,6 +18,8 @@ export default function SchoolTrainingCoursesSection({
   onInquire,
 }: SchoolTrainingCoursesSectionProps) {
   const navigate = useNavigate();
+  const coursesListRef = useRef<HTMLDivElement>(null);
+  const firstCourseRef = useRef<HTMLHeadingElement>(null);
 
   // Generate course title from hours
   const getCourseTitle = (hours: bigint): string => {
@@ -35,22 +38,51 @@ export default function SchoolTrainingCoursesSection({
     });
   };
 
+  const handleExplore = () => {
+    if (coursesListRef.current) {
+      coursesListRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Focus the first course title for accessibility
+      setTimeout(() => {
+        if (firstCourseRef.current) {
+          firstCourseRef.current.focus();
+        }
+      }, 500);
+    }
+  };
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <GraduationCap className="h-5 w-5" />
-          Courses & Training
-        </CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle className="flex items-center gap-2">
+            <GraduationCap className="h-5 w-5" />
+            Courses & Training
+          </CardTitle>
+          {trainings && trainings.length > 0 && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleExplore}
+              className="flex items-center gap-2"
+            >
+              <ArrowDown className="h-4 w-4" />
+              Explore
+            </Button>
+          )}
+        </div>
       </CardHeader>
       <CardContent>
         {trainings && trainings.length > 0 ? (
-          <div className="space-y-4">
-            {trainings.map((training) => (
+          <div ref={coursesListRef} className="space-y-4">
+            {trainings.map((training, index) => (
               <Card key={training.id} className="border-2 transition-shadow hover:shadow-md">
                 <CardContent className="p-6">
                   {/* Course Title */}
-                  <h3 className="mb-3 text-xl font-semibold tracking-tight">
+                  <h3
+                    ref={index === 0 ? firstCourseRef : null}
+                    tabIndex={index === 0 ? -1 : undefined}
+                    className="mb-3 text-xl font-semibold tracking-tight outline-none"
+                  >
                     {getCourseTitle(training.hours)}
                   </h3>
 

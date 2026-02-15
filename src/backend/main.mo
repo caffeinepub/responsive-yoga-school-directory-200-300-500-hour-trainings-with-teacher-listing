@@ -4,10 +4,8 @@ import Iter "mo:core/Iter";
 import Principal "mo:core/Principal";
 import Runtime "mo:core/Runtime";
 
-
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
-
 
 actor {
   // Access control state
@@ -59,12 +57,12 @@ actor {
     excerpt : ?Text;
   };
 
-  let schools = Map.empty<SchoolId, School>();
-  let teachers = Map.empty<TeacherId, Teacher>();
-  let trainings = Map.empty<TrainingId, Training>();
-  let reviews = List.empty<Review>();
-  let userProfiles = Map.empty<Principal, UserProfile>();
-  let blogPosts = Map.empty<Text, BlogPost>();
+  var schools = Map.empty<SchoolId, School>();
+  var teachers = Map.empty<TeacherId, Teacher>();
+  var trainings = Map.empty<TrainingId, Training>();
+  var reviews = List.empty<Review>();
+  var userProfiles = Map.empty<Principal, UserProfile>();
+  var blogPosts = Map.empty<Text, BlogPost>();
 
   // USER PROFILE METHODS
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
@@ -89,7 +87,6 @@ actor {
   };
 
   // ADMIN CRUD METHODS - SCHOOLS
-
   public shared ({ caller }) func createSchool(
     id : SchoolId,
     name : Text,
@@ -352,8 +349,106 @@ actor {
     blogPosts.values().toArray();
   };
 
-  // SYSTEM HOOKS
   system func preupgrade() { };
 
-  system func postupgrade() { };
+  system func postupgrade() {
+    let seededReviews = List.fromArray<Review>([
+      {
+        reviewerName = "Jessica Smith";
+        rating = 5;
+        comment = "Life-changing experience at Vinyasa Yogashala! The teachers are incredibly knowledgeable and supportive. Highly recommend the 200-hour teacher training.";
+        schoolId = "vinyasa-yogashala";
+      },
+      {
+        reviewerName = "Rahul Gupta";
+        rating = 4;
+        comment = "Great location and facilities. The 300-hour course was challenging but very rewarding. Only wish there were more advanced workshops.";
+        schoolId = "vinyasa-yogashala";
+      },
+      {
+        reviewerName = "Emily Chen";
+        rating = 5;
+        comment = "Absolutely loved my time here. The teachers are passionate and approachable, and the curriculum is comprehensive.";
+        schoolId = "vinyasa-yogashala";
+      },
+      {
+        reviewerName = "Carlos Mendez";
+        rating = 5;
+        comment = "Perfect blend of traditional and modern yoga. The meditation sessions were especially transformative.";
+        schoolId = "vinyasa-yogashala";
+      },
+      {
+        reviewerName = "Priya Sharma";
+        rating = 4;
+        comment = "Wonderful community of practitioners. I appreciated the focus on personal growth and mindfulness.";
+        schoolId = "vinyasa-yogashala";
+      },
+      {
+        reviewerName = "Marta Rodriguez";
+        rating = 3;
+        comment = "Great teachers and content, but I found the accommodations to be a bit modest for the price.";
+        schoolId = "vinyasa-yogashala";
+      },
+      {
+        reviewerName = "Liam O&acute;Connor";
+        rating = 5;
+        comment = "Incredible energy, beautiful setting. The advanced asana workshops were intense but very rewarding.";
+        schoolId = "vinyasa-yogashala";
+      },
+      {
+        reviewerName = "Anna Müller";
+        rating = 5;
+        comment = "Holistic approach to yoga. The philosophy classes were eye-opening and thought-provoking.";
+        schoolId = "vinyasa-yogashala";
+      },
+      {
+        reviewerName = "Vikram Patel";
+        rating = 4;
+        comment = "Balanced curriculum with focus on both practice and theory. The Pranayama sessions were excellent.";
+        schoolId = "vinyasa-yogashala";
+      },
+      {
+        reviewerName = "Sara Williams";
+        rating = 4;
+        comment = "Supportive teachers and a welcoming atmosphere. I gained so much confidence in my teaching abilities.";
+        schoolId = "vinyasa-yogashala";
+      },
+      {
+        reviewerName = "Akash Singh";
+        rating = 5;
+        comment = "Traditional Hatha yoga with modern insights. The Ayurveda workshops were both informative and practical.";
+        schoolId = "vinyasa-yogashala";
+      },
+      {
+        reviewerName = "Olivia Johnson";
+        rating = 4;
+        comment = "Great value for the quality of teaching. I wish there were more options for advanced classes.";
+        schoolId = "vinyasa-yogashala";
+      },
+      {
+        reviewerName = "Mei Li";
+        rating = 5;
+        comment = "Experienced and passionate instructors. The Yoga Nidra sessions were deeply relaxing and restorative.";
+        schoolId = "vinyasa-yogashala";
+      },
+      {
+        reviewerName = "Arjun Kumar";
+        rating = 5;
+        comment = "Comprehensive training program that covers all aspects of yoga. The food and atmosphere were excellent.";
+        schoolId = "vinyasa-yogashala";
+      },
+      {
+        reviewerName = "Samantha Lee";
+        rating = 4;
+        comment = "Transformative experience that improved my physical and mental well-being. I learned so much from the instructors.";
+        schoolId = "vinyasa-yogashala";
+      },
+    ]);
+
+    // Filter out existing reviews for "vinyasa-yogashala" and add new ones
+    let filteredOldReviews = reviews.filter(func(existingReview) { existingReview.schoolId != "vinyasa-yogashala" });
+    filteredOldReviews.addAll(seededReviews.values());
+    reviews.clear();
+    reviews.addAll(filteredOldReviews.values());
+  };
 };

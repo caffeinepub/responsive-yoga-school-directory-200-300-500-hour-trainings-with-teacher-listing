@@ -6,10 +6,10 @@ import { logBackendCallFailure } from '../lib/backendDiagnostics';
 export function useGetAllBlogPosts() {
   const { actor, isFetching: actorFetching } = useActor();
 
-  return useQuery<BlogPost[]>({
+  const query = useQuery<BlogPost[]>({
     queryKey: ['blogPosts'],
     queryFn: async () => {
-      if (!actor) throw new Error('Actor not available');
+      if (!actor) return [];
       try {
         return await actor.getAllBlogPosts();
       } catch (error) {
@@ -22,16 +22,23 @@ export function useGetAllBlogPosts() {
       }
     },
     enabled: !!actor && !actorFetching,
+    retry: false,
   });
+
+  return {
+    ...query,
+    isLoading: actorFetching || query.isLoading,
+    isFetched: !!actor && query.isFetched,
+  };
 }
 
 export function useGetBlogPost(id: string) {
   const { actor, isFetching: actorFetching } = useActor();
 
-  return useQuery<BlogPost | null>({
+  const query = useQuery<BlogPost | null>({
     queryKey: ['blogPost', id],
     queryFn: async () => {
-      if (!actor) throw new Error('Actor not available');
+      if (!actor) return null;
       try {
         return await actor.getBlogPost(id);
       } catch (error) {
@@ -44,5 +51,12 @@ export function useGetBlogPost(id: string) {
       }
     },
     enabled: !!actor && !actorFetching && !!id,
+    retry: false,
   });
+
+  return {
+    ...query,
+    isLoading: actorFetching || query.isLoading,
+    isFetched: !!actor && query.isFetched,
+  };
 }

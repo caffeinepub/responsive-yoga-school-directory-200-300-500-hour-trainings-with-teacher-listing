@@ -1,73 +1,73 @@
 {
   "kind": "build_request",
-  "title": "Add social profile links to the website header/footer",
+  "title": "Make School Detail banner match School Card carousel style",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-92",
-      "text": "Add a reusable Social Links component that renders a row of social profile links (icon + accessible label) from a single centralized configuration, and only displays links that have a non-empty URL.",
+      "id": "REQ-114",
+      "text": "Update the School Profile banner component (`frontend/src/components/school/SchoolProfileBanner.tsx`) so it can display a carousel/slider of multiple photos (visually and interactively similar to the existing directory School Card media carousel), while preserving the existing overlay readability treatment, school name + location, and optional “Inquire Now” button behavior.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "recent-messages-6"
+          "msg-21"
         ],
         "quotes": [
-          "add social profiles link at website"
+          "school card is fine  i want to school banner is also like this"
         ]
       },
       "acceptanceCriteria": [
-        "A new reusable component exists (e.g., `frontend/src/components/common/SocialLinks.tsx`) that accepts a list of `{ label, href, icon }` items and renders only valid/defined `href` values.",
-        "Each rendered social link uses an anchor tag with `target=\"_blank\"` and `rel=\"noopener noreferrer\"`.",
-        "Each rendered social link has an accessible name via `aria-label` (English) and/or visible text for screen readers.",
-        "If all configured URLs are empty/undefined, the component renders nothing (no empty container)."
+        "When multiple banner images are available, the banner shows one image at a time and provides accessible Previous/Next controls (with English aria-labels) to cycle through images.",
+        "When only one banner image is available, the banner renders a single image with no carousel controls.",
+        "The banner continues to display the existing gradient overlay, school name, location, and the optional “Inquire Now” button exactly as before.",
+        "Keyboard interaction is supported for cycling slides (e.g., left/right arrow behavior consistent with the SchoolCard carousel).",
+        "If an image fails to load, the banner shows a graceful fallback state instead of breaking layout."
       ]
     },
     {
-      "id": "REQ-93",
-      "text": "Add social profile links to the global site footer (`frontend/src/components/layout/Footer.tsx`) using the Social Links component, styled to match the existing footer typography and muted-foreground pattern.",
+      "id": "REQ-115",
+      "text": "Wire the School Detail page (`frontend/src/pages/SchoolDetailPage.tsx`) to pass a list of curated gallery images (when available via `getCuratedGalleryImages(school.id)`) into the School Profile banner so the banner carousel uses the same curated media as the School Card, with a sensible fallback to the existing default banner image when curated images are not present.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "recent-messages-6"
+          "msg-21"
         ],
         "quotes": [
-          "add social profiles link at website"
+          "school card is fine  i want to school banner is also like this"
         ]
       },
       "acceptanceCriteria": [
-        "The footer displays a “Follow us” (English) label and a horizontal row of social icons/links when at least one social URL is configured.",
-        "The social links visually match the existing footer style (consistent spacing, hover states, and muted text/icon color).",
-        "No existing footer navigation links are removed or broken."
+        "For schools with curated gallery images, the School Profile banner uses those images as the carousel slides (not just the first image).",
+        "For schools without curated gallery images, the School Profile banner uses the existing default banner image (`/assets/generated/school-profile-banner.dim_1600x420.png`).",
+        "No backend changes are required to support the banner carousel."
       ]
     },
     {
-      "id": "REQ-94",
-      "text": "Add social profile links to the global site header (`frontend/src/components/layout/Header.tsx`) in a space-efficient way that does not break the current desktop or mobile navigation layouts.",
+      "id": "REQ-116",
+      "text": "Keep user-facing text in English for any new accessibility labels or fallback messaging introduced by the School Profile banner carousel.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "recent-messages-6"
+          "msg-21"
         ],
         "quotes": [
-          "add social profiles link at website"
+          "school card is fine  i want to school banner is also like this"
         ]
       },
       "acceptanceCriteria": [
-        "On desktop, social icons/links appear in the header (e.g., near the theme toggle) without causing wrapping/overflow at common breakpoints.",
-        "On mobile, social links are either included in the dropdown menu or otherwise accessible without crowding the header controls.",
-        "All header social links meet the same accessibility and security requirements as the footer links (English aria-labels, new-tab behavior, `rel` attributes)."
+        "All newly introduced aria-labels and any visible fallback text added for the banner carousel are in English.",
+        "No existing user-facing text is changed to a non-English language."
       ]
     }
   ],
   "constraints": [
-    "Do not modify any files under `frontend/src/components/ui` (immutable UI components).",
-    "Keep user-facing text in English.",
-    "No backend changes are required for this feature."
+    "Do not modify any files under `frontend/src/components/ui` (immutable shadcn UI sources).",
+    "Do not route images through the backend; continue using existing static assets and curated media mappings.",
+    "Respect the existing styling/theme conventions and do not introduce breaking layout changes to the School Detail page."
   ],
   "nonGoals": [
-    "Building a full social feed integration (e.g., embedding Instagram/Twitter timelines).",
-    "Adding third-party analytics/tracking pixels for social clicks.",
-    "Adding Internet Identity or auth requirements for viewing social links."
+    "Do not change the existing directory School Card carousel behavior or layout.",
+    "Do not add new backend endpoints, fields, or data models for banner images.",
+    "Do not add new generated image assets unless explicitly requested later."
   ],
   "imageRequirements": {
     "required": [],

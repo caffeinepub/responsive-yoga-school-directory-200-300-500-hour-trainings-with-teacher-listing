@@ -1,59 +1,59 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Add reusable social profile links to header and footer",
+  "title": "School Profile banner carousel using curated gallery media",
   "requirements": [
     {
-      "id": "REQ-92",
-      "summary": "Create a reusable SocialLinks component driven by a centralized config and render only non-empty social URLs with accessible, secure external links.",
+      "id": "REQ-114",
+      "summary": "Enhance SchoolProfileBanner to render an interactive, accessible photo carousel matching the SchoolCard media carousel behavior while preserving existing overlay and content.",
       "acceptanceCriteria": [
-        "A new reusable component exists (e.g., `frontend/src/components/common/SocialLinks.tsx`) that accepts a list of `{ label, href, icon }` items and renders only valid/defined `href` values.",
-        "Each rendered social link uses an anchor tag with `target=\"_blank\"` and `rel=\"noopener noreferrer\"`.",
-        "Each rendered social link has an accessible name via `aria-label` (English) and/or visible text for screen readers.",
-        "If all configured URLs are empty/undefined, the component renders nothing (no empty container)."
+        "When multiple banner images are available, the banner shows one image at a time and provides accessible Previous/Next controls (with English aria-labels) to cycle through images.",
+        "When only one banner image is available, the banner renders a single image with no carousel controls.",
+        "The banner continues to display the existing gradient overlay, school name, location, and the optional “Inquire Now” button exactly as before.",
+        "Keyboard interaction is supported for cycling slides (e.g., left/right arrow behavior consistent with the SchoolCard carousel).",
+        "If an image fails to load, the banner shows a graceful fallback state instead of breaking layout."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/config/socialLinks.ts",
-          "operation": "create",
-          "description": "Add a single centralized social links configuration exporting an ordered list of items (label, href, icon) with empty-string defaults allowed so the UI can hide unconfigured links."
+          "path": "frontend/src/components/school/SchoolProfileBanner.tsx",
+          "operation": "modify",
+          "description": "Update the banner API to accept multiple images (e.g., an array of {src, alt} or similar) and implement carousel behavior aligned with the existing SchoolCard carousel: one slide visible at a time, show Previous/Next controls only when there are multiple slides, support left/right arrow key cycling, and keep the existing gradient overlay + school name/location + optional “Inquire Now” button unchanged. Add per-slide image error handling to render a non-breaking fallback UI when an image fails to load (e.g., icon/placeholder). Keep all new aria-labels in English."
+        }
+      ]
+    },
+    {
+      "id": "REQ-115",
+      "summary": "Pass curated gallery images into SchoolProfileBanner from SchoolDetailPage with a fallback to the existing default banner asset.",
+      "acceptanceCriteria": [
+        "For schools with curated gallery images, the School Profile banner uses those images as the carousel slides (not just the first image).",
+        "For schools without curated gallery images, the School Profile banner uses the existing default banner image (`/assets/generated/school-profile-banner.dim_1600x420.png`).",
+        "No backend changes are required to support the banner carousel."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/SchoolDetailPage.tsx",
+          "operation": "modify",
+          "description": "Change SchoolDetailPage to pass the full list from getCuratedGalleryImages(school.id) into SchoolProfileBanner (to populate all carousel slides). When curated images are absent/empty, do not pass curated slides so SchoolProfileBanner falls back to its existing default static banner image (/assets/generated/school-profile-banner.dim_1600x420.png). Ensure no layout-breaking changes to the School Detail page."
         },
         {
-          "path": "frontend/src/components/common/SocialLinks.tsx",
-          "operation": "create",
-          "description": "Implement a reusable SocialLinks component that accepts `{ label, href, icon }` items, filters out empty/undefined hrefs, renders a horizontal row of icon links with English `aria-label`s, and uses `target=\"_blank\"` + `rel=\"noopener noreferrer\"`; return `null` when there are no valid links."
+          "path": "frontend/src/components/school/SchoolProfileBanner.tsx",
+          "operation": "modify",
+          "description": "Adjust prop handling to accept the curated gallery image list from SchoolDetailPage and build the banner slide list from it, with a sensible fallback to the existing default banner image when no curated images are provided."
         }
       ]
     },
     {
-      "id": "REQ-93",
-      "summary": "Render social profile links in the global footer using SocialLinks, matching existing muted footer styling and preserving current footer navigation.",
+      "id": "REQ-116",
+      "summary": "Ensure all newly introduced accessibility labels and fallback messaging for the banner carousel are English-only.",
       "acceptanceCriteria": [
-        "The footer displays a “Follow us” (English) label and a horizontal row of social icons/links when at least one social URL is configured.",
-        "The social links visually match the existing footer style (consistent spacing, hover states, and muted text/icon color).",
-        "No existing footer navigation links are removed or broken."
+        "All newly introduced aria-labels and any visible fallback text added for the banner carousel are in English.",
+        "No existing user-facing text is changed to a non-English language."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/layout/Footer.tsx",
+          "path": "frontend/src/components/school/SchoolProfileBanner.tsx",
           "operation": "modify",
-          "description": "Integrate the SocialLinks component into the footer with a “Follow us” label and muted-foreground styling consistent with existing footer typography; ensure it only appears when at least one configured link is present and keep all existing footer links intact."
-        }
-      ]
-    },
-    {
-      "id": "REQ-94",
-      "summary": "Add space-efficient social profile links to the global header for desktop and mobile without breaking existing navigation layouts.",
-      "acceptanceCriteria": [
-        "On desktop, social icons/links appear in the header (e.g., near the theme toggle) without causing wrapping/overflow at common breakpoints.",
-        "On mobile, social links are either included in the dropdown menu or otherwise accessible without crowding the header controls.",
-        "All header social links meet the same accessibility and security requirements as the footer links (English aria-labels, new-tab behavior, `rel` attributes)."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/layout/Header.tsx",
-          "operation": "modify",
-          "description": "Add SocialLinks to the header in a compact placement on desktop (e.g., adjacent to the theme toggle) and ensure it does not cause overflow; add accessible social links to the mobile dropdown (as external anchors with proper `target`/`rel`) so links remain reachable without crowding the header."
+          "description": "Audit and enforce English-only strings for any newly added aria-labels (e.g., Previous photo/Next photo/Go to photo N) and any visible fallback text used when an image fails to load, without changing existing non-accessibility user-facing copy."
         }
       ]
     }

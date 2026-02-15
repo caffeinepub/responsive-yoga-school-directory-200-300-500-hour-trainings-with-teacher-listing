@@ -129,114 +129,118 @@ export default function DirectoryInfoSections() {
             Understanding the different certification levels for yoga teacher training
           </p>
         </div>
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          <Card className="border-2">
-            <CardHeader>
-              <Badge className="mb-3 w-fit" variant="secondary">
+        <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+          {/* 100-Hour YTT */}
+          <Card className="flex flex-col border transition-shadow hover:shadow-md">
+            <CardHeader className="pb-4">
+              <Badge className="mb-3 w-fit bg-sage-100 text-sage-800 hover:bg-sage-100" variant="secondary">
                 Introduction
               </Badge>
-              <CardTitle className="text-2xl">100-Hour YTT</CardTitle>
+              <CardTitle className="text-2xl font-bold">100-Hour YTT</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3">
-              <p className="text-muted-foreground">
+            <CardContent className="flex-1 space-y-4">
+              <p className="text-sm leading-relaxed text-muted-foreground">
                 An introductory program for those exploring yoga teaching or seeking to deepen their personal practice before committing to full certification.
               </p>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                  <span>Foundational yoga principles</span>
+              <ul className="space-y-2.5 text-sm">
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-terracotta" />
+                  <span className="text-muted-foreground">Foundational yoga principles</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                  <span>Basic teaching techniques</span>
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-terracotta" />
+                  <span className="text-muted-foreground">Basic teaching techniques</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                  <span>Personal practice development</span>
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-terracotta" />
+                  <span className="text-muted-foreground">Personal practice development</span>
                 </li>
               </ul>
             </CardContent>
           </Card>
 
-          <Card className="border-2">
-            <CardHeader>
-              <Badge className="mb-3 w-fit" variant="secondary">
+          {/* 200-Hour YTT */}
+          <Card className="flex flex-col border transition-shadow hover:shadow-md">
+            <CardHeader className="pb-4">
+              <Badge className="mb-3 w-fit bg-sage-100 text-sage-800 hover:bg-sage-100" variant="secondary">
                 Foundation
               </Badge>
-              <CardTitle className="text-2xl">200-Hour YTT</CardTitle>
+              <CardTitle className="text-2xl font-bold">200-Hour YTT</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3">
-              <p className="text-muted-foreground">
+            <CardContent className="flex-1 space-y-4">
+              <p className="text-sm leading-relaxed text-muted-foreground">
                 The foundational certification for aspiring yoga teachers. Covers essential teaching skills, anatomy, philosophy, and practice methodology.
               </p>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                  <span>Basic teaching methodology</span>
+              <ul className="space-y-2.5 text-sm">
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-terracotta" />
+                  <span className="text-muted-foreground">Basic teaching methodology</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                  <span>Yoga philosophy & history</span>
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-terracotta" />
+                  <span className="text-muted-foreground">Yoga philosophy & history</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                  <span>Anatomy & physiology basics</span>
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-terracotta" />
+                  <span className="text-muted-foreground">Anatomy & physiology basics</span>
                 </li>
               </ul>
             </CardContent>
           </Card>
 
-          <Card className="border-2">
-            <CardHeader>
-              <Badge className="mb-3 w-fit" variant="secondary">
+          {/* 300-Hour YTT */}
+          <Card className="flex flex-col border transition-shadow hover:shadow-md">
+            <CardHeader className="pb-4">
+              <Badge className="mb-3 w-fit bg-sage-100 text-sage-800 hover:bg-sage-100" variant="secondary">
                 Advanced
               </Badge>
-              <CardTitle className="text-2xl">300-Hour YTT</CardTitle>
+              <CardTitle className="text-2xl font-bold">300-Hour YTT</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3">
-              <p className="text-muted-foreground">
+            <CardContent className="flex-1 space-y-4">
+              <p className="text-sm leading-relaxed text-muted-foreground">
                 Advanced training for certified teachers seeking to deepen their knowledge and specialize in specific areas of yoga practice and teaching.
               </p>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                  <span>Advanced teaching techniques</span>
+              <ul className="space-y-2.5 text-sm">
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-terracotta" />
+                  <span className="text-muted-foreground">Advanced teaching techniques</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                  <span>Specialized yoga styles</span>
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-terracotta" />
+                  <span className="text-muted-foreground">Specialized yoga styles</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                  <span>Therapeutic applications</span>
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-terracotta" />
+                  <span className="text-muted-foreground">Therapeutic applications</span>
                 </li>
               </ul>
             </CardContent>
           </Card>
 
-          <Card className="border-2">
-            <CardHeader>
-              <Badge className="mb-3 w-fit" variant="secondary">
+          {/* 500-Hour YTT */}
+          <Card className="flex flex-col border transition-shadow hover:shadow-md">
+            <CardHeader className="pb-4">
+              <Badge className="mb-3 w-fit bg-sage-100 text-sage-800 hover:bg-sage-100" variant="secondary">
                 Master
               </Badge>
-              <CardTitle className="text-2xl">500-Hour YTT</CardTitle>
+              <CardTitle className="text-2xl font-bold">500-Hour YTT</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3">
-              <p className="text-muted-foreground">
+            <CardContent className="flex-1 space-y-4">
+              <p className="text-sm leading-relaxed text-muted-foreground">
                 The highest level of yoga teacher certification, combining 200-hour and 300-hour training for comprehensive mastery of yoga teaching.
               </p>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                  <span>Complete teaching mastery</span>
+              <ul className="space-y-2.5 text-sm">
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-terracotta" />
+                  <span className="text-muted-foreground">Complete teaching mastery</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                  <span>Advanced specializations</span>
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-terracotta" />
+                  <span className="text-muted-foreground">Advanced specializations</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                  <span>Professional development</span>
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-terracotta" />
+                  <span className="text-muted-foreground">Professional development</span>
                 </li>
               </ul>
             </CardContent>

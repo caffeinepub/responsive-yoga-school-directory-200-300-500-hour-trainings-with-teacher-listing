@@ -1,6 +1,6 @@
 import { StrictMode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { RouterProvider, createRouter, createRoute, createRootRoute } from '@tanstack/react-router';
+import { RouterProvider, createRouter, createRoute, createRootRoute, Outlet } from '@tanstack/react-router';
 import { ThemeProvider } from 'next-themes';
 import { Toaster } from '@/components/ui/sonner';
 import Header from '@/components/layout/Header';
@@ -15,6 +15,7 @@ import AdminPage from '@/pages/AdminPage';
 import BlogPage from '@/pages/BlogPage';
 import BlogPostPage from '@/pages/BlogPostPage';
 import LocationListingPage from '@/pages/LocationListingPage';
+import RouterErrorFallback from '@/components/routing/RouterErrorFallback';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -25,18 +26,21 @@ const queryClient = new QueryClient({
   },
 });
 
-function Layout({ children }: { children: React.ReactNode }) {
+function RootLayout() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <Header />
-      <main className="flex-1 bg-background">{children}</main>
+      <main className="flex-1 bg-background">
+        <Outlet />
+      </main>
       <Footer />
     </div>
   );
 }
 
 const rootRoute = createRootRoute({
-  component: () => <Layout><RouterProvider router={router} /></Layout>,
+  component: RootLayout,
+  errorComponent: RouterErrorFallback,
 });
 
 const indexRoute = createRoute({
