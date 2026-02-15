@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 65,
+  "projectStateVersion": 67,
   "summary": "Build a fully responsive Yoga Schools Directory with school listings, teacher information, custom branding using the provided logo, an FAQ section on each school page, a Google Map option per school, a similar-schools list on school detail pages, a School Review section, an Admin Dashboard (authenticated) to manage directory data without touching code, a Blog section with demo blog posts, and training course hour options including 100/200/300/500-hour YTT.",
   "architectural_notes": [
     "WordPress-based directory website with responsive design requirements.",
@@ -534,6 +534,30 @@
         "REQ-91"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-add-a-reusable-social-links-component-that-renders-a-row-of-social-profile-links-icon-accessible-label-from-a-single-centralized-configuration-and-only-displays-links-that-have-a-non-empty-url",
+      "title": "Add a reusable Social Links component that renders a row of social profile links (icon + accessible label) from a single centralized configuration, and only displays links that have a non-empty URL.",
+      "reqIds": [
+        "REQ-92"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-social-profile-links-to-the-global-site-footer-frontend-src-components-layout-footer-tsx-using-the-social-links-component-styled-to-match-the-existing-footer-typography-and-muted-foreground-pattern",
+      "title": "Add social profile links to the global site footer (`frontend/src/components/layout/Footer.tsx`) using the Social Links component, styled to match the existing footer typography and muted-foreground pattern.",
+      "reqIds": [
+        "REQ-93"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-social-profile-links-to-the-global-site-header-frontend-src-components-layout-header-tsx-in-a-space-efficient-way-that-does-not-break-the-current-desktop-or-mobile-navigation-layouts",
+      "title": "Add social profile links to the global site header (`frontend/src/components/layout/Header.tsx`) in a space-efficient way that does not break the current desktop or mobile navigation layouts.",
+      "reqIds": [
+        "REQ-94"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -919,6 +943,12 @@
       "reqIds": [
         "REQ-87"
       ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-63",
+      "summary": "Add social profile links to the website (e.g., header/footer social icons linking to social profiles)",
+      "reqIds": [],
       "status": "pending"
     }
   ],

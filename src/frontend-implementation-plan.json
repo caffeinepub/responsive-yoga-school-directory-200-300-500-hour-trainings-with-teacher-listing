@@ -1,128 +1,59 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Structured location display, location deep links, and copy-link promos",
+  "title": "Add reusable social profile links to header and footer",
   "requirements": [
     {
-      "id": "REQ-88",
-      "summary": "Extend Admin Schools management UI to capture structured location (Country/State/City), persist it, and display composed location in Country > State > City order.",
+      "id": "REQ-92",
+      "summary": "Create a reusable SocialLinks component driven by a centralized config and render only non-empty social URLs with accessible, secure external links.",
       "acceptanceCriteria": [
-        "`frontend/src/components/admin/sections/SchoolsAdminSection.tsx` includes required/clearly-labeled inputs for Country, State, and City (English labels).",
-        "Admin create/update school mutations are updated to send the structured location fields to the backend.",
-        "The Schools admin table displays the structured location in Country > State > City order (or a sensible fallback when some fields are missing).",
-        "All user-facing validation and errors remain in English."
+        "A new reusable component exists (e.g., `frontend/src/components/common/SocialLinks.tsx`) that accepts a list of `{ label, href, icon }` items and renders only valid/defined `href` values.",
+        "Each rendered social link uses an anchor tag with `target=\"_blank\"` and `rel=\"noopener noreferrer\"`.",
+        "Each rendered social link has an accessible name via `aria-label` (English) and/or visible text for screen readers.",
+        "If all configured URLs are empty/undefined, the component renders nothing (no empty container)."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/admin/sections/SchoolsAdminSection.tsx",
-          "operation": "modify",
-          "description": "Add labeled inputs for Country, State, and City to the create/edit dialogs; update validation (English) and update the admin table to display composed location as Country > State > City with a sensible fallback to legacy location text. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/hooks/admin/useAdminSchools.ts",
-          "operation": "modify",
-          "description": "Update create/update school mutations to pass structured location fields (country/state/city) and videoUrl according to the current backend actor method signatures in `frontend/src/backend.d.ts`. Keep English error messages and cache invalidation behavior."
-        },
-        {
-          "path": "frontend/src/lib/locationFormat.ts",
+          "path": "frontend/src/config/socialLinks.ts",
           "operation": "create",
-          "description": "Create shared helpers to compose a school location string from structured fields (Country > State > City) with graceful fallback to legacy `location` text, and to sanitize/normalize location segments for display."
+          "description": "Add a single centralized social links configuration exporting an ordered list of items (label, href, icon) with empty-string defaults allowed so the UI can hide unconfigured links."
+        },
+        {
+          "path": "frontend/src/components/common/SocialLinks.tsx",
+          "operation": "create",
+          "description": "Implement a reusable SocialLinks component that accepts `{ label, href, icon }` items, filters out empty/undefined hrefs, renders a horizontal row of icon links with English `aria-label`s, and uses `target=\"_blank\"` + `rel=\"noopener noreferrer\"`; return `null` when there are no valid links."
         }
       ]
     },
     {
-      "id": "REQ-89",
-      "summary": "Update school-facing UI to display structured location as Country > State > City wherever location is shown, with graceful fallback to legacy `school.location`.",
+      "id": "REQ-93",
+      "summary": "Render social profile links in the global footer using SocialLinks, matching existing muted footer styling and preserving current footer navigation.",
       "acceptanceCriteria": [
-        "`frontend/src/components/directory/SchoolCard.tsx` shows location in Country > State > City order when available.",
-        "`frontend/src/components/school/SchoolProfileBanner.tsx` shows location in Country > State > City order when available.",
-        "`frontend/src/pages/SchoolDetailPage.tsx` “Quick Info” location renders the structured location order when available.",
-        "If any structured parts are missing, the UI falls back gracefully (no blank/undefined strings shown)."
+        "The footer displays a “Follow us” (English) label and a horizontal row of social icons/links when at least one social URL is configured.",
+        "The social links visually match the existing footer style (consistent spacing, hover states, and muted text/icon color).",
+        "No existing footer navigation links are removed or broken."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/directory/SchoolCard.tsx",
+          "path": "frontend/src/components/layout/Footer.tsx",
           "operation": "modify",
-          "description": "Replace direct `school.location` rendering with a composed location string derived from `school.country/state/city` with fallback to `school.location` using a shared formatter utility."
-        },
-        {
-          "path": "frontend/src/components/school/SchoolProfileBanner.tsx",
-          "operation": "modify",
-          "description": "Adjust banner location rendering to accept and display a composed structured location string (Country > State > City) with safe fallback (no undefined/blank output)."
-        },
-        {
-          "path": "frontend/src/pages/SchoolDetailPage.tsx",
-          "operation": "modify",
-          "description": "Update the “Quick Info” location rendering (and any other location spots on the page) to use the shared composed location formatter with fallback to the legacy location text."
-        },
-        {
-          "path": "frontend/src/lib/locationFormat.ts",
-          "operation": "modify",
-          "description": "Extend formatter helpers (if needed) to support consistent composition and fallback behavior for directory cards, banners, and quick info across the app."
+          "description": "Integrate the SocialLinks component into the footer with a “Follow us” label and muted-foreground styling consistent with existing footer typography; ensure it only appears when at least one configured link is present and keep all existing footer links intact."
         }
       ]
     },
     {
-      "id": "REQ-90",
-      "summary": "Add deep-linkable promotional location routes and a location listing page that loads schools via backend location filtering, plus location breadcrumbs/links from School Detail pages.",
+      "id": "REQ-94",
+      "summary": "Add space-efficient social profile links to the global header for desktop and mobile without breaking existing navigation layouts.",
       "acceptanceCriteria": [
-        "`frontend/src/App.tsx` includes one or more new routes for locations (e.g., `/location/$country`, `/location/$country/$state`, `/location/$country/$state/$city`) consistent with the existing TanStack Router setup.",
-        "A new location listing page renders a directory-style list of matching schools for the selected location and shows an English heading describing the location context.",
-        "The location listing page loads schools using the new backend location-filter query (REQ-87) and handles empty/error/loading states in English.",
-        "School Detail pages render location breadcrumbs/links (Country, State, City) that navigate to the corresponding location URL(s)."
+        "On desktop, social icons/links appear in the header (e.g., near the theme toggle) without causing wrapping/overflow at common breakpoints.",
+        "On mobile, social links are either included in the dropdown menu or otherwise accessible without crowding the header controls.",
+        "All header social links meet the same accessibility and security requirements as the footer links (English aria-labels, new-tab behavior, `rel` attributes)."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/App.tsx",
+          "path": "frontend/src/components/layout/Header.tsx",
           "operation": "modify",
-          "description": "Register new TanStack Router routes for location pages: `/location/$country`, `/location/$country/$state`, and `/location/$country/$state/$city`, wired to a new LocationListingPage component."
-        },
-        {
-          "path": "frontend/src/pages/LocationListingPage.tsx",
-          "operation": "create",
-          "description": "Implement a location listing page that reads route params (country/state/city), renders an English heading for the selected location, shows a directory-style grid of SchoolCard items, and includes English loading/empty/error states. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/hooks/useSchoolsByLocation.ts",
-          "operation": "create",
-          "description": "Add a React Query hook that calls the backend actor capability `getSchoolsByLocation(country, state, city)` (as typed in `frontend/src/backend.d.ts`), returning schools for the specified structured location and surfacing English errors."
-        },
-        {
-          "path": "frontend/src/pages/SchoolDetailPage.tsx",
-          "operation": "modify",
-          "description": "Add location breadcrumbs/links (Country, State, City) derived from structured fields on `school` that navigate to the corresponding `/location/...` routes; ensure graceful behavior when some fields are missing (no broken links). Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/lib/locationRoutes.ts",
-          "operation": "create",
-          "description": "Create helpers to build and parse location route segments (URL-safe), and to generate breadcrumb link targets for country/state/city. Keep logic centralized so School Detail and Location Listing use consistent route construction."
-        }
-      ]
-    },
-    {
-      "id": "REQ-91",
-      "summary": "Add a user-visible “Copy link” control for Training Curriculum pages and for location listing pages with English success/error messaging.",
-      "acceptanceCriteria": [
-        "On the Training Curriculum page (`/school/$schoolId/training/$trainingId`, `frontend/src/pages/TrainingCurriculumPage.tsx`), a “Copy link” control copies the current page URL to the clipboard and shows an English confirmation (toast or inline message).",
-        "On location listing pages, a “Copy link” control copies the current location page URL and shows an English confirmation.",
-        "If clipboard access fails, the UI shows an English fallback message instructing the user to manually copy the URL from the address bar.",
-        "No backend changes are required for copying links."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/common/CopyLinkButton.tsx",
-          "operation": "create",
-          "description": "Create a reusable CopyLinkButton component that copies the current page URL (or a provided URL) via the Clipboard API, shows English success via the existing toast system, and shows an English failure message instructing manual copy if clipboard access fails. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/pages/TrainingCurriculumPage.tsx",
-          "operation": "modify",
-          "description": "Add a visible “Copy link” control (using the new CopyLinkButton) that copies the current training curriculum URL and provides English success/error messaging. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/pages/LocationListingPage.tsx",
-          "operation": "modify",
-          "description": "Add a visible “Copy link” control (using the new CopyLinkButton) that copies the current location URL and provides English success/error messaging. Verify the component's usage instructions before implementing."
+          "description": "Add SocialLinks to the header in a compact placement on desktop (e.g., adjacent to the theme toggle) and ensure it does not cause overflow; add accessible social links to the mobile dropdown (as external anchors with proper `target`/`rel`) so links remain reachable without crowding the header."
         }
       ]
     }

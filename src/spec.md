@@ -1,16 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Add structured school locations (Country > State > City) and shareable, deep-linkable location/course URLs for promotion.
+**Goal:** Add configurable, accessible social profile links to the site header and footer.
 
 **Planned changes:**
-- Extend the backend School model to include optional `country`, `state`, and `city` fields while preserving the existing `location` text field for backward compatibility.
-- Update backend school create/update flows to accept and store structured location fields, and ensure existing public queries still return School objects with the new fields.
-- Add a new public backend query method to fetch schools by structured location (country, optionally state and city) for anonymous callers.
-- Update the Admin Dashboard Schools management UI to collect Country/State/City, persist them, and display the composed location as Country > State > City (with sensible fallbacks).
-- Update school-facing UI components to display location as Country > State > City wherever shown, falling back to legacy `school.location` when structured fields are missing.
-- Add location routes and a location listing page (country/state/city) that loads schools via the new backend location-filter query and includes English loading/empty/error states.
-- Add location breadcrumbs/links on School Detail pages that navigate to the corresponding location listing URLs.
-- Add “Copy link” controls on Training Curriculum pages and on location listing pages with English success/error messaging and a manual-copy fallback.
+- Create a reusable Social Links component driven by a single centralized configuration, rendering only social items with non-empty URLs and nothing when all URLs are empty.
+- Add a “Follow us” label plus a horizontal row of social icons/links to the global footer, matching existing footer typography and muted styling without breaking current footer links.
+- Add social icons/links to the global header in a space-efficient way that preserves desktop and mobile navigation layouts (desktop near existing controls; mobile accessible via the dropdown/menu if needed).
 
-**User-visible outcome:** Admins can enter structured locations for schools; users see locations consistently as Country > State > City, can browse schools via shareable location URLs, and can copy promotional links for both location pages and training pages.
+**User-visible outcome:** Visitors can quickly open the site’s social profiles from both the header and footer, with consistent styling and accessible, secure new-tab links.

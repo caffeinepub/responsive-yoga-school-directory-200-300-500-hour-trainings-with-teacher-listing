@@ -2,12 +2,11 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-update-the-admin-dashboard-schools-management-ui-to-collect-and-persist-structured-location-country-state-city-and-to-display-the-composed-location-in-the-order-country-state-city",
-      "featureTitle": "Update the Admin Dashboard Schools management UI to collect and persist structured location (Country, State, City) and to display the composed location in the order Country > State > City.",
+      "featureId": "feature-add-a-reusable-social-links-component-that-renders-a-row-of-social-profile-links-icon-accessible-label-from-a-single-centralized-configuration-and-only-displays-links-that-have-a-non-empty-url",
+      "featureTitle": "Add a reusable Social Links component that renders a row of social profile links (icon + accessible label) from a single centralized configuration, and only displays links that have a non-empty URL.",
       "files": [
-        "frontend/src/components/admin/sections/SchoolsAdminSection.tsx",
-        "frontend/src/hooks/admin/useAdminSchools.ts",
-        "frontend/src/lib/locationFormat.ts"
+        "frontend/src/components/common/SocialLinks.tsx",
+        "frontend/src/config/socialLinks.ts"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -18,18 +17,15 @@
         "authorization@4.0.0"
       ],
       "testIds": [
-        "REQ-88"
+        "REQ-92"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-update-school-facing-ui-components-to-display-structured-location-as-country-state-city-wherever-a-school-location-is-shown-e-g-school-card-school-profile-banner-school-detail-quick-info-with-a-sensible-fallback-to-the-legacy-school-location-text-when-structured-fields-are-not-present",
-      "featureTitle": "Update school-facing UI components to display structured location as Country > State > City wherever a school location is shown (e.g., School Card, School Profile Banner, School Detail “Quick Info”), with a sensible fallback to the legacy `school.location` text when structured fields are not present.",
+      "featureId": "feature-add-social-profile-links-to-the-global-site-footer-frontend-src-components-layout-footer-tsx-using-the-social-links-component-styled-to-match-the-existing-footer-typography-and-muted-foreground-pattern",
+      "featureTitle": "Add social profile links to the global site footer (`frontend/src/components/layout/Footer.tsx`) using the Social Links component, styled to match the existing footer typography and muted-foreground pattern.",
       "files": [
-        "frontend/src/components/directory/SchoolCard.tsx",
-        "frontend/src/components/school/SchoolProfileBanner.tsx",
-        "frontend/src/lib/locationFormat.ts",
-        "frontend/src/pages/SchoolDetailPage.tsx"
+        "frontend/src/components/layout/Footer.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -40,19 +36,15 @@
         "authorization@4.0.0"
       ],
       "testIds": [
-        "REQ-89"
+        "REQ-93"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-deep-linkable-promotional-location-urls-that-users-can-share-to-promote-a-specific-country-state-city-location-and-render-a-location-listing-page-that-shows-schools-in-that-location",
-      "featureTitle": "Add deep-linkable, promotional location URLs that users can share to promote a specific Country/State/City location, and render a location listing page that shows schools in that location.",
+      "featureId": "feature-add-social-profile-links-to-the-global-site-header-frontend-src-components-layout-header-tsx-in-a-space-efficient-way-that-does-not-break-the-current-desktop-or-mobile-navigation-layouts",
+      "featureTitle": "Add social profile links to the global site header (`frontend/src/components/layout/Header.tsx`) in a space-efficient way that does not break the current desktop or mobile navigation layouts.",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/hooks/useSchoolsByLocation.ts",
-        "frontend/src/lib/locationRoutes.ts",
-        "frontend/src/pages/LocationListingPage.tsx",
-        "frontend/src/pages/SchoolDetailPage.tsx"
+        "frontend/src/components/layout/Header.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -63,28 +55,7 @@
         "authorization@4.0.0"
       ],
       "testIds": [
-        "REQ-90"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-shareable-promotional-urls-for-courses-trainings-and-for-locations-by-providing-a-user-visible-copy-link-control-on-the-relevant-pages-using-english-labels-and-clear-success-error-messaging",
-      "featureTitle": "Add shareable promotional URLs for courses (trainings) and for locations by providing a user-visible “Copy link” control on the relevant pages, using English labels and clear success/error messaging.",
-      "files": [
-        "frontend/src/components/common/CopyLinkButton.tsx",
-        "frontend/src/pages/LocationListingPage.tsx",
-        "frontend/src/pages/TrainingCurriculumPage.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "authorization@4.0.0"
-      ],
-      "testIds": [
-        "REQ-91"
+        "REQ-94"
       ],
       "confidence": "high"
     }

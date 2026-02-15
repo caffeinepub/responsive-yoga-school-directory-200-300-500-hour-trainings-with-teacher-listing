@@ -1,120 +1,61 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-15T04:03:28.024Z",
+  "generatedAt": "2026-02-15T04:53:39.379Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 6,
-    "implemented": 4,
+    "total": 3,
+    "implemented": 3,
     "items": [
       {
-        "id": "REQ-86",
-        "summary": "Update the backend School data model to support structured location fields (country, state, city) in addition to the existing `location` text, so the app can display locations as Country > State > City (e.g., India, Uttarakhand, Rishikesh) without breaking existing consumers.",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-87",
-        "summary": "Add a public backend query method that supports fetching schools by structured location (country/state/city), so location-specific pages can load schools without client-side full-list filtering.",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-88",
-        "summary": "Update the Admin Dashboard Schools management UI to collect and persist structured location (Country, State, City) and to display the composed location in the order Country > State > City.",
+        "id": "REQ-92",
+        "summary": "Add a reusable Social Links component that renders a row of social profile links (icon + accessible label) from a single centralized configuration, and only displays links that have a non-empty URL.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/admin/sections/SchoolsAdminSection.tsx",
-          "frontend/src/hooks/admin/useAdminSchools.ts",
-          "frontend/src/lib/locationFormat.ts"
+          "frontend/src/config/socialLinks.ts",
+          "frontend/src/components/common/SocialLinks.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/admin/sections/SchoolsAdminSection.tsx",
-          "frontend/src/hooks/admin/useAdminSchools.ts",
-          "frontend/src/lib/locationFormat.ts"
+          "frontend/src/config/socialLinks.ts",
+          "frontend/src/components/common/SocialLinks.tsx"
         ]
       },
       {
-        "id": "REQ-89",
-        "summary": "Update school-facing UI components to display structured location as Country > State > City wherever a school location is shown (e.g., School Card, School Profile Banner, School Detail “Quick Info”), with a sensible fallback to the legacy `school.location` text when structured fields are not present.",
+        "id": "REQ-93",
+        "summary": "Add social profile links to the global site footer (`frontend/src/components/layout/Footer.tsx`) using the Social Links component, styled to match the existing footer typography and muted-foreground pattern.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/directory/SchoolCard.tsx",
-          "frontend/src/components/school/SchoolProfileBanner.tsx",
-          "frontend/src/pages/SchoolDetailPage.tsx",
-          "frontend/src/lib/locationFormat.ts"
+          "frontend/src/components/layout/Footer.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/directory/SchoolCard.tsx",
-          "frontend/src/components/school/SchoolProfileBanner.tsx",
-          "frontend/src/pages/SchoolDetailPage.tsx",
-          "frontend/src/lib/locationFormat.ts"
+          "frontend/src/components/layout/Footer.tsx"
         ]
       },
       {
-        "id": "REQ-90",
-        "summary": "Add deep-linkable, promotional location URLs that users can share to promote a specific Country/State/City location, and render a location listing page that shows schools in that location.",
+        "id": "REQ-94",
+        "summary": "Add social profile links to the global site header (`frontend/src/components/layout/Header.tsx`) in a space-efficient way that does not break the current desktop or mobile navigation layouts.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/App.tsx",
-          "frontend/src/pages/LocationListingPage.tsx",
-          "frontend/src/hooks/useSchoolsByLocation.ts",
-          "frontend/src/pages/SchoolDetailPage.tsx",
-          "frontend/src/lib/locationRoutes.ts"
+          "frontend/src/components/layout/Header.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/App.tsx",
-          "frontend/src/pages/LocationListingPage.tsx",
-          "frontend/src/hooks/useSchoolsByLocation.ts",
-          "frontend/src/pages/SchoolDetailPage.tsx",
-          "frontend/src/lib/locationRoutes.ts"
-        ]
-      },
-      {
-        "id": "REQ-91",
-        "summary": "Add shareable promotional URLs for courses (trainings) and for locations by providing a user-visible “Copy link” control on the relevant pages, using English labels and clear success/error messaging.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/common/CopyLinkButton.tsx",
-          "frontend/src/pages/TrainingCurriculumPage.tsx",
-          "frontend/src/pages/LocationListingPage.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/common/CopyLinkButton.tsx",
-          "frontend/src/pages/TrainingCurriculumPage.tsx",
-          "frontend/src/pages/LocationListingPage.tsx"
+          "frontend/src/components/layout/Header.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
-    "backend/main.mo",
-    "backend/migration.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/App.tsx",
-    "frontend/src/backend.d.ts",
-    "frontend/src/backend.ts",
-    "frontend/src/components/admin/sections/SchoolsAdminSection.tsx",
-    "frontend/src/components/common/CopyLinkButton.tsx",
-    "frontend/src/components/directory/SchoolCard.tsx",
-    "frontend/src/components/school/SchoolProfileBanner.tsx",
-    "frontend/src/declarations/backend.did.d.ts",
-    "frontend/src/declarations/backend.did.js",
-    "frontend/src/hooks/admin/useAdminSchools.ts",
-    "frontend/src/hooks/useSchoolsByLocation.ts",
-    "frontend/src/lib/locationFormat.ts",
-    "frontend/src/lib/locationRoutes.ts",
-    "frontend/src/pages/LocationListingPage.tsx",
-    "frontend/src/pages/SchoolDetailPage.tsx",
-    "frontend/src/pages/TrainingCurriculumPage.tsx",
+    "frontend/src/components/common/SocialLinks.tsx",
+    "frontend/src/components/layout/Footer.tsx",
+    "frontend/src/components/layout/Header.tsx",
+    "frontend/src/config/socialLinks.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

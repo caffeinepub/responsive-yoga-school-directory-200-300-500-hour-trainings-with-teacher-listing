@@ -1,6 +1,8 @@
 import { Heart } from 'lucide-react';
 import { useNavigate } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
+import SocialLinks from '@/components/common/SocialLinks';
+import { socialLinks } from '@/config/socialLinks';
 
 export default function Footer() {
   const navigate = useNavigate();
@@ -63,7 +65,7 @@ export default function Footer() {
             </nav>
           </div>
 
-          {/* Contact Info */}
+          {/* Contact Info & Social Links */}
           <div>
             <h3 className="mb-3 font-semibold">Get in Touch</h3>
             <p className="text-sm text-muted-foreground">
@@ -77,6 +79,9 @@ export default function Footer() {
               </Button>
               .
             </p>
+            <div className="mt-4">
+              <SocialLinks links={socialLinks} />
+            </div>
           </div>
         </div>
 

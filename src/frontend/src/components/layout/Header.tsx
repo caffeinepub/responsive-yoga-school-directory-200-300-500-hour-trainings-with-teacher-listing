@@ -7,11 +7,17 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
+import SocialLinks from '@/components/common/SocialLinks';
+import { socialLinks } from '@/config/socialLinks';
 
 export default function Header() {
   const navigate = useNavigate();
   const { theme, setTheme } = useTheme();
+
+  // Filter valid social links for mobile menu
+  const validSocialLinks = socialLinks.filter((link) => link.href && link.href.trim() !== '');
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background backdrop-blur supports-[backdrop-filter]:bg-background/95">
@@ -66,6 +72,11 @@ export default function Header() {
             </Button>
           </nav>
 
+          {/* Desktop Social Links */}
+          <div className="hidden md:flex">
+            <SocialLinks links={socialLinks} className="ml-2" />
+          </div>
+
           {/* Mobile Navigation Menu */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild className="md:hidden">
@@ -89,6 +100,27 @@ export default function Header() {
               <DropdownMenuItem onClick={() => navigate({ to: '/admin' })}>
                 Admin
               </DropdownMenuItem>
+              {validSocialLinks.length > 0 && (
+                <>
+                  <DropdownMenuSeparator />
+                  {validSocialLinks.map((link) => {
+                    const Icon = link.icon;
+                    return (
+                      <DropdownMenuItem key={link.label} asChild>
+                        <a
+                          href={link.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2"
+                        >
+                          <Icon className="h-4 w-4" />
+                          <span>{link.label}</span>
+                        </a>
+                      </DropdownMenuItem>
+                    );
+                  })}
+                </>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
 

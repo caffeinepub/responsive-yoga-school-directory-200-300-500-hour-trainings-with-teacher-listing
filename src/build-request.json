@@ -1,136 +1,86 @@
 {
   "kind": "build_request",
-  "title": "Structured location (Country > State > City) and promotional deep links for locations and courses",
+  "title": "Add social profile links to the website header/footer",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-86",
-      "text": "Update the backend School data model to support structured location fields (country, state, city) in addition to the existing `location` text, so the app can display locations as Country > State > City (e.g., India, Uttarakhand, Rishikesh) without breaking existing consumers.",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "also i want these location (India, Uttarakhand , Rishikesh)  means First country then state then city"
-        ]
-      },
-      "acceptanceCriteria": [
-        "`backend/main.mo` School type includes fields for country/state/city (nullable/optional if needed for backward compatibility).",
-        "Existing public query methods that return School objects (e.g., `searchSchoolsByName`, `getSchool`) continue to work and include the structured fields.",
-        "`createSchool`/`updateSchool` accept and store the structured fields, while preserving the existing `location` behavior for legacy display/use.",
-        "User-facing behavior remains unchanged unless the frontend is updated to use the structured fields."
-      ]
-    },
-    {
-      "id": "REQ-87",
-      "text": "Add a public backend query method that supports fetching schools by structured location (country/state/city), so location-specific pages can load schools without client-side full-list filtering.",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "also want these urls of location and courses to promote"
-        ]
-      },
-      "acceptanceCriteria": [
-        "A new public query method exists in `backend/main.mo` that can return schools filtered by country, optionally refined by state and city.",
-        "The method returns an empty list (not a trap) when no schools match or when inputs are empty/unknown.",
-        "The method is safe for anonymous callers (no authorization required) and does not trap in normal usage."
-      ]
-    },
-    {
-      "id": "REQ-88",
-      "text": "Update the Admin Dashboard Schools management UI to collect and persist structured location (Country, State, City) and to display the composed location in the order Country > State > City.",
+      "id": "REQ-92",
+      "text": "Add a reusable Social Links component that renders a row of social profile links (icon + accessible label) from a single centralized configuration, and only displays links that have a non-empty URL.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "recent-messages-6"
         ],
         "quotes": [
-          "also i want these location (India, Uttarakhand , Rishikesh)  means First country then state then city"
+          "add social profiles link at website"
         ]
       },
       "acceptanceCriteria": [
-        "`frontend/src/components/admin/sections/SchoolsAdminSection.tsx` includes required/clearly-labeled inputs for Country, State, and City (English labels).",
-        "Admin create/update school mutations are updated to send the structured location fields to the backend.",
-        "The Schools admin table displays the structured location in Country > State > City order (or a sensible fallback when some fields are missing).",
-        "All user-facing validation and errors remain in English."
+        "A new reusable component exists (e.g., `frontend/src/components/common/SocialLinks.tsx`) that accepts a list of `{ label, href, icon }` items and renders only valid/defined `href` values.",
+        "Each rendered social link uses an anchor tag with `target=\"_blank\"` and `rel=\"noopener noreferrer\"`.",
+        "Each rendered social link has an accessible name via `aria-label` (English) and/or visible text for screen readers.",
+        "If all configured URLs are empty/undefined, the component renders nothing (no empty container)."
       ]
     },
     {
-      "id": "REQ-89",
-      "text": "Update school-facing UI components to display structured location as Country > State > City wherever a school location is shown (e.g., School Card, School Profile Banner, School Detail “Quick Info”), with a sensible fallback to the legacy `school.location` text when structured fields are not present.",
+      "id": "REQ-93",
+      "text": "Add social profile links to the global site footer (`frontend/src/components/layout/Footer.tsx`) using the Social Links component, styled to match the existing footer typography and muted-foreground pattern.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "recent-messages-6"
         ],
         "quotes": [
-          "means First country then state then city"
+          "add social profiles link at website"
         ]
       },
       "acceptanceCriteria": [
-        "`frontend/src/components/directory/SchoolCard.tsx` shows location in Country > State > City order when available.",
-        "`frontend/src/components/school/SchoolProfileBanner.tsx` shows location in Country > State > City order when available.",
-        "`frontend/src/pages/SchoolDetailPage.tsx` “Quick Info” location renders the structured location order when available.",
-        "If any structured parts are missing, the UI falls back gracefully (no blank/undefined strings shown)."
+        "The footer displays a “Follow us” (English) label and a horizontal row of social icons/links when at least one social URL is configured.",
+        "The social links visually match the existing footer style (consistent spacing, hover states, and muted text/icon color).",
+        "No existing footer navigation links are removed or broken."
       ]
     },
     {
-      "id": "REQ-90",
-      "text": "Add deep-linkable, promotional location URLs that users can share to promote a specific Country/State/City location, and render a location listing page that shows schools in that location.",
+      "id": "REQ-94",
+      "text": "Add social profile links to the global site header (`frontend/src/components/layout/Header.tsx`) in a space-efficient way that does not break the current desktop or mobile navigation layouts.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "recent-messages-6"
         ],
         "quotes": [
-          "also want these urls of location and courses to promote"
+          "add social profiles link at website"
         ]
       },
       "acceptanceCriteria": [
-        "`frontend/src/App.tsx` includes one or more new routes for locations (e.g., `/location/$country`, `/location/$country/$state`, `/location/$country/$state/$city`) consistent with the existing TanStack Router setup.",
-        "A new location listing page renders a directory-style list of matching schools for the selected location and shows an English heading describing the location context.",
-        "The location listing page loads schools using the new backend location-filter query (REQ-87) and handles empty/error/loading states in English.",
-        "School Detail pages render location breadcrumbs/links (Country, State, City) that navigate to the corresponding location URL(s)."
-      ]
-    },
-    {
-      "id": "REQ-91",
-      "text": "Add shareable promotional URLs for courses (trainings) and for locations by providing a user-visible “Copy link” control on the relevant pages, using English labels and clear success/error messaging.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "also want these urls of location and courses to promote"
-        ]
-      },
-      "acceptanceCriteria": [
-        "On the Training Curriculum page (`/school/$schoolId/training/$trainingId`, `frontend/src/pages/TrainingCurriculumPage.tsx`), a “Copy link” control copies the current page URL to the clipboard and shows an English confirmation (toast or inline message).",
-        "On location listing pages, a “Copy link” control copies the current location page URL and shows an English confirmation.",
-        "If clipboard access fails, the UI shows an English fallback message instructing the user to manually copy the URL from the address bar.",
-        "No backend changes are required for copying links."
+        "On desktop, social icons/links appear in the header (e.g., near the theme toggle) without causing wrapping/overflow at common breakpoints.",
+        "On mobile, social links are either included in the dropdown menu or otherwise accessible without crowding the header controls.",
+        "All header social links meet the same accessibility and security requirements as the footer links (English aria-labels, new-tab behavior, `rel` attributes)."
       ]
     }
   ],
   "constraints": [
-    "Backend must remain a single Motoko actor in `backend/main.mo` (no additional backend services).",
-    "Do not modify any files under `frontend/src/components/ui` (read-only Shadcn components); compose them instead.",
-    "Do not modify immutable hook bootstrap files listed in `frontend.immutablePaths` (e.g., `frontend/src/hooks/useActor.ts`, `frontend/src/main.tsx`).",
-    "All user-facing text must be in English."
+    "Do not modify any files under `frontend/src/components/ui` (immutable UI components).",
+    "Keep user-facing text in English.",
+    "No backend changes are required for this feature."
   ],
   "nonGoals": [
-    "Adding third-party map/geocoding APIs or GPS-based location features.",
-    "SEO server-side rendering or Next.js migration.",
-    "Changing the existing course/curriculum route structure (`/school/$schoolId/training/$trainingId`).",
-    "Implementing external marketing integrations or social sharing APIs beyond copy-link functionality."
+    "Building a full social feed integration (e.g., embedding Instagram/Twitter timelines).",
+    "Adding third-party analytics/tracking pixels for social clicks.",
+    "Adding Internet Identity or auth requirements for viewing social links."
   ],
   "imageRequirements": {
     "required": [],
     "edits": []
+  },
+  "userProfileUpdate": {
+    "goalsToAdd": [],
+    "goalsToRemove": [],
+    "preferencesToAdd": [],
+    "preferencesToRemove": [],
+    "miscToAdd": [],
+    "miscToRemove": [],
+    "fieldsToSet": {},
+    "fieldsToDelete": []
   }
 }

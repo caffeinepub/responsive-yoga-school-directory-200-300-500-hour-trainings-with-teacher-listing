@@ -4,8 +4,8 @@
   "frontend/src/pages/SchoolDetailPage.tsx": "School detail page with hero banner, comprehensive school information sections, structured location breadcrumbs with navigation links to location pages, inquiry form section, and shared inquiry handler with correct prop types for all child components.",
   "frontend/src/components/directory/SchoolCard.tsx": "Reusable school card component with thumbnail image, school name, structured location display (Country > State > City), training programs, teacher count, and navigation to detail page using Tailwind v3 classes.",
   "frontend/src/components/directory/TeacherList.tsx": "Teacher list component displaying teacher cards with avatar, name, and specialization in a responsive layout.",
-  "frontend/src/components/layout/Header.tsx": "Sticky header component with white background in light mode using bg-background, logo, desktop/mobile navigation including Blog link, and theme toggle functionality.",
-  "frontend/src/components/layout/Footer.tsx": "Footer component with white background in light mode using bg-background, three-column layout with about section, quick links including Blog, contact info, copyright, and caffeine.ai attribution with UTM tracking.",
+  "frontend/src/components/layout/Header.tsx": "Sticky header component with logo, desktop/mobile navigation including Blog link, social links displayed on desktop next to theme toggle and in mobile dropdown menu with separator, and theme toggle functionality.",
+  "frontend/src/components/layout/Footer.tsx": "Footer component with three-column layout including about section, quick links, contact info with social links displayed below, copyright, and caffeine.ai attribution with UTM tracking.",
   "frontend/src/hooks/useSchools.ts": "React Query hook for fetching and filtering schools by training hours with comprehensive error handling, structured diagnostic logging via logBackendCallFailure for searchSchoolsByName failures, and client-side filtering logic.",
   "frontend/src/hooks/useSchoolDetails.ts": "React Query hook for fetching detailed school information including teachers and trainings for the detail page.",
   "frontend/src/hooks/useSchoolCardData.ts": "React Query hook for fetching training and teacher data for individual school cards in the directory listing.",
@@ -51,5 +51,7 @@
   "frontend/src/lib/locationRoutes.ts": "Utility functions for building and parsing location routes, encoding/decoding URL segments, and generating breadcrumb links for structured locations.",
   "frontend/src/hooks/useSchoolsByLocation.ts": "React Query hook that fetches schools filtered by structured location (country/state/city) using the backend getSchoolsByLocation method with error handling.",
   "frontend/src/components/common/CopyLinkButton.tsx": "Reusable button component that copies the current page URL (or provided URL) to clipboard with success/error toast notifications and fallback messaging for non-secure contexts.",
-  "frontend/src/pages/LocationListingPage.tsx": "Location listing page that displays schools filtered by structured location (country/state/city) with directory-style grid, copy link button, and comprehensive loading/empty/error states."
+  "frontend/src/pages/LocationListingPage.tsx": "Location listing page that displays schools filtered by structured location (country/state/city) with directory-style grid, copy link button, and comprehensive loading/empty/error states.",
+  "frontend/src/config/socialLinks.ts": "Centralized configuration file exporting an array of social link objects with label, href (empty by default), and icon from react-icons/si.",
+  "frontend/src/components/common/SocialLinks.tsx": "Reusable component that renders a horizontal row of social media icon links, filtering out empty hrefs and returning null when no valid links exist, with accessible aria-labels and secure external link attributes."
 }
