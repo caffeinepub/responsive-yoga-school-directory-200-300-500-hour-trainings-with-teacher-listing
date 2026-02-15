@@ -1,56 +1,128 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Add 100-hour YTT option to directory filters and informational content",
+  "title": "Structured location display, location deep links, and copy-link promos",
   "requirements": [
     {
-      "id": "REQ-83",
-      "summary": "Add a 100-hour option to the Directory page training-hours filter so users can filter schools by 100-hour YTT programs.",
+      "id": "REQ-88",
+      "summary": "Extend Admin Schools management UI to capture structured location (Country/State/City), persist it, and display composed location in Country > State > City order.",
       "acceptanceCriteria": [
-        "On `/` (`frontend/src/pages/DirectoryPage.tsx`), the filter checklist includes: 100 Hours, 200 Hours, 300 Hours, 500 Hours.",
-        "Selecting 100 Hours adds it to the active filters badges and filters the school results based on trainings with `hours == 100` (using the existing `useSchools(selectedHours)` behavior).",
-        "User-facing labels remain in English and match the existing pattern (e.g., \"100 Hours\")."
+        "`frontend/src/components/admin/sections/SchoolsAdminSection.tsx` includes required/clearly-labeled inputs for Country, State, and City (English labels).",
+        "Admin create/update school mutations are updated to send the structured location fields to the backend.",
+        "The Schools admin table displays the structured location in Country > State > City order (or a sensible fallback when some fields are missing).",
+        "All user-facing validation and errors remain in English."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/DirectoryPage.tsx",
+          "path": "frontend/src/components/admin/sections/SchoolsAdminSection.tsx",
           "operation": "modify",
-          "description": "Update the training-hours checklist to render [100, 200, 300, 500] (instead of [200, 300, 500]) and ensure toggling 100 updates badges and continues to pass selectedHours into useSchools for filtering. Use the existing shadcn-ui Checkbox/Label/Badge components for consistent styling; verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-84",
-      "summary": "Update Directory hero and directory info copy to include 100-hour YTT alongside 200/300/500-hour categories.",
-      "acceptanceCriteria": [
-        "The Directory hero subtitle on `frontend/src/pages/DirectoryPage.tsx` mentions 100, 200, 300, and 500-hour teacher training programs (English text).",
-        "In `frontend/src/components/directory/DirectoryInfoSections.tsx`, any text that currently lists only 200/300/500 is updated to include 100 as well (English text)."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/DirectoryPage.tsx",
-          "operation": "modify",
-          "description": "Revise the hero subtitle copy to explicitly mention 100, 200, 300, and 500-hour teacher training programs (English), keeping the existing layout and shadcn-ui Badge/Button styling intact; verify the component's usage instructions before implementing."
+          "description": "Add labeled inputs for Country, State, and City to the create/edit dialogs; update validation (English) and update the admin table to display composed location as Country > State > City with a sensible fallback to legacy location text. Verify the component's usage instructions before implementing."
         },
         {
-          "path": "frontend/src/components/directory/DirectoryInfoSections.tsx",
+          "path": "frontend/src/hooks/admin/useAdminSchools.ts",
           "operation": "modify",
-          "description": "Update any informational text that enumerates hour levels (e.g., the 'Browse Programs' card copy) to include 100-hour offerings alongside 200/300/500 (English). Keep the existing shadcn-ui Card/Badge typography and spacing consistent; verify the component's usage instructions before implementing."
+          "description": "Update create/update school mutations to pass structured location fields (country/state/city) and videoUrl according to the current backend actor method signatures in `frontend/src/backend.d.ts`. Keep English error messages and cache invalidation behavior."
+        },
+        {
+          "path": "frontend/src/lib/locationFormat.ts",
+          "operation": "create",
+          "description": "Create shared helpers to compose a school location string from structured fields (Country > State > City) with graceful fallback to legacy `location` text, and to sanitize/normalize location segments for display."
         }
       ]
     },
     {
-      "id": "REQ-85",
-      "summary": "Add a 100-Hour YTT entry to the “Training Hour Levels Explained” section using the existing Card-based layout and styling.",
+      "id": "REQ-89",
+      "summary": "Update school-facing UI to display structured location as Country > State > City wherever location is shown, with graceful fallback to legacy `school.location`.",
       "acceptanceCriteria": [
-        "`frontend/src/components/directory/DirectoryInfoSections.tsx` includes a visible \"100-Hour YTT\" entry in the Training Hour Levels section, styled consistently with the existing 200/300/500 cards.",
-        "All new content is in English and does not introduce new backend dependencies."
+        "`frontend/src/components/directory/SchoolCard.tsx` shows location in Country > State > City order when available.",
+        "`frontend/src/components/school/SchoolProfileBanner.tsx` shows location in Country > State > City order when available.",
+        "`frontend/src/pages/SchoolDetailPage.tsx` “Quick Info” location renders the structured location order when available.",
+        "If any structured parts are missing, the UI falls back gracefully (no blank/undefined strings shown)."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/directory/DirectoryInfoSections.tsx",
+          "path": "frontend/src/components/directory/SchoolCard.tsx",
           "operation": "modify",
-          "description": "Extend the Training Hour Levels Explained grid to include a new shadcn-ui Card for \"100-Hour YTT\" with copy and bullet points consistent with the existing 200/300/500 cards. Adjust the grid column classes if needed so four cards display cleanly while preserving current styling; verify the component's usage instructions before implementing."
+          "description": "Replace direct `school.location` rendering with a composed location string derived from `school.country/state/city` with fallback to `school.location` using a shared formatter utility."
+        },
+        {
+          "path": "frontend/src/components/school/SchoolProfileBanner.tsx",
+          "operation": "modify",
+          "description": "Adjust banner location rendering to accept and display a composed structured location string (Country > State > City) with safe fallback (no undefined/blank output)."
+        },
+        {
+          "path": "frontend/src/pages/SchoolDetailPage.tsx",
+          "operation": "modify",
+          "description": "Update the “Quick Info” location rendering (and any other location spots on the page) to use the shared composed location formatter with fallback to the legacy location text."
+        },
+        {
+          "path": "frontend/src/lib/locationFormat.ts",
+          "operation": "modify",
+          "description": "Extend formatter helpers (if needed) to support consistent composition and fallback behavior for directory cards, banners, and quick info across the app."
+        }
+      ]
+    },
+    {
+      "id": "REQ-90",
+      "summary": "Add deep-linkable promotional location routes and a location listing page that loads schools via backend location filtering, plus location breadcrumbs/links from School Detail pages.",
+      "acceptanceCriteria": [
+        "`frontend/src/App.tsx` includes one or more new routes for locations (e.g., `/location/$country`, `/location/$country/$state`, `/location/$country/$state/$city`) consistent with the existing TanStack Router setup.",
+        "A new location listing page renders a directory-style list of matching schools for the selected location and shows an English heading describing the location context.",
+        "The location listing page loads schools using the new backend location-filter query (REQ-87) and handles empty/error/loading states in English.",
+        "School Detail pages render location breadcrumbs/links (Country, State, City) that navigate to the corresponding location URL(s)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Register new TanStack Router routes for location pages: `/location/$country`, `/location/$country/$state`, and `/location/$country/$state/$city`, wired to a new LocationListingPage component."
+        },
+        {
+          "path": "frontend/src/pages/LocationListingPage.tsx",
+          "operation": "create",
+          "description": "Implement a location listing page that reads route params (country/state/city), renders an English heading for the selected location, shows a directory-style grid of SchoolCard items, and includes English loading/empty/error states. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/useSchoolsByLocation.ts",
+          "operation": "create",
+          "description": "Add a React Query hook that calls the backend actor capability `getSchoolsByLocation(country, state, city)` (as typed in `frontend/src/backend.d.ts`), returning schools for the specified structured location and surfacing English errors."
+        },
+        {
+          "path": "frontend/src/pages/SchoolDetailPage.tsx",
+          "operation": "modify",
+          "description": "Add location breadcrumbs/links (Country, State, City) derived from structured fields on `school` that navigate to the corresponding `/location/...` routes; ensure graceful behavior when some fields are missing (no broken links). Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/lib/locationRoutes.ts",
+          "operation": "create",
+          "description": "Create helpers to build and parse location route segments (URL-safe), and to generate breadcrumb link targets for country/state/city. Keep logic centralized so School Detail and Location Listing use consistent route construction."
+        }
+      ]
+    },
+    {
+      "id": "REQ-91",
+      "summary": "Add a user-visible “Copy link” control for Training Curriculum pages and for location listing pages with English success/error messaging.",
+      "acceptanceCriteria": [
+        "On the Training Curriculum page (`/school/$schoolId/training/$trainingId`, `frontend/src/pages/TrainingCurriculumPage.tsx`), a “Copy link” control copies the current page URL to the clipboard and shows an English confirmation (toast or inline message).",
+        "On location listing pages, a “Copy link” control copies the current location page URL and shows an English confirmation.",
+        "If clipboard access fails, the UI shows an English fallback message instructing the user to manually copy the URL from the address bar.",
+        "No backend changes are required for copying links."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/common/CopyLinkButton.tsx",
+          "operation": "create",
+          "description": "Create a reusable CopyLinkButton component that copies the current page URL (or a provided URL) via the Clipboard API, shows English success via the existing toast system, and shows an English failure message instructing manual copy if clipboard access fails. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/TrainingCurriculumPage.tsx",
+          "operation": "modify",
+          "description": "Add a visible “Copy link” control (using the new CopyLinkButton) that copies the current training curriculum URL and provides English success/error messaging. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/LocationListingPage.tsx",
+          "operation": "modify",
+          "description": "Add a visible “Copy link” control (using the new CopyLinkButton) that copies the current location URL and provides English success/error messaging. Verify the component's usage instructions before implementing."
         }
       ]
     }

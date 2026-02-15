@@ -25,7 +25,10 @@ export interface Review {
 }
 export interface School {
   'id' : SchoolId,
+  'country' : [] | [string],
+  'city' : [] | [string],
   'name' : string,
+  'state' : [] | [string],
   'videoUrl' : [] | [string],
   'location' : string,
 }
@@ -58,7 +61,15 @@ export interface _SERVICE {
   >,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
   'createSchool' : ActorMethod<
-    [SchoolId, string, string, [] | [string]],
+    [
+      SchoolId,
+      string,
+      string,
+      [] | [string],
+      [] | [string],
+      [] | [string],
+      [] | [string],
+    ],
     undefined
   >,
   'deleteSchool' : ActorMethod<[SchoolId], undefined>,
@@ -70,6 +81,10 @@ export interface _SERVICE {
   'getCallerUserRole' : ActorMethod<[], UserRole>,
   'getReviewsForSchool' : ActorMethod<[SchoolId], Array<Review>>,
   'getSchool' : ActorMethod<[SchoolId], [] | [School]>,
+  'getSchoolsByLocation' : ActorMethod<
+    [[] | [string], [] | [string], [] | [string]],
+    Array<School>
+  >,
   'getTeacher' : ActorMethod<[TeacherId], [] | [Teacher]>,
   'getTeachersBySchool' : ActorMethod<[SchoolId], Array<Teacher>>,
   'getTraining' : ActorMethod<[TrainingId], [] | [Training]>,
@@ -79,7 +94,15 @@ export interface _SERVICE {
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
   'searchSchoolsByName' : ActorMethod<[string], Array<School>>,
   'updateSchool' : ActorMethod<
-    [SchoolId, string, string, [] | [string]],
+    [
+      SchoolId,
+      string,
+      string,
+      [] | [string],
+      [] | [string],
+      [] | [string],
+      [] | [string],
+    ],
     undefined
   >,
   'updateTeacher' : ActorMethod<

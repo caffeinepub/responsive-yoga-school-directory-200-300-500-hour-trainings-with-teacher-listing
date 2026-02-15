@@ -1,12 +1,13 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 63,
+  "projectStateVersion": 65,
   "summary": "Build a fully responsive Yoga Schools Directory with school listings, teacher information, custom branding using the provided logo, an FAQ section on each school page, a Google Map option per school, a similar-schools list on school detail pages, a School Review section, an Admin Dashboard (authenticated) to manage directory data without touching code, a Blog section with demo blog posts, and training course hour options including 100/200/300/500-hour YTT.",
   "architectural_notes": [
     "WordPress-based directory website with responsive design requirements.",
     "UI styling requirement: use a white background site-wide (\"everywhere\"), not just on the directory page, while maintaining readable contrast.",
     "Backend must seed demo schools/teachers/trainings automatically via canister install/upgrade system hooks so `searchSchoolsByName(\"\")` has data immediately after deploy/upgrade.",
-    "Add an authenticated Admin Dashboard (likely using Internet Identity) so admins can CRUD schools/teachers/trainings/reviews via UI rather than code changes."
+    "Add an authenticated Admin Dashboard (likely using Internet Identity) so admins can CRUD schools/teachers/trainings/reviews via UI rather than code changes.",
+    "Support structured location fields (country/state/city) and enable deep-linkable URLs for location and course pages for promotion."
   ],
   "known_issues": [
     "Production deployment failed with a deployment error (Version 1 could not be deployed to production).",
@@ -501,6 +502,38 @@
         "REQ-85"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-update-the-admin-dashboard-schools-management-ui-to-collect-and-persist-structured-location-country-state-city-and-to-display-the-composed-location-in-the-order-country-state-city",
+      "title": "Update the Admin Dashboard Schools management UI to collect and persist structured location (Country, State, City) and to display the composed location in the order Country > State > City.",
+      "reqIds": [
+        "REQ-88"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-school-facing-ui-components-to-display-structured-location-as-country-state-city-wherever-a-school-location-is-shown-e-g-school-card-school-profile-banner-school-detail-quick-info-with-a-sensible-fallback-to-the-legacy-school-location-text-when-structured-fields-are-not-present",
+      "title": "Update school-facing UI components to display structured location as Country > State > City wherever a school location is shown (e.g., School Card, School Profile Banner, School Detail “Quick Info”), with a sensible fallback to the legacy `school.location` text when structured fields are not present.",
+      "reqIds": [
+        "REQ-89"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-deep-linkable-promotional-location-urls-that-users-can-share-to-promote-a-specific-country-state-city-location-and-render-a-location-listing-page-that-shows-schools-in-that-location",
+      "title": "Add deep-linkable, promotional location URLs that users can share to promote a specific Country/State/City location, and render a location listing page that shows schools in that location.",
+      "reqIds": [
+        "REQ-90"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-shareable-promotional-urls-for-courses-trainings-and-for-locations-by-providing-a-user-visible-copy-link-control-on-the-relevant-pages-using-english-labels-and-clear-success-error-messaging",
+      "title": "Add shareable promotional URLs for courses (trainings) and for locations by providing a user-visible “Copy link” control on the relevant pages, using English labels and clear success/error messaging.",
+      "reqIds": [
+        "REQ-91"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -858,6 +891,34 @@
       "id": "AR-58",
       "summary": "Add support for an additional training course option/filter: 100-Hour YTT (alongside existing 200/300/500-hour options) across the directory UI and seeded demo trainings.",
       "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-59",
+      "summary": "Update school location data model/UI to support structured location fields: Country, State, City (e.g., India > Uttarakhand > Rishikesh) and display them in that order",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-60",
+      "summary": "Add shareable/promotional URLs for locations and courses (deep links users can copy/share to promote specific location pages and specific course/training pages)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-61",
+      "summary": "Update the backend School data model to support structured location fields (country, state, city) in addition to the existing `location` text, so the app can display locations as Country > State > City (e.g., India, Uttarakhand, Rishikesh) without breaking existing consumers.",
+      "reqIds": [
+        "REQ-86"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-62",
+      "summary": "Add a public backend query method that supports fetching schools by structured location (country/state/city), so location-specific pages can load schools without client-side full-list filtering.",
+      "reqIds": [
+        "REQ-87"
+      ],
       "status": "pending"
     }
   ],

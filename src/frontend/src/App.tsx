@@ -1,34 +1,42 @@
-import { createRouter, RouterProvider, createRoute, createRootRoute, Outlet } from '@tanstack/react-router';
-import DirectoryPage from './pages/DirectoryPage';
-import SchoolDetailPage from './pages/SchoolDetailPage';
-import TrainingCurriculumPage from './pages/TrainingCurriculumPage';
-import AboutPage from './pages/AboutPage';
-import ContactPage from './pages/ContactPage';
-import SubmitClaimSchoolPage from './pages/SubmitClaimSchoolPage';
-import AdminPage from './pages/AdminPage';
-import BlogPage from './pages/BlogPage';
-import BlogPostPage from './pages/BlogPostPage';
-import Header from './components/layout/Header';
-import Footer from './components/layout/Footer';
+import { StrictMode } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { RouterProvider, createRouter, createRoute, createRootRoute } from '@tanstack/react-router';
 import { ThemeProvider } from 'next-themes';
 import { Toaster } from '@/components/ui/sonner';
+import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
+import DirectoryPage from '@/pages/DirectoryPage';
+import SchoolDetailPage from '@/pages/SchoolDetailPage';
+import TrainingCurriculumPage from '@/pages/TrainingCurriculumPage';
+import AboutPage from '@/pages/AboutPage';
+import ContactPage from '@/pages/ContactPage';
+import SubmitClaimSchoolPage from '@/pages/SubmitClaimSchoolPage';
+import AdminPage from '@/pages/AdminPage';
+import BlogPage from '@/pages/BlogPage';
+import BlogPostPage from '@/pages/BlogPostPage';
+import LocationListingPage from '@/pages/LocationListingPage';
 
-// Layout component with Header and Footer
-function Layout() {
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+});
+
+function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <Header />
-      <main className="flex-1 bg-background">
-        <Outlet />
-      </main>
+      <main className="flex-1 bg-background">{children}</main>
       <Footer />
     </div>
   );
 }
 
-// Define routes
 const rootRoute = createRootRoute({
-  component: Layout,
+  component: () => <Layout><RouterProvider router={router} /></Layout>,
 });
 
 const indexRoute = createRoute({
@@ -37,13 +45,13 @@ const indexRoute = createRoute({
   component: DirectoryPage,
 });
 
-const schoolDetailRoute = createRoute({
+const schoolRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/school/$schoolId',
   component: SchoolDetailPage,
 });
 
-const trainingCurriculumRoute = createRoute({
+const trainingRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/school/$schoolId/training/$trainingId',
   component: TrainingCurriculumPage,
@@ -85,16 +93,37 @@ const blogPostRoute = createRoute({
   component: BlogPostPage,
 });
 
+const locationCountryRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/location/$country',
+  component: LocationListingPage,
+});
+
+const locationStateRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/location/$country/$state',
+  component: LocationListingPage,
+});
+
+const locationCityRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/location/$country/$state/$city',
+  component: LocationListingPage,
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
-  schoolDetailRoute,
-  trainingCurriculumRoute,
+  schoolRoute,
+  trainingRoute,
   aboutRoute,
   contactRoute,
   submitClaimRoute,
   adminRoute,
   blogRoute,
   blogPostRoute,
+  locationCountryRoute,
+  locationStateRoute,
+  locationCityRoute,
 ]);
 
 const router = createRouter({ routeTree });
@@ -107,9 +136,13 @@ declare module '@tanstack/react-router' {
 
 export default function App() {
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <RouterProvider router={router} />
-      <Toaster />
-    </ThemeProvider>
+    <StrictMode>
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+          <Toaster />
+        </QueryClientProvider>
+      </ThemeProvider>
+    </StrictMode>
   );
 }

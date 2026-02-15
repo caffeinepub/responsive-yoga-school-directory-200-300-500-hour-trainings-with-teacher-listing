@@ -1,58 +1,49 @@
-import { useParams, useNavigate } from '@tanstack/react-router';
-import { useRef, useCallback } from 'react';
+import { useParams } from '@tanstack/react-router';
+import { useRef } from 'react';
 import { useSchoolDetails } from '@/hooks/useSchoolDetails';
+import SchoolProfileBanner from '@/components/school/SchoolProfileBanner';
+import AboutSchoolSection from '@/components/school/AboutSchoolSection';
+import SchoolTrainingCoursesSection from '@/components/school/SchoolTrainingCoursesSection';
 import TeacherList from '@/components/directory/TeacherList';
 import FAQSection from '@/components/school/FAQSection';
 import ImageGallerySection from '@/components/school/ImageGallerySection';
 import SchoolVideoEmbedSection from '@/components/school/SchoolVideoEmbedSection';
 import SchoolMapSection from '@/components/school/SchoolMapSection';
 import SimilarSchoolsSection from '@/components/school/SimilarSchoolsSection';
-import AboutSchoolSection from '@/components/school/AboutSchoolSection';
-import SchoolTrainingCoursesSection from '@/components/school/SchoolTrainingCoursesSection';
 import SchoolReviewsSection from '@/components/school/SchoolReviewsSection';
-import SchoolProfileBanner from '@/components/school/SchoolProfileBanner';
 import SchoolInquiryFormSection from '@/components/school/SchoolInquiryFormSection';
-import { defaultSchoolFAQs } from '@/components/school/faqContent';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { ArrowLeft, AlertCircle } from 'lucide-react';
-import { Separator } from '@/components/ui/separator';
+import { MapPin, Users, GraduationCap, ChevronRight } from 'lucide-react';
+import { formatStructuredLocation, hasStructuredLocation } from '@/lib/locationFormat';
+import { buildLocationBreadcrumbs } from '@/lib/locationRoutes';
+import { useNavigate } from '@tanstack/react-router';
+import { defaultSchoolFAQs } from '@/components/school/faqContent';
 
 export default function SchoolDetailPage() {
   const { schoolId } = useParams({ from: '/school/$schoolId' });
-  const navigate = useNavigate();
   const { school, teachers, trainings, isLoading, error } = useSchoolDetails(schoolId);
-  const inquiryFormRef = useRef<HTMLElement>(null);
+  const inquiryFormRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
-  const handleInquireClick = useCallback(() => {
-    const inquirySection = document.getElementById('inquiry-form');
-    if (inquirySection) {
-      // Smooth scroll to the inquiry form
-      inquirySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-      // Focus the first input field after scroll completes
-      setTimeout(() => {
-        const firstInput = inquirySection.querySelector<HTMLInputElement>('#inquiry-name');
-        if (firstInput) {
-          firstInput.focus();
-        }
-      }, 500);
-    }
-  }, []);
+  const handleInquire = () => {
+    inquiryFormRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setTimeout(() => {
+      const firstInput = inquiryFormRef.current?.querySelector('input');
+      firstInput?.focus();
+    }, 500);
+  };
 
   if (isLoading) {
     return (
-      <div className="bg-background">
-        <div className="container mx-auto px-4 py-8">
-          <Skeleton className="mb-6 h-10 w-32" />
-          <div className="space-y-6">
-            <Skeleton className="h-12 w-3/4" />
-            <Skeleton className="h-6 w-1/2" />
-            <Skeleton className="h-40 w-full" />
-            <Skeleton className="h-60 w-full" />
+      <div className="min-h-screen bg-background">
+        <Skeleton className="h-[420px] w-full" />
+        <div className="container mx-auto px-4 py-12">
+          <div className="space-y-8">
+            <Skeleton className="h-48 w-full" />
+            <Skeleton className="h-64 w-full" />
+            <Skeleton className="h-48 w-full" />
           </div>
         </div>
       </div>
@@ -61,124 +52,126 @@ export default function SchoolDetailPage() {
 
   if (error || !school) {
     return (
-      <div className="bg-background">
-        <div className="container mx-auto px-4 py-8">
-          <Button variant="ghost" onClick={() => navigate({ to: '/' })} className="mb-6">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Directory
-          </Button>
-          <Alert variant="destructive">
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription>
-              School not found or failed to load. Please try again.
-            </AlertDescription>
-          </Alert>
-        </div>
+      <div className="container mx-auto px-4 py-12">
+        <Alert variant="destructive">
+          <AlertDescription>
+            {error?.message || 'School not found. Please check the URL and try again.'}
+          </AlertDescription>
+        </Alert>
       </div>
     );
   }
 
+  const displayLocation = formatStructuredLocation(school);
+  const locationBreadcrumbs = hasStructuredLocation(school)
+    ? buildLocationBreadcrumbs(school.country, school.state, school.city)
+    : [];
+
   return (
-    <div className="bg-background">
-      {/* Banner Section */}
-      <SchoolProfileBanner 
-        schoolName={school.name} 
-        location={school.location}
-        onInquire={handleInquireClick}
+    <div className="min-h-screen bg-background">
+      <SchoolProfileBanner
+        schoolName={school.name}
+        location={displayLocation}
+        onInquire={handleInquire}
       />
 
-      {/* Main Content */}
-      <div className="container mx-auto px-4 py-8 md:py-12">
-        {/* Back Button */}
-        <Button variant="ghost" onClick={() => navigate({ to: '/' })} className="mb-6">
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Directory
-        </Button>
-
-        <div className="grid gap-6 lg:grid-cols-3">
-          {/* Main Content */}
-          <div className="space-y-6 lg:col-span-2">
-            {/* About School Section */}
+      <div className="container mx-auto px-4 py-12">
+        <div className="grid gap-8 lg:grid-cols-3">
+          <div className="space-y-8 lg:col-span-2">
             <AboutSchoolSection 
               schoolName={school.name}
-              location={school.location}
+              location={displayLocation}
             />
 
-            {/* Courses & Training Section */}
-            <SchoolTrainingCoursesSection 
-              trainings={trainings || []} 
-              schoolId={schoolId}
-              onInquire={handleInquireClick}
-            />
-
-            {/* Inquiry Form Section */}
-            <SchoolInquiryFormSection schoolName={school.name} />
-
-            {/* Reviews Section */}
-            <SchoolReviewsSection schoolId={schoolId} />
-
-            {/* Teachers Section */}
             <Card>
-              <CardHeader>
-                <CardTitle>Our Teachers</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <TeacherList teachers={teachers || []} />
+              <CardContent className="pt-6">
+                <h2 className="mb-6 flex items-center gap-2 text-2xl font-bold">
+                  <MapPin className="h-6 w-6 text-primary" />
+                  Quick Info
+                </h2>
+                <div className="space-y-4">
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">Location</p>
+                    <div className="mt-1">
+                      {locationBreadcrumbs.length > 0 ? (
+                        <div className="flex flex-wrap items-center gap-2">
+                          {locationBreadcrumbs.map((crumb, index) => (
+                            <div key={crumb.path} className="flex items-center gap-2">
+                              <button
+                                onClick={() => navigate({ to: crumb.path })}
+                                className="text-base font-medium text-primary hover:underline"
+                              >
+                                {crumb.label}
+                              </button>
+                              {index < locationBreadcrumbs.length - 1 && (
+                                <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-base">{displayLocation}</p>
+                      )}
+                    </div>
+                  </div>
+                  {teachers && teachers.length > 0 && (
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground">Teachers</p>
+                      <p className="mt-1 flex items-center gap-2 text-base">
+                        <Users className="h-4 w-4" />
+                        {teachers.length} {teachers.length === 1 ? 'Teacher' : 'Teachers'}
+                      </p>
+                    </div>
+                  )}
+                  {trainings && trainings.length > 0 && (
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground">Training Programs</p>
+                      <p className="mt-1 flex items-center gap-2 text-base">
+                        <GraduationCap className="h-4 w-4" />
+                        {trainings.length} {trainings.length === 1 ? 'Program' : 'Programs'}
+                      </p>
+                    </div>
+                  )}
+                </div>
               </CardContent>
             </Card>
 
-            {/* Video Section */}
-            <SchoolVideoEmbedSection videoUrl={school.videoUrl} />
+            {trainings && trainings.length > 0 && (
+              <SchoolTrainingCoursesSection
+                trainings={trainings}
+                schoolId={school.id}
+                onInquire={handleInquire}
+              />
+            )}
 
-            {/* Location/Map Section */}
-            <SchoolMapSection location={school.location} schoolName={school.name} showEmbed={false} />
+            {teachers && teachers.length > 0 && (
+              <Card>
+                <CardContent className="pt-6">
+                  <h2 className="mb-6 text-2xl font-bold">Our Teachers</h2>
+                  <TeacherList teachers={teachers} />
+                </CardContent>
+              </Card>
+            )}
 
-            {/* Image Gallery Section */}
             <ImageGallerySection />
 
-            {/* FAQ Section */}
+            {school.videoUrl && <SchoolVideoEmbedSection videoUrl={school.videoUrl} />}
+
+            <SchoolMapSection 
+              location={displayLocation}
+              schoolName={school.name}
+            />
+
             <FAQSection faqs={defaultSchoolFAQs} />
+
+            <SchoolReviewsSection schoolId={school.id} />
           </div>
 
-          {/* Sidebar */}
-          <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Quick Info</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <h3 className="mb-1 text-sm font-medium text-muted-foreground">Location</h3>
-                  <p className="text-base">{school.location}</p>
-                </div>
-                <Separator />
-                <div>
-                  <h3 className="mb-2 text-sm font-medium text-muted-foreground">
-                    Available Programs
-                  </h3>
-                  <div className="flex flex-wrap gap-2">
-                    {trainings && trainings.length > 0 ? (
-                      trainings.map((training) => (
-                        <Badge key={training.id} variant="secondary">
-                          {Number(training.hours)}h
-                        </Badge>
-                      ))
-                    ) : (
-                      <span className="text-sm text-muted-foreground">None listed</span>
-                    )}
-                  </div>
-                </div>
-                <Separator />
-                <div>
-                  <h3 className="mb-1 text-sm font-medium text-muted-foreground">Teachers</h3>
-                  <p className="text-base">
-                    {teachers?.length || 0} {teachers?.length === 1 ? 'teacher' : 'teachers'}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
+          <div className="space-y-8">
+            <div ref={inquiryFormRef}>
+              <SchoolInquiryFormSection schoolName={school.name} />
+            </div>
 
-            {/* Similar Schools Section */}
             <SimilarSchoolsSection currentSchoolId={school.id} />
           </div>
         </div>

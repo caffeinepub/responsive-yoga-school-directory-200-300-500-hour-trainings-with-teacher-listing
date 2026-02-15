@@ -1,41 +1,61 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-15T03:49:58.466Z",
-  "summary": "REQ-84 appears implemented (Directory hero subtitle and at least some informational copy now includes 100/200/300/500). REQ-83 (filter checklist + filtering behavior) and REQ-85 (add 100-Hour card in the Training Hour Levels section) cannot be confirmed from the provided truncated diffs; they may be implemented but are not visible in the evidence shown. The diff also includes additional UI/UX changes on DirectoryPage not requested by the BuildRequest (e.g., scroll-to-results/filters behavior and CTA buttons).",
+  "generatedAt": "2026-02-15T04:03:28.019Z",
+  "summary": "Diff implements structured location fields across backend and several frontend areas, adds location routes and a location listing page, and introduces a reusable CopyLinkButton. However, due to truncation, some key acceptance criteria cannot be conclusively verified (notably the new backend query for location filtering and the full admin UI inputs/table changes).",
   "missing_requirements": [
     {
-      "id": "REQ-83",
-      "requirement": "Update the Directory page training-hours filter to include a 100-hour option alongside the existing 200/300/500 options, including active filter badges and filtering behavior for trainings with hours == 100.",
-      "reason": "The provided truncated snippet of `DirectoryPage.tsx` shows the hero section and state (`selectedHours`) but does not include the actual filter checklist UI (checkbox list) nor evidence of a 100-hour option label/badge behavior in the visible portion. The file summary mentions the filter controls, but the diff excerpt does not show them, so this cannot be verified from the evidence provided.",
+      "id": "REQ-87",
+      "requirement": "Add a public backend query method to fetch schools filtered by structured location (country, optionally state/city), returning empty list for no matches/empty inputs, safe for anonymous callers.",
+      "reason": "Frontend hook calls `actor.getSchoolsByLocation(...)`, but the diff excerpt for `backend/main.mo` does not show a `getSchoolsByLocation` method implementation; it may exist in truncated sections, but there is no direct evidence in the provided summary.",
       "evidence": [
-        "frontend/src/pages/DirectoryPage.tsx (truncated)",
-        "frontend-file-summaries.txt (mentions filter controls but no code shown)"
+        "frontend/src/hooks/useSchoolsByLocation.ts",
+        "backend/main.mo (truncated)"
       ]
     },
     {
-      "id": "REQ-85",
-      "requirement": "Extend the “Training Hour Levels Explained” section to include a visible “100-Hour YTT” card entry styled consistently with existing 200/300/500 cards.",
-      "reason": "`DirectoryInfoSections.tsx` is truncated and only shows the “How It Works” section copy updated to mention 100/200/300/500. The diff excerpt does not include the “Training Hour Levels Explained” section, so the presence of a new “100-Hour YTT” card cannot be verified.",
+      "id": "REQ-88",
+      "requirement": "Admin Schools UI must include clearly-labeled inputs for Country, State, City and show structured location in Country > State > City order in the admin table.",
+      "reason": "`SchoolsAdminSection.tsx` shows form state and mutations include `country/state/city`, but the truncated diff does not show the actual rendered inputs/labels or the table column rendering to confirm display order and labeling.",
       "evidence": [
-        "frontend/src/components/directory/DirectoryInfoSections.tsx (truncated)"
+        "frontend/src/components/admin/sections/SchoolsAdminSection.tsx (truncated)"
       ]
     }
   ],
   "hallucinated_features": [
     {
-      "description": "Added scroll-to-results and scroll-to-filters behavior with focus management, plus new hero CTA buttons (“Browse Schools” / “Filter Programs”).",
-      "reason": "These UI/UX behaviors are not part of REQ-83/84/85, which only request hour filter options and copy/info updates.",
+      "description": "Added a backend migration module (`backend/migration.mo`) and wired migration into the actor initialization.",
+      "reason": "BuildRequest did not explicitly request a migration system/module; while it may be necessary for backward compatibility, it is an additional implementation beyond the stated requirements.",
       "evidence": [
-        "frontend/src/pages/DirectoryPage.tsx (truncated)"
+        "backend/migration.mo",
+        "backend/main.mo"
+      ]
+    },
+    {
+      "description": "Broad UI/theme/style changes and unrelated page enhancements mentioned in `frontend-file-summaries.txt` (e.g., new color palette, additional sections/components).",
+      "reason": "These changes are not part of REQ-86..REQ-91 and may be unrelated scope additions; exact extent cannot be verified from the truncated summary, but they are described as modifications.",
+      "evidence": [
+        "frontend-file-summaries.txt"
       ]
     }
   ],
-  "confidence": 0.62,
+  "confidence": 0.66,
   "changed_files": [
+    "backend/main.mo",
+    "backend/migration.mo",
     "frontend-file-summaries.txt",
-    "frontend/src/components/directory/DirectoryInfoSections.tsx",
-    "frontend/src/pages/DirectoryPage.tsx",
+    "frontend/src/App.tsx",
+    "frontend/src/components/admin/sections/SchoolsAdminSection.tsx",
+    "frontend/src/components/common/CopyLinkButton.tsx",
+    "frontend/src/components/directory/SchoolCard.tsx",
+    "frontend/src/components/school/SchoolProfileBanner.tsx",
+    "frontend/src/hooks/admin/useAdminSchools.ts",
+    "frontend/src/hooks/useSchoolsByLocation.ts",
+    "frontend/src/lib/locationFormat.ts",
+    "frontend/src/lib/locationRoutes.ts",
+    "frontend/src/pages/LocationListingPage.tsx",
+    "frontend/src/pages/SchoolDetailPage.tsx",
+    "frontend/src/pages/TrainingCurriculumPage.tsx",
     "project_state.json"
   ]
 }

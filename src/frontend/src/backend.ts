@@ -111,7 +111,10 @@ export interface BlogPost {
 export type SchoolId = string;
 export interface School {
     id: SchoolId;
+    country?: string;
+    city?: string;
     name: string;
+    state?: string;
     videoUrl?: string;
     location: string;
 }
@@ -137,7 +140,7 @@ export interface backendInterface {
     addTeacher(id: TeacherId, name: string, specialization: string, schoolId: SchoolId): Promise<void>;
     addTraining(id: TrainingId, hours: bigint, description: string, schoolId: SchoolId): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
-    createSchool(id: SchoolId, name: string, location: string, videoUrl: string | null): Promise<void>;
+    createSchool(id: SchoolId, name: string, location: string, country: string | null, state: string | null, city: string | null, videoUrl: string | null): Promise<void>;
     deleteSchool(id: SchoolId): Promise<void>;
     deleteTeacher(id: TeacherId): Promise<void>;
     deleteTraining(id: TrainingId): Promise<void>;
@@ -147,6 +150,7 @@ export interface backendInterface {
     getCallerUserRole(): Promise<UserRole>;
     getReviewsForSchool(schoolId: SchoolId): Promise<Array<Review>>;
     getSchool(id: SchoolId): Promise<School | null>;
+    getSchoolsByLocation(country: string | null, state: string | null, city: string | null): Promise<Array<School>>;
     getTeacher(id: TeacherId): Promise<Teacher | null>;
     getTeachersBySchool(schoolId: SchoolId): Promise<Array<Teacher>>;
     getTraining(id: TrainingId): Promise<Training | null>;
@@ -155,7 +159,7 @@ export interface backendInterface {
     isCallerAdmin(): Promise<boolean>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
     searchSchoolsByName(nameQuery: string): Promise<Array<School>>;
-    updateSchool(id: SchoolId, name: string, location: string, videoUrl: string | null): Promise<void>;
+    updateSchool(id: SchoolId, name: string, location: string, country: string | null, state: string | null, city: string | null, videoUrl: string | null): Promise<void>;
     updateTeacher(id: TeacherId, name: string, specialization: string, schoolId: SchoolId): Promise<void>;
     updateTraining(id: TrainingId, hours: bigint, description: string, schoolId: SchoolId): Promise<void>;
 }
@@ -232,17 +236,17 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async createSchool(arg0: SchoolId, arg1: string, arg2: string, arg3: string | null): Promise<void> {
+    async createSchool(arg0: SchoolId, arg1: string, arg2: string, arg3: string | null, arg4: string | null, arg5: string | null, arg6: string | null): Promise<void> {
         if (this.processError) {
             try {
-                const result = await this.actor.createSchool(arg0, arg1, arg2, to_candid_opt_n3(this._uploadFile, this._downloadFile, arg3));
+                const result = await this.actor.createSchool(arg0, arg1, arg2, to_candid_opt_n3(this._uploadFile, this._downloadFile, arg3), to_candid_opt_n3(this._uploadFile, this._downloadFile, arg4), to_candid_opt_n3(this._uploadFile, this._downloadFile, arg5), to_candid_opt_n3(this._uploadFile, this._downloadFile, arg6));
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.createSchool(arg0, arg1, arg2, to_candid_opt_n3(this._uploadFile, this._downloadFile, arg3));
+            const result = await this.actor.createSchool(arg0, arg1, arg2, to_candid_opt_n3(this._uploadFile, this._downloadFile, arg3), to_candid_opt_n3(this._uploadFile, this._downloadFile, arg4), to_candid_opt_n3(this._uploadFile, this._downloadFile, arg5), to_candid_opt_n3(this._uploadFile, this._downloadFile, arg6));
             return result;
         }
     }
@@ -372,18 +376,32 @@ export class Backend implements backendInterface {
             return from_candid_opt_n12(this._uploadFile, this._downloadFile, result);
         }
     }
+    async getSchoolsByLocation(arg0: string | null, arg1: string | null, arg2: string | null): Promise<Array<School>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getSchoolsByLocation(to_candid_opt_n3(this._uploadFile, this._downloadFile, arg0), to_candid_opt_n3(this._uploadFile, this._downloadFile, arg1), to_candid_opt_n3(this._uploadFile, this._downloadFile, arg2));
+                return from_candid_vec_n15(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getSchoolsByLocation(to_candid_opt_n3(this._uploadFile, this._downloadFile, arg0), to_candid_opt_n3(this._uploadFile, this._downloadFile, arg1), to_candid_opt_n3(this._uploadFile, this._downloadFile, arg2));
+            return from_candid_vec_n15(this._uploadFile, this._downloadFile, result);
+        }
+    }
     async getTeacher(arg0: TeacherId): Promise<Teacher | null> {
         if (this.processError) {
             try {
                 const result = await this.actor.getTeacher(arg0);
-                return from_candid_opt_n15(this._uploadFile, this._downloadFile, result);
+                return from_candid_opt_n16(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getTeacher(arg0);
-            return from_candid_opt_n15(this._uploadFile, this._downloadFile, result);
+            return from_candid_opt_n16(this._uploadFile, this._downloadFile, result);
         }
     }
     async getTeachersBySchool(arg0: SchoolId): Promise<Array<Teacher>> {
@@ -404,14 +422,14 @@ export class Backend implements backendInterface {
         if (this.processError) {
             try {
                 const result = await this.actor.getTraining(arg0);
-                return from_candid_opt_n16(this._uploadFile, this._downloadFile, result);
+                return from_candid_opt_n17(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getTraining(arg0);
-            return from_candid_opt_n16(this._uploadFile, this._downloadFile, result);
+            return from_candid_opt_n17(this._uploadFile, this._downloadFile, result);
         }
     }
     async getTrainingsBySchool(arg0: SchoolId): Promise<Array<Training>> {
@@ -474,27 +492,27 @@ export class Backend implements backendInterface {
         if (this.processError) {
             try {
                 const result = await this.actor.searchSchoolsByName(arg0);
-                return from_candid_vec_n17(this._uploadFile, this._downloadFile, result);
+                return from_candid_vec_n15(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.searchSchoolsByName(arg0);
-            return from_candid_vec_n17(this._uploadFile, this._downloadFile, result);
+            return from_candid_vec_n15(this._uploadFile, this._downloadFile, result);
         }
     }
-    async updateSchool(arg0: SchoolId, arg1: string, arg2: string, arg3: string | null): Promise<void> {
+    async updateSchool(arg0: SchoolId, arg1: string, arg2: string, arg3: string | null, arg4: string | null, arg5: string | null, arg6: string | null): Promise<void> {
         if (this.processError) {
             try {
-                const result = await this.actor.updateSchool(arg0, arg1, arg2, to_candid_opt_n3(this._uploadFile, this._downloadFile, arg3));
+                const result = await this.actor.updateSchool(arg0, arg1, arg2, to_candid_opt_n3(this._uploadFile, this._downloadFile, arg3), to_candid_opt_n3(this._uploadFile, this._downloadFile, arg4), to_candid_opt_n3(this._uploadFile, this._downloadFile, arg5), to_candid_opt_n3(this._uploadFile, this._downloadFile, arg6));
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.updateSchool(arg0, arg1, arg2, to_candid_opt_n3(this._uploadFile, this._downloadFile, arg3));
+            const result = await this.actor.updateSchool(arg0, arg1, arg2, to_candid_opt_n3(this._uploadFile, this._downloadFile, arg3), to_candid_opt_n3(this._uploadFile, this._downloadFile, arg4), to_candid_opt_n3(this._uploadFile, this._downloadFile, arg5), to_candid_opt_n3(this._uploadFile, this._downloadFile, arg6));
             return result;
         }
     }
@@ -539,10 +557,10 @@ function from_candid_UserRole_n10(_uploadFile: (file: ExternalBlob) => Promise<U
 function from_candid_opt_n12(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_School]): School | null {
     return value.length === 0 ? null : from_candid_School_n13(_uploadFile, _downloadFile, value[0]);
 }
-function from_candid_opt_n15(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_Teacher]): Teacher | null {
+function from_candid_opt_n16(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_Teacher]): Teacher | null {
     return value.length === 0 ? null : value[0];
 }
-function from_candid_opt_n16(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_Training]): Training | null {
+function from_candid_opt_n17(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_Training]): Training | null {
     return value.length === 0 ? null : value[0];
 }
 function from_candid_opt_n7(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [string]): string | null {
@@ -556,18 +574,27 @@ function from_candid_opt_n9(_uploadFile: (file: ExternalBlob) => Promise<Uint8Ar
 }
 function from_candid_record_n14(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     id: _SchoolId;
+    country: [] | [string];
+    city: [] | [string];
     name: string;
+    state: [] | [string];
     videoUrl: [] | [string];
     location: string;
 }): {
     id: SchoolId;
+    country?: string;
+    city?: string;
     name: string;
+    state?: string;
     videoUrl?: string;
     location: string;
 } {
     return {
         id: value.id,
+        country: record_opt_to_undefined(from_candid_opt_n7(_uploadFile, _downloadFile, value.country)),
+        city: record_opt_to_undefined(from_candid_opt_n7(_uploadFile, _downloadFile, value.city)),
         name: value.name,
+        state: record_opt_to_undefined(from_candid_opt_n7(_uploadFile, _downloadFile, value.state)),
         videoUrl: record_opt_to_undefined(from_candid_opt_n7(_uploadFile, _downloadFile, value.videoUrl)),
         location: value.location
     };
@@ -602,7 +629,7 @@ function from_candid_variant_n11(_uploadFile: (file: ExternalBlob) => Promise<Ui
 }): UserRole {
     return "admin" in value ? UserRole.admin : "user" in value ? UserRole.user : "guest" in value ? UserRole.guest : value;
 }
-function from_candid_vec_n17(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_School>): Array<School> {
+function from_candid_vec_n15(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_School>): Array<School> {
     return value.map((x)=>from_candid_School_n13(_uploadFile, _downloadFile, x));
 }
 function from_candid_vec_n4(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_BlogPost>): Array<BlogPost> {

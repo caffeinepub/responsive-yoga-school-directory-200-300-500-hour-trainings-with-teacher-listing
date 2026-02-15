@@ -3,10 +3,12 @@ import List "mo:core/List";
 import Iter "mo:core/Iter";
 import Principal "mo:core/Principal";
 import Runtime "mo:core/Runtime";
+import Migration "migration";
 
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
 
+(with migration = Migration.run)
 actor {
   // Access control state
   let accessControlState = AccessControl.initState();
@@ -14,10 +16,17 @@ actor {
 
   public type UserProfile = { name : Text };
 
+  type SchoolId = Text;
+  type TeacherId = Text;
+  type TrainingId = Text;
+
   public type School = {
     id : SchoolId;
     name : Text;
     location : Text;
+    country : ?Text;
+    state : ?Text;
+    city : ?Text;
     videoUrl : ?Text;
   };
 
@@ -50,10 +59,6 @@ actor {
     excerpt : ?Text;
   };
 
-  type SchoolId = Text;
-  type TeacherId = Text;
-  type TrainingId = Text;
-
   let schools = Map.empty<SchoolId, School>();
   let teachers = Map.empty<TeacherId, Teacher>();
   let trainings = Map.empty<TrainingId, Training>();
@@ -84,10 +89,14 @@ actor {
   };
 
   // ADMIN CRUD METHODS - SCHOOLS
+
   public shared ({ caller }) func createSchool(
     id : SchoolId,
     name : Text,
     location : Text,
+    country : ?Text,
+    state : ?Text,
+    city : ?Text,
     videoUrl : ?Text,
   ) : async () {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
@@ -96,7 +105,7 @@ actor {
     if (schools.containsKey(id)) {
       Runtime.trap("School already exists");
     };
-    let school : School = { id; name; location; videoUrl };
+    let school : School = { id; name; location; country; state; city; videoUrl };
     schools.add(id, school);
   };
 
@@ -104,6 +113,9 @@ actor {
     id : SchoolId,
     name : Text,
     location : Text,
+    country : ?Text,
+    state : ?Text,
+    city : ?Text,
     videoUrl : ?Text,
   ) : async () {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
@@ -112,7 +124,7 @@ actor {
     if (not schools.containsKey(id)) {
       Runtime.trap("School does not exist");
     };
-    let school : School = { id; name; location; videoUrl };
+    let school : School = { id; name; location; country; state; city; videoUrl };
     schools.add(id, school);
   };
 
@@ -260,6 +272,57 @@ actor {
       func(school) { nameQuery == "" or school.name.contains(#text nameQuery) }
     );
     filteredSchools;
+  };
+
+  // New method to search schools by structured location
+  public query ({ caller }) func getSchoolsByLocation(
+    country : ?Text,
+    state : ?Text,
+    city : ?Text,
+  ) : async [School] {
+    schools.values().toArray().filter(
+      func(school) {
+        if (country != null and state != null and city != null) {
+          switch (country, state, city) {
+            case (?c, ?s, ?ci) {
+              return school.country == ?c and school.state == ?s and school.city == ?ci;
+            };
+            case (_) { return false };
+          };
+        } else if (country != null and state != null) {
+          switch (country, state) {
+            case (?c, ?s) { return school.country == ?c and school.state == ?s };
+            case (_) { return false };
+          };
+        } else if (country != null and city != null) {
+          switch (country, city) {
+            case (?c, ?ci) { return school.country == ?c and school.city == ?ci };
+            case (_) { return false };
+          };
+        } else if (state != null and city != null) {
+          switch (state, city) {
+            case (?s, ?ci) { return school.state == ?s and school.city == ?ci };
+            case (_) { return false };
+          };
+        } else if (country != null) {
+          switch (country) {
+            case (?c) { return school.country == ?c };
+            case (_) { return false };
+          };
+        } else if (state != null) {
+          switch (state) {
+            case (?s) { return school.state == ?s };
+            case (_) { return false };
+          };
+        } else if (city != null) {
+          switch (city) {
+            case (?ci) { return school.city == ?ci };
+            case (_) { return false };
+          };
+        };
+        return true;
+      }
+    );
   };
 
   // -------------- REVIEW MANAGEMENT (USER-LEVEL AUTH) ---------------

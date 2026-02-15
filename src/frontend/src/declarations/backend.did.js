@@ -32,7 +32,10 @@ export const Review = IDL.Record({
 });
 export const School = IDL.Record({
   'id' : SchoolId,
+  'country' : IDL.Opt(IDL.Text),
+  'city' : IDL.Opt(IDL.Text),
   'name' : IDL.Text,
+  'state' : IDL.Opt(IDL.Text),
   'videoUrl' : IDL.Opt(IDL.Text),
   'location' : IDL.Text,
 });
@@ -56,7 +59,15 @@ export const idlService = IDL.Service({
   'addTraining' : IDL.Func([TrainingId, IDL.Nat, IDL.Text, SchoolId], [], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
   'createSchool' : IDL.Func(
-      [SchoolId, IDL.Text, IDL.Text, IDL.Opt(IDL.Text)],
+      [
+        SchoolId,
+        IDL.Text,
+        IDL.Text,
+        IDL.Opt(IDL.Text),
+        IDL.Opt(IDL.Text),
+        IDL.Opt(IDL.Text),
+        IDL.Opt(IDL.Text),
+      ],
       [],
       [],
     ),
@@ -69,6 +80,11 @@ export const idlService = IDL.Service({
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
   'getReviewsForSchool' : IDL.Func([SchoolId], [IDL.Vec(Review)], ['query']),
   'getSchool' : IDL.Func([SchoolId], [IDL.Opt(School)], ['query']),
+  'getSchoolsByLocation' : IDL.Func(
+      [IDL.Opt(IDL.Text), IDL.Opt(IDL.Text), IDL.Opt(IDL.Text)],
+      [IDL.Vec(School)],
+      ['query'],
+    ),
   'getTeacher' : IDL.Func([TeacherId], [IDL.Opt(Teacher)], ['query']),
   'getTeachersBySchool' : IDL.Func([SchoolId], [IDL.Vec(Teacher)], ['query']),
   'getTraining' : IDL.Func([TrainingId], [IDL.Opt(Training)], ['query']),
@@ -82,7 +98,15 @@ export const idlService = IDL.Service({
   'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
   'searchSchoolsByName' : IDL.Func([IDL.Text], [IDL.Vec(School)], ['query']),
   'updateSchool' : IDL.Func(
-      [SchoolId, IDL.Text, IDL.Text, IDL.Opt(IDL.Text)],
+      [
+        SchoolId,
+        IDL.Text,
+        IDL.Text,
+        IDL.Opt(IDL.Text),
+        IDL.Opt(IDL.Text),
+        IDL.Opt(IDL.Text),
+        IDL.Opt(IDL.Text),
+      ],
       [],
       [],
     ),
@@ -121,7 +145,10 @@ export const idlFactory = ({ IDL }) => {
   });
   const School = IDL.Record({
     'id' : SchoolId,
+    'country' : IDL.Opt(IDL.Text),
+    'city' : IDL.Opt(IDL.Text),
     'name' : IDL.Text,
+    'state' : IDL.Opt(IDL.Text),
     'videoUrl' : IDL.Opt(IDL.Text),
     'location' : IDL.Text,
   });
@@ -145,7 +172,15 @@ export const idlFactory = ({ IDL }) => {
     'addTraining' : IDL.Func([TrainingId, IDL.Nat, IDL.Text, SchoolId], [], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
     'createSchool' : IDL.Func(
-        [SchoolId, IDL.Text, IDL.Text, IDL.Opt(IDL.Text)],
+        [
+          SchoolId,
+          IDL.Text,
+          IDL.Text,
+          IDL.Opt(IDL.Text),
+          IDL.Opt(IDL.Text),
+          IDL.Opt(IDL.Text),
+          IDL.Opt(IDL.Text),
+        ],
         [],
         [],
       ),
@@ -158,6 +193,11 @@ export const idlFactory = ({ IDL }) => {
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
     'getReviewsForSchool' : IDL.Func([SchoolId], [IDL.Vec(Review)], ['query']),
     'getSchool' : IDL.Func([SchoolId], [IDL.Opt(School)], ['query']),
+    'getSchoolsByLocation' : IDL.Func(
+        [IDL.Opt(IDL.Text), IDL.Opt(IDL.Text), IDL.Opt(IDL.Text)],
+        [IDL.Vec(School)],
+        ['query'],
+      ),
     'getTeacher' : IDL.Func([TeacherId], [IDL.Opt(Teacher)], ['query']),
     'getTeachersBySchool' : IDL.Func([SchoolId], [IDL.Vec(Teacher)], ['query']),
     'getTraining' : IDL.Func([TrainingId], [IDL.Opt(Training)], ['query']),
@@ -175,7 +215,15 @@ export const idlFactory = ({ IDL }) => {
     'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
     'searchSchoolsByName' : IDL.Func([IDL.Text], [IDL.Vec(School)], ['query']),
     'updateSchool' : IDL.Func(
-        [SchoolId, IDL.Text, IDL.Text, IDL.Opt(IDL.Text)],
+        [
+          SchoolId,
+          IDL.Text,
+          IDL.Text,
+          IDL.Opt(IDL.Text),
+          IDL.Opt(IDL.Text),
+          IDL.Opt(IDL.Text),
+          IDL.Opt(IDL.Text),
+        ],
         [],
         [],
       ),

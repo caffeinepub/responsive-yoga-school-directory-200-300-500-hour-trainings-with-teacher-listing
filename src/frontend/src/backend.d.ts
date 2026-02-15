@@ -29,7 +29,10 @@ export interface BlogPost {
 export type SchoolId = string;
 export interface School {
     id: SchoolId;
+    country?: string;
+    city?: string;
     name: string;
+    state?: string;
     videoUrl?: string;
     location: string;
 }
@@ -54,7 +57,7 @@ export interface backendInterface {
     addTeacher(id: TeacherId, name: string, specialization: string, schoolId: SchoolId): Promise<void>;
     addTraining(id: TrainingId, hours: bigint, description: string, schoolId: SchoolId): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
-    createSchool(id: SchoolId, name: string, location: string, videoUrl: string | null): Promise<void>;
+    createSchool(id: SchoolId, name: string, location: string, country: string | null, state: string | null, city: string | null, videoUrl: string | null): Promise<void>;
     deleteSchool(id: SchoolId): Promise<void>;
     deleteTeacher(id: TeacherId): Promise<void>;
     deleteTraining(id: TrainingId): Promise<void>;
@@ -64,6 +67,7 @@ export interface backendInterface {
     getCallerUserRole(): Promise<UserRole>;
     getReviewsForSchool(schoolId: SchoolId): Promise<Array<Review>>;
     getSchool(id: SchoolId): Promise<School | null>;
+    getSchoolsByLocation(country: string | null, state: string | null, city: string | null): Promise<Array<School>>;
     getTeacher(id: TeacherId): Promise<Teacher | null>;
     getTeachersBySchool(schoolId: SchoolId): Promise<Array<Teacher>>;
     getTraining(id: TrainingId): Promise<Training | null>;
@@ -72,7 +76,7 @@ export interface backendInterface {
     isCallerAdmin(): Promise<boolean>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
     searchSchoolsByName(nameQuery: string): Promise<Array<School>>;
-    updateSchool(id: SchoolId, name: string, location: string, videoUrl: string | null): Promise<void>;
+    updateSchool(id: SchoolId, name: string, location: string, country: string | null, state: string | null, city: string | null, videoUrl: string | null): Promise<void>;
     updateTeacher(id: TeacherId, name: string, specialization: string, schoolId: SchoolId): Promise<void>;
     updateTraining(id: TrainingId, hours: bigint, description: string, schoolId: SchoolId): Promise<void>;
 }

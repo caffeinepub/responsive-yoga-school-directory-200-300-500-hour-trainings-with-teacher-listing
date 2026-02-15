@@ -1,107 +1,116 @@
 import Map "mo:core/Map";
-import Text "mo:core/Text";
 import List "mo:core/List";
-import Nat "mo:core/Nat";
-import Iter "mo:core/Iter";
+import Principal "mo:core/Principal";
 
 module {
   type SchoolId = Text;
   type TeacherId = Text;
   type TrainingId = Text;
 
-  public type School = {
+  type OldSchool = {
     id : SchoolId;
     name : Text;
     location : Text;
     videoUrl : ?Text;
   };
 
-  public type Teacher = {
+  type OldTeacher = {
     id : TeacherId;
     name : Text;
     specialization : Text;
     schoolId : SchoolId;
   };
 
-  public type Training = {
+  type OldTraining = {
     id : TrainingId;
     hours : Nat;
     description : Text;
     schoolId : SchoolId;
   };
 
-  public type Review = {
+  type OldReview = {
     reviewerName : Text;
     rating : Nat;
     comment : Text;
     schoolId : SchoolId;
   };
 
-  // Old actor type (without automatic demo data)
-  type OldActor = {
-    schools : Map.Map<Text, School>;
-    teachers : Map.Map<Text, Teacher>;
-    trainings : Map.Map<Text, Training>;
-    reviews : List.List<Review>;
+  type OldBlogPost = {
+    id : Text;
+    title : Text;
+    content : Text;
+    featuredImageUrl : ?Text;
+    excerpt : ?Text;
   };
 
-  // New actor type (demo data always present via persistent seed)
+  type OldActor = {
+    schools : Map.Map<SchoolId, OldSchool>;
+    teachers : Map.Map<TeacherId, OldTeacher>;
+    trainings : Map.Map<TrainingId, OldTraining>;
+    reviews : List.List<OldReview>;
+    userProfiles : Map.Map<Principal, { name : Text }>;
+    blogPosts : Map.Map<Text, OldBlogPost>;
+  };
+
+  type NewSchool = {
+    id : SchoolId;
+    name : Text;
+    location : Text;
+    country : ?Text;
+    state : ?Text;
+    city : ?Text;
+    videoUrl : ?Text;
+  };
+
+  type NewTeacher = {
+    id : TeacherId;
+    name : Text;
+    specialization : Text;
+    schoolId : SchoolId;
+  };
+
+  type NewTraining = {
+    id : TrainingId;
+    hours : Nat;
+    description : Text;
+    schoolId : SchoolId;
+  };
+
+  type NewReview = {
+    reviewerName : Text;
+    rating : Nat;
+    comment : Text;
+    schoolId : SchoolId;
+  };
+
+  type NewBlogPost = {
+    id : Text;
+    title : Text;
+    content : Text;
+    featuredImageUrl : ?Text;
+    excerpt : ?Text;
+  };
+
   type NewActor = {
-    schools : Map.Map<Text, School>;
-    teachers : Map.Map<Text, Teacher>;
-    trainings : Map.Map<Text, Training>;
-    reviews : List.List<Review>;
+    schools : Map.Map<SchoolId, NewSchool>;
+    teachers : Map.Map<TeacherId, NewTeacher>;
+    trainings : Map.Map<TrainingId, NewTraining>;
+    reviews : List.List<NewReview>;
+    userProfiles : Map.Map<Principal, { name : Text }>;
+    blogPosts : Map.Map<Text, NewBlogPost>;
   };
 
   public func run(old : OldActor) : NewActor {
-    // Always re-add demo data on upgrade to avoid "no schools" issues
-    let demoSchools : [(SchoolId, School)] = [
-      (
-        "123",
+    let newSchools = old.schools.map<SchoolId, OldSchool, NewSchool>(
+      func(_id, oldSchool) {
         {
-          id = "123";
-          name = "Mo:core/Swim School";
-          location = "New York";
-          videoUrl = ?("https://youtube.com/v1");
-        },
-      ),
-      (
-        "124",
-        {
-          id = "124";
-          name = "PH2O";
-          location = "Los Angeles";
-          videoUrl = ?("https://youtube.com/v2");
-        },
-      ),
-      (
-        "125",
-        {
-          id = "125";
-          name = "Underwater College";
-          location = "Ping";
-          videoUrl = ?("https://youtube.com/v3");
-        },
-      ),
-      (
-        "126",
-        {
-          id = "126";
-          name = "Universal Swim School";
-          location = "Dublin";
-          videoUrl = ?("https://youtube.com/v4");
-        },
-      ),
-    ];
-
-    let newSchools = old.schools.clone();
-
-    for ((id, school) in demoSchools.values()) {
-      if (not newSchools.containsKey(id)) {
-        newSchools.add(id, school);
-      };
-    };
-
+          oldSchool with
+          country = null;
+          state = null;
+          city = null;
+        };
+      }
+    );
     { old with schools = newSchools };
   };
 };

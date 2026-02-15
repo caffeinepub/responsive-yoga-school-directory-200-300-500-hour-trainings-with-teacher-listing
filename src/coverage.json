@@ -1,59 +1,120 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-15T03:49:58.470Z",
+  "generatedAt": "2026-02-15T04:03:28.024Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 3,
-    "implemented": 3,
+    "total": 6,
+    "implemented": 4,
     "items": [
       {
-        "id": "REQ-83",
-        "summary": "Update the Directory page training-hours filter to include a 100-hour option alongside the existing 200/300/500 options, so users can filter schools by 100-Hour YTT programs.",
+        "id": "REQ-86",
+        "summary": "Update the backend School data model to support structured location fields (country, state, city) in addition to the existing `location` text, so the app can display locations as Country > State > City (e.g., India, Uttarakhand, Rishikesh) without breaking existing consumers.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-87",
+        "summary": "Add a public backend query method that supports fetching schools by structured location (country/state/city), so location-specific pages can load schools without client-side full-list filtering.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-88",
+        "summary": "Update the Admin Dashboard Schools management UI to collect and persist structured location (Country, State, City) and to display the composed location in the order Country > State > City.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/DirectoryPage.tsx"
+          "frontend/src/components/admin/sections/SchoolsAdminSection.tsx",
+          "frontend/src/hooks/admin/useAdminSchools.ts",
+          "frontend/src/lib/locationFormat.ts"
         ],
         "matchedFiles": [
-          "frontend/src/pages/DirectoryPage.tsx"
+          "frontend/src/components/admin/sections/SchoolsAdminSection.tsx",
+          "frontend/src/hooks/admin/useAdminSchools.ts",
+          "frontend/src/lib/locationFormat.ts"
         ]
       },
       {
-        "id": "REQ-84",
-        "summary": "Update home/Directory hero and informational copy that enumerates hour levels so it reflects the available hour categories including 100-Hour YTT.",
+        "id": "REQ-89",
+        "summary": "Update school-facing UI components to display structured location as Country > State > City wherever a school location is shown (e.g., School Card, School Profile Banner, School Detail “Quick Info”), with a sensible fallback to the legacy `school.location` text when structured fields are not present.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/DirectoryPage.tsx",
-          "frontend/src/components/directory/DirectoryInfoSections.tsx"
+          "frontend/src/components/directory/SchoolCard.tsx",
+          "frontend/src/components/school/SchoolProfileBanner.tsx",
+          "frontend/src/pages/SchoolDetailPage.tsx",
+          "frontend/src/lib/locationFormat.ts"
         ],
         "matchedFiles": [
-          "frontend/src/pages/DirectoryPage.tsx",
-          "frontend/src/components/directory/DirectoryInfoSections.tsx"
+          "frontend/src/components/directory/SchoolCard.tsx",
+          "frontend/src/components/school/SchoolProfileBanner.tsx",
+          "frontend/src/pages/SchoolDetailPage.tsx",
+          "frontend/src/lib/locationFormat.ts"
         ]
       },
       {
-        "id": "REQ-85",
-        "summary": "Extend the “Training Hour Levels Explained” informational section to include a 100-Hour YTT level entry consistent with the existing Card-based layout and styling.",
+        "id": "REQ-90",
+        "summary": "Add deep-linkable, promotional location URLs that users can share to promote a specific Country/State/City location, and render a location listing page that shows schools in that location.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/directory/DirectoryInfoSections.tsx"
+          "frontend/src/App.tsx",
+          "frontend/src/pages/LocationListingPage.tsx",
+          "frontend/src/hooks/useSchoolsByLocation.ts",
+          "frontend/src/pages/SchoolDetailPage.tsx",
+          "frontend/src/lib/locationRoutes.ts"
         ],
         "matchedFiles": [
-          "frontend/src/components/directory/DirectoryInfoSections.tsx"
+          "frontend/src/App.tsx",
+          "frontend/src/pages/LocationListingPage.tsx",
+          "frontend/src/hooks/useSchoolsByLocation.ts",
+          "frontend/src/pages/SchoolDetailPage.tsx",
+          "frontend/src/lib/locationRoutes.ts"
+        ]
+      },
+      {
+        "id": "REQ-91",
+        "summary": "Add shareable promotional URLs for courses (trainings) and for locations by providing a user-visible “Copy link” control on the relevant pages, using English labels and clear success/error messaging.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/common/CopyLinkButton.tsx",
+          "frontend/src/pages/TrainingCurriculumPage.tsx",
+          "frontend/src/pages/LocationListingPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/common/CopyLinkButton.tsx",
+          "frontend/src/pages/TrainingCurriculumPage.tsx",
+          "frontend/src/pages/LocationListingPage.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
+    "backend/main.mo",
+    "backend/migration.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/components/directory/DirectoryInfoSections.tsx",
-    "frontend/src/pages/DirectoryPage.tsx",
+    "frontend/src/App.tsx",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/components/admin/sections/SchoolsAdminSection.tsx",
+    "frontend/src/components/common/CopyLinkButton.tsx",
+    "frontend/src/components/directory/SchoolCard.tsx",
+    "frontend/src/components/school/SchoolProfileBanner.tsx",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "frontend/src/hooks/admin/useAdminSchools.ts",
+    "frontend/src/hooks/useSchoolsByLocation.ts",
+    "frontend/src/lib/locationFormat.ts",
+    "frontend/src/lib/locationRoutes.ts",
+    "frontend/src/pages/LocationListingPage.tsx",
+    "frontend/src/pages/SchoolDetailPage.tsx",
+    "frontend/src/pages/TrainingCurriculumPage.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

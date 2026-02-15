@@ -1,82 +1,136 @@
 {
   "kind": "build_request",
-  "title": "Add 100/200/300/500-hour YTT course options across the directory filters and informational content",
+  "title": "Structured location (Country > State > City) and promotional deep links for locations and courses",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-83",
-      "text": "Update the Directory page training-hours filter to include a 100-hour option alongside the existing 200/300/500 options, so users can filter schools by 100-Hour YTT programs.",
-      "target": "frontend",
+      "id": "REQ-86",
+      "text": "Update the backend School data model to support structured location fields (country, state, city) in addition to the existing `location` text, so the app can display locations as Country > State > City (e.g., India, Uttarakhand, Rishikesh) without breaking existing consumers.",
+      "target": "backend",
       "source": {
         "messageIds": [
           "msg-4"
         ],
         "quotes": [
-          "create these courses option ( 100-Hour YTT, 200-Hour YTT, 300-Hour YTT, 500-Hour YTT )"
+          "also i want these location (India, Uttarakhand , Rishikesh)  means First country then state then city"
         ]
       },
       "acceptanceCriteria": [
-        "On `/` (`frontend/src/pages/DirectoryPage.tsx`), the filter checklist includes: 100 Hours, 200 Hours, 300 Hours, 500 Hours.",
-        "Selecting 100 Hours adds it to the active filters badges and filters the school results based on trainings with `hours == 100` (using the existing `useSchools(selectedHours)` behavior).",
-        "User-facing labels remain in English and match the existing pattern (e.g., \"100 Hours\")."
+        "`backend/main.mo` School type includes fields for country/state/city (nullable/optional if needed for backward compatibility).",
+        "Existing public query methods that return School objects (e.g., `searchSchoolsByName`, `getSchool`) continue to work and include the structured fields.",
+        "`createSchool`/`updateSchool` accept and store the structured fields, while preserving the existing `location` behavior for legacy display/use.",
+        "User-facing behavior remains unchanged unless the frontend is updated to use the structured fields."
       ]
     },
     {
-      "id": "REQ-84",
-      "text": "Update home/Directory hero and informational copy that enumerates hour levels so it reflects the available hour categories including 100-Hour YTT.",
-      "target": "frontend",
+      "id": "REQ-87",
+      "text": "Add a public backend query method that supports fetching schools by structured location (country/state/city), so location-specific pages can load schools without client-side full-list filtering.",
+      "target": "backend",
       "source": {
         "messageIds": [
           "msg-4"
         ],
         "quotes": [
-          "create these courses option ( 100-Hour YTT, 200-Hour YTT, 300-Hour YTT, 500-Hour YTT )"
+          "also want these urls of location and courses to promote"
         ]
       },
       "acceptanceCriteria": [
-        "The Directory hero subtitle on `frontend/src/pages/DirectoryPage.tsx` mentions 100, 200, 300, and 500-hour teacher training programs (English text).",
-        "In `frontend/src/components/directory/DirectoryInfoSections.tsx`, any text that currently lists only 200/300/500 is updated to include 100 as well (English text)."
+        "A new public query method exists in `backend/main.mo` that can return schools filtered by country, optionally refined by state and city.",
+        "The method returns an empty list (not a trap) when no schools match or when inputs are empty/unknown.",
+        "The method is safe for anonymous callers (no authorization required) and does not trap in normal usage."
       ]
     },
     {
-      "id": "REQ-85",
-      "text": "Extend the “Training Hour Levels Explained” informational section to include a 100-Hour YTT level entry consistent with the existing Card-based layout and styling.",
+      "id": "REQ-88",
+      "text": "Update the Admin Dashboard Schools management UI to collect and persist structured location (Country, State, City) and to display the composed location in the order Country > State > City.",
       "target": "frontend",
       "source": {
         "messageIds": [
           "msg-4"
         ],
         "quotes": [
-          "create these courses option ( 100-Hour YTT, 200-Hour YTT, 300-Hour YTT, 500-Hour YTT )"
+          "also i want these location (India, Uttarakhand , Rishikesh)  means First country then state then city"
         ]
       },
       "acceptanceCriteria": [
-        "`frontend/src/components/directory/DirectoryInfoSections.tsx` includes a visible \"100-Hour YTT\" entry in the Training Hour Levels section, styled consistently with the existing 200/300/500 cards.",
-        "All new content is in English and does not introduce new backend dependencies."
+        "`frontend/src/components/admin/sections/SchoolsAdminSection.tsx` includes required/clearly-labeled inputs for Country, State, and City (English labels).",
+        "Admin create/update school mutations are updated to send the structured location fields to the backend.",
+        "The Schools admin table displays the structured location in Country > State > City order (or a sensible fallback when some fields are missing).",
+        "All user-facing validation and errors remain in English."
+      ]
+    },
+    {
+      "id": "REQ-89",
+      "text": "Update school-facing UI components to display structured location as Country > State > City wherever a school location is shown (e.g., School Card, School Profile Banner, School Detail “Quick Info”), with a sensible fallback to the legacy `school.location` text when structured fields are not present.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "means First country then state then city"
+        ]
+      },
+      "acceptanceCriteria": [
+        "`frontend/src/components/directory/SchoolCard.tsx` shows location in Country > State > City order when available.",
+        "`frontend/src/components/school/SchoolProfileBanner.tsx` shows location in Country > State > City order when available.",
+        "`frontend/src/pages/SchoolDetailPage.tsx` “Quick Info” location renders the structured location order when available.",
+        "If any structured parts are missing, the UI falls back gracefully (no blank/undefined strings shown)."
+      ]
+    },
+    {
+      "id": "REQ-90",
+      "text": "Add deep-linkable, promotional location URLs that users can share to promote a specific Country/State/City location, and render a location listing page that shows schools in that location.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "also want these urls of location and courses to promote"
+        ]
+      },
+      "acceptanceCriteria": [
+        "`frontend/src/App.tsx` includes one or more new routes for locations (e.g., `/location/$country`, `/location/$country/$state`, `/location/$country/$state/$city`) consistent with the existing TanStack Router setup.",
+        "A new location listing page renders a directory-style list of matching schools for the selected location and shows an English heading describing the location context.",
+        "The location listing page loads schools using the new backend location-filter query (REQ-87) and handles empty/error/loading states in English.",
+        "School Detail pages render location breadcrumbs/links (Country, State, City) that navigate to the corresponding location URL(s)."
+      ]
+    },
+    {
+      "id": "REQ-91",
+      "text": "Add shareable promotional URLs for courses (trainings) and for locations by providing a user-visible “Copy link” control on the relevant pages, using English labels and clear success/error messaging.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "also want these urls of location and courses to promote"
+        ]
+      },
+      "acceptanceCriteria": [
+        "On the Training Curriculum page (`/school/$schoolId/training/$trainingId`, `frontend/src/pages/TrainingCurriculumPage.tsx`), a “Copy link” control copies the current page URL to the clipboard and shows an English confirmation (toast or inline message).",
+        "On location listing pages, a “Copy link” control copies the current location page URL and shows an English confirmation.",
+        "If clipboard access fails, the UI shows an English fallback message instructing the user to manually copy the URL from the address bar.",
+        "No backend changes are required for copying links."
       ]
     }
   ],
   "constraints": [
-    "Do not modify any immutable frontend paths listed in SYSTEM_CONTEXT (e.g., `frontend/src/hooks/useActor.ts`, `frontend/src/hooks/useInternetIdentity.ts(x)`, `frontend/src/main.tsx`, or any sources under `frontend/src/components/ui`).",
-    "Keep the Motoko backend single-actor architecture (all logic in `backend/main.mo`); no backend changes are required unless strictly necessary for this request."
+    "Backend must remain a single Motoko actor in `backend/main.mo` (no additional backend services).",
+    "Do not modify any files under `frontend/src/components/ui` (read-only Shadcn components); compose them instead.",
+    "Do not modify immutable hook bootstrap files listed in `frontend.immutablePaths` (e.g., `frontend/src/hooks/useActor.ts`, `frontend/src/main.tsx`).",
+    "All user-facing text must be in English."
   ],
   "nonGoals": [
-    "Adding new backend data models for courses/training categories beyond the existing `Training.hours` field.",
-    "Implementing new admin-only validation rules that restrict which hour values are allowed for trainings.",
-    "Creating new pages or routes for course/category browsing beyond updating the existing directory filter and informational content."
+    "Adding third-party map/geocoding APIs or GPS-based location features.",
+    "SEO server-side rendering or Next.js migration.",
+    "Changing the existing course/curriculum route structure (`/school/$schoolId/training/$trainingId`).",
+    "Implementing external marketing integrations or social sharing APIs beyond copy-link functionality."
   ],
   "imageRequirements": {
     "required": [],
     "edits": []
-  },
-  "userProfileUpdate": {
-    "goalsToAdd": [],
-    "goalsToRemove": [],
-    "preferencesToAdd": [],
-    "preferencesToRemove": [],
-    "miscToAdd": [],
-    "miscToRemove": [],
-    "fieldsToSet": {},
-    "fieldsToDelete": []
   }
 }

@@ -11,6 +11,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Plus, Pencil, Trash2, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import type { School } from '@/backend';
+import { formatStructuredLocation } from '@/lib/locationFormat';
 
 export default function SchoolsAdminSection() {
   const { data: schools, isLoading } = useAdminSchools();
@@ -24,17 +25,20 @@ export default function SchoolsAdminSection() {
     id: '',
     name: '',
     location: '',
+    country: '',
+    state: '',
+    city: '',
     videoUrl: '',
   });
 
   const resetForm = () => {
-    setFormData({ id: '', name: '', location: '', videoUrl: '' });
+    setFormData({ id: '', name: '', location: '', country: '', state: '', city: '', videoUrl: '' });
     setEditingSchool(null);
   };
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.id.trim() || !formData.name.trim() || !formData.location.trim()) {
+    if (!formData.id.trim() || !formData.name.trim()) {
       toast.error('Please fill in all required fields');
       return;
     }
@@ -43,7 +47,10 @@ export default function SchoolsAdminSection() {
       await createSchool.mutateAsync({
         id: formData.id.trim(),
         name: formData.name.trim(),
-        location: formData.location.trim(),
+        location: formData.location.trim() || 'Not specified',
+        country: formData.country.trim() || null,
+        state: formData.state.trim() || null,
+        city: formData.city.trim() || null,
         videoUrl: formData.videoUrl.trim() || null,
       });
       toast.success('School created successfully');
@@ -56,7 +63,7 @@ export default function SchoolsAdminSection() {
 
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!editingSchool || !formData.name.trim() || !formData.location.trim()) {
+    if (!editingSchool || !formData.name.trim()) {
       toast.error('Please fill in all required fields');
       return;
     }
@@ -65,7 +72,10 @@ export default function SchoolsAdminSection() {
       await updateSchool.mutateAsync({
         id: editingSchool.id,
         name: formData.name.trim(),
-        location: formData.location.trim(),
+        location: formData.location.trim() || 'Not specified',
+        country: formData.country.trim() || null,
+        state: formData.state.trim() || null,
+        city: formData.city.trim() || null,
         videoUrl: formData.videoUrl.trim() || null,
       });
       toast.success('School updated successfully');
@@ -91,6 +101,9 @@ export default function SchoolsAdminSection() {
       id: school.id,
       name: school.name,
       location: school.location,
+      country: school.country || '',
+      state: school.state || '',
+      city: school.city || '',
       videoUrl: school.videoUrl || '',
     });
   };
@@ -120,7 +133,7 @@ export default function SchoolsAdminSection() {
                 Add School
               </Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="max-h-[90vh] overflow-y-auto">
               <form onSubmit={handleCreate}>
                 <DialogHeader>
                   <DialogTitle>Create New School</DialogTitle>
@@ -148,14 +161,46 @@ export default function SchoolsAdminSection() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="create-location">Location *</Label>
+                    <Label htmlFor="create-country">Country *</Label>
+                    <Input
+                      id="create-country"
+                      value={formData.country}
+                      onChange={(e) => setFormData({ ...formData, country: e.target.value })}
+                      placeholder="e.g., India"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="create-state">State *</Label>
+                    <Input
+                      id="create-state"
+                      value={formData.state}
+                      onChange={(e) => setFormData({ ...formData, state: e.target.value })}
+                      placeholder="e.g., Uttarakhand"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="create-city">City *</Label>
+                    <Input
+                      id="create-city"
+                      value={formData.city}
+                      onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                      placeholder="e.g., Rishikesh"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="create-location">Legacy Location (optional)</Label>
                     <Input
                       id="create-location"
                       value={formData.location}
                       onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                       placeholder="e.g., Bali, Indonesia"
-                      required
                     />
+                    <p className="text-xs text-muted-foreground">
+                      Leave blank to use structured location (Country &gt; State &gt; City)
+                    </p>
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="create-video">Video URL</Label>
@@ -203,7 +248,7 @@ export default function SchoolsAdminSection() {
                   <TableRow key={school.id}>
                     <TableCell className="font-mono text-sm">{school.id}</TableCell>
                     <TableCell className="font-medium">{school.name}</TableCell>
-                    <TableCell>{school.location}</TableCell>
+                    <TableCell>{formatStructuredLocation(school)}</TableCell>
                     <TableCell>{school.videoUrl ? 'Yes' : 'No'}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
@@ -213,7 +258,7 @@ export default function SchoolsAdminSection() {
                               <Pencil className="h-4 w-4" />
                             </Button>
                           </DialogTrigger>
-                          <DialogContent>
+                          <DialogContent className="max-h-[90vh] overflow-y-auto">
                             <form onSubmit={handleUpdate}>
                               <DialogHeader>
                                 <DialogTitle>Edit School</DialogTitle>
@@ -230,13 +275,45 @@ export default function SchoolsAdminSection() {
                                   />
                                 </div>
                                 <div className="space-y-2">
-                                  <Label htmlFor="edit-location">Location *</Label>
+                                  <Label htmlFor="edit-country">Country *</Label>
+                                  <Input
+                                    id="edit-country"
+                                    value={formData.country}
+                                    onChange={(e) => setFormData({ ...formData, country: e.target.value })}
+                                    placeholder="e.g., India"
+                                    required
+                                  />
+                                </div>
+                                <div className="space-y-2">
+                                  <Label htmlFor="edit-state">State *</Label>
+                                  <Input
+                                    id="edit-state"
+                                    value={formData.state}
+                                    onChange={(e) => setFormData({ ...formData, state: e.target.value })}
+                                    placeholder="e.g., Uttarakhand"
+                                    required
+                                  />
+                                </div>
+                                <div className="space-y-2">
+                                  <Label htmlFor="edit-city">City *</Label>
+                                  <Input
+                                    id="edit-city"
+                                    value={formData.city}
+                                    onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                                    placeholder="e.g., Rishikesh"
+                                    required
+                                  />
+                                </div>
+                                <div className="space-y-2">
+                                  <Label htmlFor="edit-location">Legacy Location (optional)</Label>
                                   <Input
                                     id="edit-location"
                                     value={formData.location}
                                     onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                                    required
                                   />
+                                  <p className="text-xs text-muted-foreground">
+                                    Leave blank to use structured location (Country &gt; State &gt; City)
+                                  </p>
                                 </div>
                                 <div className="space-y-2">
                                   <Label htmlFor="edit-video">Video URL</Label>
@@ -270,7 +347,7 @@ export default function SchoolsAdminSection() {
                             <AlertDialogHeader>
                               <AlertDialogTitle>Delete School</AlertDialogTitle>
                               <AlertDialogDescription>
-                                Are you sure you want to delete "{school.name}"? This will also delete all associated teachers, trainings, and reviews. This action cannot be undone.
+                                Are you sure you want to delete &quot;{school.name}&quot;? This will also delete all associated teachers, trainings, and reviews. This action cannot be undone.
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>

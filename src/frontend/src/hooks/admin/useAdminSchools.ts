@@ -35,18 +35,24 @@ export function useCreateSchool() {
       id,
       name,
       location,
+      country,
+      state,
+      city,
       videoUrl,
     }: {
       id: string;
       name: string;
       location: string;
+      country: string | null;
+      state: string | null;
+      city: string | null;
       videoUrl: string | null;
     }) => {
       if (!actor) {
         throw new Error('Backend connection not available. Please try again.');
       }
       try {
-        await actor.createSchool(id, name, location, videoUrl);
+        await actor.createSchool(id, name, location, country, state, city, videoUrl);
       } catch (error: any) {
         console.error('[useCreateSchool] Failed:', error);
         if (error.message?.includes('Unauthorized')) {
@@ -74,18 +80,24 @@ export function useUpdateSchool() {
       id,
       name,
       location,
+      country,
+      state,
+      city,
       videoUrl,
     }: {
       id: string;
       name: string;
       location: string;
+      country: string | null;
+      state: string | null;
+      city: string | null;
       videoUrl: string | null;
     }) => {
       if (!actor) {
         throw new Error('Backend connection not available. Please try again.');
       }
       try {
-        await actor.updateSchool(id, name, location, videoUrl);
+        await actor.updateSchool(id, name, location, country, state, city, videoUrl);
       } catch (error: any) {
         console.error('[useUpdateSchool] Failed:', error);
         if (error.message?.includes('Unauthorized')) {
