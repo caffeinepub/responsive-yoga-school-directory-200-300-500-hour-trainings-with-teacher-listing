@@ -1,21 +1,56 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Directory: add actionable retry control for school-load failures",
+  "title": "Add 100-hour YTT option to directory filters and informational content",
   "requirements": [
     {
-      "id": "REQ-47",
-      "summary": "Add a Retry action to the Directory error banner that refetches the schools React Query without a full page refresh, while keeping the existing English error message unchanged.",
+      "id": "REQ-83",
+      "summary": "Add a 100-hour option to the Directory page training-hours filter so users can filter schools by 100-hour YTT programs.",
       "acceptanceCriteria": [
-        "When the Directory page is in an error state, it still displays exactly the message: \"Failed to load schools. Please try again later.\"",
-        "The error UI includes a clearly labeled \"Retry\" action that triggers a React Query refetch for the schools query.",
-        "If the backend becomes available, clicking \"Retry\" loads and renders the schools grid without a full page reload."
+        "On `/` (`frontend/src/pages/DirectoryPage.tsx`), the filter checklist includes: 100 Hours, 200 Hours, 300 Hours, 500 Hours.",
+        "Selecting 100 Hours adds it to the active filters badges and filters the school results based on trainings with `hours == 100` (using the existing `useSchools(selectedHours)` behavior).",
+        "User-facing labels remain in English and match the existing pattern (e.g., \"100 Hours\")."
       ],
       "file_operations": [
         {
           "path": "frontend/src/pages/DirectoryPage.tsx",
           "operation": "modify",
-          "description": "Update the Directory error state UI to include a clearly labeled \"Retry\" control that calls the React Query refetch function returned by useSchools(selectedHours). Ensure the existing error message string remains exactly unchanged and that retry does not require a full page reload. If using shadcn-ui (e.g., Button) for the control, verify the component's usage instructions before implementing."
+          "description": "Update the training-hours checklist to render [100, 200, 300, 500] (instead of [200, 300, 500]) and ensure toggling 100 updates badges and continues to pass selectedHours into useSchools for filtering. Use the existing shadcn-ui Checkbox/Label/Badge components for consistent styling; verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-84",
+      "summary": "Update Directory hero and directory info copy to include 100-hour YTT alongside 200/300/500-hour categories.",
+      "acceptanceCriteria": [
+        "The Directory hero subtitle on `frontend/src/pages/DirectoryPage.tsx` mentions 100, 200, 300, and 500-hour teacher training programs (English text).",
+        "In `frontend/src/components/directory/DirectoryInfoSections.tsx`, any text that currently lists only 200/300/500 is updated to include 100 as well (English text)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/DirectoryPage.tsx",
+          "operation": "modify",
+          "description": "Revise the hero subtitle copy to explicitly mention 100, 200, 300, and 500-hour teacher training programs (English), keeping the existing layout and shadcn-ui Badge/Button styling intact; verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/directory/DirectoryInfoSections.tsx",
+          "operation": "modify",
+          "description": "Update any informational text that enumerates hour levels (e.g., the 'Browse Programs' card copy) to include 100-hour offerings alongside 200/300/500 (English). Keep the existing shadcn-ui Card/Badge typography and spacing consistent; verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-85",
+      "summary": "Add a 100-Hour YTT entry to the “Training Hour Levels Explained” section using the existing Card-based layout and styling.",
+      "acceptanceCriteria": [
+        "`frontend/src/components/directory/DirectoryInfoSections.tsx` includes a visible \"100-Hour YTT\" entry in the Training Hour Levels section, styled consistently with the existing 200/300/500 cards.",
+        "All new content is in English and does not introduce new backend dependencies."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/directory/DirectoryInfoSections.tsx",
+          "operation": "modify",
+          "description": "Extend the Training Hour Levels Explained grid to include a new shadcn-ui Card for \"100-Hour YTT\" with copy and bullet points consistent with the existing 200/300/500 cards. Adjust the grid column classes if needed so four cards display cleanly while preserving current styling; verify the component's usage instructions before implementing."
         }
       ]
     }

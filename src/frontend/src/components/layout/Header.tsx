@@ -36,6 +36,12 @@ export default function Header() {
           <nav className="hidden items-center gap-1 md:flex">
             <Button
               variant="ghost"
+              onClick={() => navigate({ to: '/blog' })}
+            >
+              Blog
+            </Button>
+            <Button
+              variant="ghost"
               onClick={() => navigate({ to: '/about' })}
             >
               About
@@ -52,6 +58,12 @@ export default function Header() {
             >
               Submit/Claim School
             </Button>
+            <Button
+              variant="ghost"
+              onClick={() => navigate({ to: '/admin' })}
+            >
+              Admin
+            </Button>
           </nav>
 
           {/* Mobile Navigation Menu */}
@@ -62,6 +74,9 @@ export default function Header() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuItem onClick={() => navigate({ to: '/blog' })}>
+                Blog
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={() => navigate({ to: '/about' })}>
                 About
               </DropdownMenuItem>
@@ -70,6 +85,9 @@ export default function Header() {
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => navigate({ to: '/submit-claim' })}>
                 Submit/Claim School
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate({ to: '/admin' })}>
+                Admin
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

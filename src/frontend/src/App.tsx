@@ -5,6 +5,9 @@ import TrainingCurriculumPage from './pages/TrainingCurriculumPage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import SubmitClaimSchoolPage from './pages/SubmitClaimSchoolPage';
+import AdminPage from './pages/AdminPage';
+import BlogPage from './pages/BlogPage';
+import BlogPostPage from './pages/BlogPostPage';
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 import { ThemeProvider } from 'next-themes';
@@ -64,6 +67,24 @@ const submitClaimRoute = createRoute({
   component: SubmitClaimSchoolPage,
 });
 
+const adminRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/admin',
+  component: AdminPage,
+});
+
+const blogRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/blog',
+  component: BlogPage,
+});
+
+const blogPostRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/blog/$postId',
+  component: BlogPostPage,
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   schoolDetailRoute,
@@ -71,6 +92,9 @@ const routeTree = rootRoute.addChildren([
   aboutRoute,
   contactRoute,
   submitClaimRoute,
+  adminRoute,
+  blogRoute,
+  blogPostRoute,
 ]);
 
 const router = createRouter({ routeTree });

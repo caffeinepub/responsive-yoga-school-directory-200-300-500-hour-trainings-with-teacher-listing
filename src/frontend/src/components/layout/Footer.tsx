@@ -35,6 +35,13 @@ export default function Footer() {
               <Button
                 variant="link"
                 className="h-auto justify-start p-0 text-sm text-muted-foreground hover:text-foreground"
+                onClick={() => navigate({ to: '/blog' })}
+              >
+                Blog
+              </Button>
+              <Button
+                variant="link"
+                className="h-auto justify-start p-0 text-sm text-muted-foreground hover:text-foreground"
                 onClick={() => navigate({ to: '/about' })}
               >
                 About

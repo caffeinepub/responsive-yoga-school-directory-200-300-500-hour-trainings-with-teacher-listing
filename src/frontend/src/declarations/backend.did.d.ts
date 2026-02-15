@@ -10,6 +10,13 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
+export interface BlogPost {
+  'id' : string,
+  'title' : string,
+  'content' : string,
+  'featuredImageUrl' : [] | [string],
+  'excerpt' : [] | [string],
+}
 export interface Review {
   'reviewerName' : string,
   'comment' : string,
@@ -37,25 +44,52 @@ export interface Training {
   'schoolId' : SchoolId,
 }
 export type TrainingId = string;
+export interface UserProfile { 'name' : string }
+export type UserRole = { 'admin' : null } |
+  { 'user' : null } |
+  { 'guest' : null };
 export interface _SERVICE {
+  '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
   'addReview' : ActorMethod<[SchoolId, string, bigint, string], undefined>,
-  'addSchool' : ActorMethod<
-    [SchoolId, string, string, [] | [string]],
-    undefined
-  >,
   'addTeacher' : ActorMethod<[TeacherId, string, string, SchoolId], undefined>,
   'addTraining' : ActorMethod<
     [TrainingId, bigint, string, SchoolId],
     undefined
   >,
+  'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
+  'createSchool' : ActorMethod<
+    [SchoolId, string, string, [] | [string]],
+    undefined
+  >,
+  'deleteSchool' : ActorMethod<[SchoolId], undefined>,
+  'deleteTeacher' : ActorMethod<[TeacherId], undefined>,
+  'deleteTraining' : ActorMethod<[TrainingId], undefined>,
+  'getAllBlogPosts' : ActorMethod<[], Array<BlogPost>>,
+  'getBlogPost' : ActorMethod<[string], [] | [BlogPost]>,
+  'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
+  'getCallerUserRole' : ActorMethod<[], UserRole>,
   'getReviewsForSchool' : ActorMethod<[SchoolId], Array<Review>>,
-  'getSchool' : ActorMethod<[SchoolId], School>,
-  'getTeacher' : ActorMethod<[TeacherId], Teacher>,
+  'getSchool' : ActorMethod<[SchoolId], [] | [School]>,
+  'getTeacher' : ActorMethod<[TeacherId], [] | [Teacher]>,
   'getTeachersBySchool' : ActorMethod<[SchoolId], Array<Teacher>>,
-  'getTraining' : ActorMethod<[TrainingId], Training>,
+  'getTraining' : ActorMethod<[TrainingId], [] | [Training]>,
   'getTrainingsBySchool' : ActorMethod<[SchoolId], Array<Training>>,
+  'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
+  'isCallerAdmin' : ActorMethod<[], boolean>,
+  'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
   'searchSchoolsByName' : ActorMethod<[string], Array<School>>,
-  'seedSchools' : ActorMethod<[], undefined>,
+  'updateSchool' : ActorMethod<
+    [SchoolId, string, string, [] | [string]],
+    undefined
+  >,
+  'updateTeacher' : ActorMethod<
+    [TeacherId, string, string, SchoolId],
+    undefined
+  >,
+  'updateTraining' : ActorMethod<
+    [TrainingId, bigint, string, SchoolId],
+    undefined
+  >,
 }
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];

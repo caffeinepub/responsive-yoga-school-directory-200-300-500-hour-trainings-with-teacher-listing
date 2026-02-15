@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useSchools } from '@/hooks/useSchools';
 import SchoolCard from '@/components/directory/SchoolCard';
+import DirectoryInfoSections from '@/components/directory/DirectoryInfoSections';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
-import { AlertCircle, Filter, RefreshCw } from 'lucide-react';
+import { AlertCircle, Filter, RefreshCw, ArrowDown, Sliders } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -12,6 +13,9 @@ import { Button } from '@/components/ui/button';
 export default function DirectoryPage() {
   const [selectedHours, setSelectedHours] = useState<number[]>([]);
   const { data: schools, isLoading, error, refetch, isRefetching } = useSchools(selectedHours);
+  
+  const filtersRef = useRef<HTMLDivElement>(null);
+  const resultsRef = useRef<HTMLDivElement>(null);
 
   const toggleHourFilter = (hours: number) => {
     setSelectedHours((prev) =>
@@ -23,28 +27,91 @@ export default function DirectoryPage() {
     refetch();
   };
 
+  const scrollToResults = () => {
+    resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  const scrollToFilters = () => {
+    filtersRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Focus the first checkbox after scrolling
+    setTimeout(() => {
+      const firstCheckbox = filtersRef.current?.querySelector('button[role="checkbox"]') as HTMLElement;
+      firstCheckbox?.focus();
+    }, 500);
+  };
+
   return (
-    <div className="bg-white dark:bg-background">
-      <div className="container mx-auto px-4 py-8 md:py-12">
-        {/* Hero Section */}
-        <div className="mb-12 text-center">
-          <h1 className="mb-4 text-4xl font-bold tracking-tight text-foreground md:text-5xl lg:text-6xl">
-            Yoga Alliance Teacher Training Directory
-          </h1>
-          <p className="mx-auto max-w-2xl text-lg text-muted-foreground md:text-xl">
-            Discover certified yoga schools offering 200, 300, and 500-hour teacher training programs
-          </p>
+    <div className="bg-background">
+      {/* Banner Section */}
+      <section className="relative overflow-hidden">
+        {/* Background Banner Image with Overlay */}
+        <div className="absolute inset-0 z-0">
+          <img
+            src="/assets/generated/directory-banner.dim_1600x500.png"
+            alt=""
+            className="h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/95 via-background/85 to-background dark:from-background/98 dark:via-background/90 dark:to-background" />
         </div>
 
+        {/* Hero Content */}
+        <div className="relative z-10 container mx-auto px-4 py-20 md:py-28 lg:py-36">
+          <div className="mx-auto max-w-4xl text-center">
+            <Badge className="mb-6 px-4 py-1.5 text-sm font-medium" variant="secondary">
+              Yoga Alliance Certified Programs
+            </Badge>
+            <h1 className="mb-6 font-serif text-4xl font-bold tracking-tight text-foreground md:text-5xl lg:text-6xl xl:text-7xl">
+              Yoga Alliance Teacher Training Directory
+            </h1>
+            <p className="mb-10 text-lg text-muted-foreground md:text-xl lg:text-2xl">
+              Discover certified yoga schools offering 100, 200, 300, and 500-hour teacher training programs
+            </p>
+
+            {/* Hero CTAs */}
+            <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <Button
+                size="lg"
+                className="min-w-[200px] text-base font-semibold shadow-lg transition-all hover:scale-105 hover:shadow-xl"
+                onClick={scrollToResults}
+              >
+                Browse Schools
+                <ArrowDown className="ml-2 h-5 w-5" />
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="min-w-[200px] border-2 text-base font-semibold transition-all hover:scale-105"
+                onClick={scrollToFilters}
+              >
+                <Sliders className="mr-2 h-5 w-5" />
+                Filter Programs
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Decorative bottom wave */}
+        <div className="absolute bottom-0 left-0 right-0 z-10 h-16 bg-gradient-to-t from-background to-transparent" />
+      </section>
+
+      {/* Informational Sections */}
+      <div className="container mx-auto px-4 py-16 md:py-20">
+        <DirectoryInfoSections />
+      </div>
+
+      {/* Filter and Results Section */}
+      <div className="container mx-auto px-4 py-12">
         {/* Filter Section */}
-        <div className="mb-8 rounded-lg border border-border bg-card p-6 shadow-sm">
-          <div className="mb-4 flex items-center gap-2">
-            <Filter className="h-5 w-5 text-muted-foreground" />
-            <h2 className="text-lg font-semibold text-foreground">Filter by Training Hours</h2>
+        <div ref={filtersRef} className="mb-12 scroll-mt-24 rounded-xl border-2 border-border bg-card p-6 shadow-soft md:p-8">
+          <div className="mb-6 flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+              <Filter className="h-5 w-5 text-primary" />
+            </div>
+            <h2 className="text-xl font-bold text-foreground md:text-2xl">Filter by Training Hours</h2>
           </div>
           <div className="flex flex-wrap gap-6">
-            {[200, 300, 500].map((hours) => (
-              <div key={hours} className="flex items-center space-x-2">
+            {[100, 200, 300, 500].map((hours) => (
+              <div key={hours} className="flex items-center space-x-3">
                 <Checkbox
                   id={`hours-${hours}`}
                   checked={selectedHours.includes(hours)}
@@ -60,10 +127,10 @@ export default function DirectoryPage() {
             ))}
           </div>
           {selectedHours.length > 0 && (
-            <div className="mt-4 flex flex-wrap gap-2">
-              <span className="text-sm text-muted-foreground">Active filters:</span>
+            <div className="mt-6 flex flex-wrap gap-2">
+              <span className="text-sm font-medium text-muted-foreground">Active filters:</span>
               {selectedHours.map((hours) => (
-                <Badge key={hours} variant="secondary" className="gap-1">
+                <Badge key={hours} variant="secondary" className="gap-1 px-3 py-1">
                   {hours} Hours
                 </Badge>
               ))}
@@ -71,7 +138,7 @@ export default function DirectoryPage() {
           )}
         </div>
 
-        {/* Error State - only show when not loading and there's an error */}
+        {/* Error State */}
         {!isLoading && error && (
           <Alert variant="destructive" className="mb-8">
             <AlertCircle className="h-4 w-4" />
@@ -116,27 +183,33 @@ export default function DirectoryPage() {
 
         {/* Schools Grid */}
         {!isLoading && !error && schools && schools.length > 0 && (
-          <>
-            <div className="mb-6 text-sm text-muted-foreground">
-              Showing {schools.length} {schools.length === 1 ? 'school' : 'schools'}
+          <div ref={resultsRef} className="scroll-mt-24">
+            <div className="mb-6 flex items-center gap-2">
+              <h2 className="text-2xl font-bold text-foreground">Available Schools</h2>
+              <Badge variant="outline" className="text-base">
+                {schools.length} {schools.length === 1 ? 'school' : 'schools'}
+              </Badge>
             </div>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {schools.map((school) => (
                 <SchoolCard key={school.id} school={school} />
               ))}
             </div>
-          </>
+          </div>
         )}
 
-        {/* Empty State - only show when not loading, no error, and empty results */}
+        {/* Empty State */}
         {!isLoading && !error && schools && schools.length === 0 && (
-          <div className="rounded-lg border border-dashed border-border bg-muted/20 p-12 text-center">
-            <p className="text-lg text-muted-foreground">
-              No schools found matching your criteria.
+          <div className="rounded-xl border-2 border-dashed border-border bg-muted/20 p-12 text-center">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-muted">
+              <Filter className="h-8 w-8 text-muted-foreground" />
+            </div>
+            <p className="mb-2 text-lg font-semibold text-foreground">
+              No schools found matching your criteria
             </p>
             {selectedHours.length > 0 && (
-              <p className="mt-2 text-sm text-muted-foreground">
-                Try adjusting your filters to see more results.
+              <p className="text-sm text-muted-foreground">
+                Try adjusting your filters to see more results
               </p>
             )}
           </div>

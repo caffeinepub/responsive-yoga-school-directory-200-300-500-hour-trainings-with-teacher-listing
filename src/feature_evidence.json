@@ -2,8 +2,8 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-update-the-frontend-directory-error-state-to-provide-a-user-actionable-retry-control-while-keeping-the-existing-user-facing-message-in-english-the-retry-must-re-run-the-schools-query-without-requiring-a-full-page-refresh",
-      "featureTitle": "Update the frontend Directory error state to provide a user-actionable retry control while keeping the existing user-facing message in English. The retry must re-run the schools query without requiring a full page refresh.",
+      "featureId": "feature-update-the-directory-page-training-hours-filter-to-include-a-100-hour-option-alongside-the-existing-200-300-500-options-so-users-can-filter-schools-by-100-hour-ytt-programs",
+      "featureTitle": "Update the Directory page training-hours filter to include a 100-hour option alongside the existing 200/300/500 options, so users can filter schools by 100-Hour YTT programs.",
       "files": [
         "frontend/src/pages/DirectoryPage.tsx"
       ],
@@ -12,10 +12,50 @@
         "shadcn-ui@1.0.0",
         "build-template-react@1.0.0",
         "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
       ],
       "testIds": [
-        "REQ-47"
+        "REQ-83"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-home-directory-hero-and-informational-copy-that-enumerates-hour-levels-so-it-reflects-the-available-hour-categories-including-100-hour-ytt",
+      "featureTitle": "Update home/Directory hero and informational copy that enumerates hour levels so it reflects the available hour categories including 100-Hour YTT.",
+      "files": [
+        "frontend/src/components/directory/DirectoryInfoSections.tsx",
+        "frontend/src/pages/DirectoryPage.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
+      ],
+      "testIds": [
+        "REQ-84"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-extend-the-training-hour-levels-explained-informational-section-to-include-a-100-hour-ytt-level-entry-consistent-with-the-existing-card-based-layout-and-styling",
+      "featureTitle": "Extend the “Training Hour Levels Explained” informational section to include a 100-Hour YTT level entry consistent with the existing Card-based layout and styling.",
+      "files": [
+        "frontend/src/components/directory/DirectoryInfoSections.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
+      ],
+      "testIds": [
+        "REQ-85"
       ],
       "confidence": "high"
     }

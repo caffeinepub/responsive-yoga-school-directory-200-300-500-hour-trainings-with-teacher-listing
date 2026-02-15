@@ -1,10 +1,12 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 39,
-  "summary": "Build a fully responsive WordPress Yoga Schools Directory for Yoga Alliance teacher training programs (200/300/500 hours), including school listings with associated teacher information, custom branding using the provided logo, an FAQ section on each school page, a Google Map option per school, a similar-schools list on school detail pages, and a new School Review section on school detail pages.",
+  "projectStateVersion": 63,
+  "summary": "Build a fully responsive Yoga Schools Directory with school listings, teacher information, custom branding using the provided logo, an FAQ section on each school page, a Google Map option per school, a similar-schools list on school detail pages, a School Review section, an Admin Dashboard (authenticated) to manage directory data without touching code, a Blog section with demo blog posts, and training course hour options including 100/200/300/500-hour YTT.",
   "architectural_notes": [
     "WordPress-based directory website with responsive design requirements.",
-    "UI styling requirement: use a white background site-wide (\"everywhere\"), not just on the directory page, while maintaining readable contrast."
+    "UI styling requirement: use a white background site-wide (\"everywhere\"), not just on the directory page, while maintaining readable contrast.",
+    "Backend must seed demo schools/teachers/trainings automatically via canister install/upgrade system hooks so `searchSchoolsByName(\"\")` has data immediately after deploy/upgrade.",
+    "Add an authenticated Admin Dashboard (likely using Internet Identity) so admins can CRUD schools/teachers/trainings/reviews via UI rather than code changes."
   ],
   "known_issues": [
     "Production deployment failed with a deployment error (Version 1 could not be deployed to production).",
@@ -13,9 +15,12 @@
     "After deploying Version 15, users still see \"Failed to load schools. Please try again later.\" (schools not loading / frontend fetch still failing).",
     "School listing cards have unwanted top margin (spacing) that the user wants removed/adjusted.",
     "\"View details\" element needs additional bottom margin/spacing (layout tweak requested).",
-    "After deploying Draft Version 18, the Directory page still shows \"Failed to load schools. Please try again later.\" (schools not loading / frontend fetch still failing)."
+    "After deploying Draft Version 18, the Directory page still shows \"Failed to load schools. Please try again later.\" (schools not loading / frontend fetch still failing).",
+    "Directory page error \"Failed to load schools. Please try again later.\" is likely caused by backend having zero seeded schools (no automatic seeding on install/upgrade), leading to empty results and/or follow-on traps when fetching trainings/teachers.",
+    "Blog post featured image has unwanted top margin/spacing that needs to be removed/adjusted.",
+    "Blog archive (Blog list) featured image has unwanted margin/spacing that needs to be removed/adjusted."
   ],
-  "isFixRequest": true,
+  "isFixRequest": false,
   "existing_features": [
     {
       "id": "feature-build-a-fully-responsive-frontend-directory-ui-that-lists-yoga-schools-and-allows-filtering-by-training-hour-categories-200-300-500",
@@ -304,6 +309,198 @@
         "REQ-47"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-redesign-the-home-page-route-implemented-by-frontend-src-pages-directorypage-tsx-hero-area-to-feel-more-premium-and-visually-engaging-while-preserving-the-existing-title-and-subtitle-text-content-and-keeping-all-user-facing-text-in-english",
+      "title": "Redesign the Home page (route `/`, implemented by `frontend/src/pages/DirectoryPage.tsx`) hero area to feel more premium and visually engaging while preserving the existing title and subtitle text content and keeping all user-facing text in English.",
+      "reqIds": [
+        "REQ-48"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-clear-home-page-call-to-action-controls-in-the-hero-area-that-help-users-immediately-browse-the-directory-e-g-a-primary-action-that-scrolls-jumps-to-the-school-list-and-a-secondary-action-that-focuses-the-filter-section-without-adding-any-new-backend-functionality",
+      "title": "Add clear Home page call-to-action controls in the hero area that help users immediately browse the directory (e.g., a primary action that scrolls/jumps to the school list and a secondary action that focuses the filter section), without adding any new backend functionality.",
+      "reqIds": [
+        "REQ-49"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-one-or-more-informational-purely-presentational-sections-to-the-home-page-below-the-hero-e-g-how-it-works-why-use-this-directory-or-training-hour-levels-explained-using-existing-ui-components-and-styling-conventions-without-introducing-new-data-requirements-or-backend-changes",
+      "title": "Add one or more informational, purely-presentational sections to the Home page below the hero (e.g., “How it works”, “Why use this directory”, or “Training hour levels explained”) using existing UI components and styling conventions, without introducing new data requirements or backend changes.",
+      "reqIds": [
+        "REQ-50"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-responsive-banner-hero-section-to-the-top-of-the-school-detail-school-profile-page-frontend-src-pages-schooldetailpage-tsx-that-visually-matches-the-existing-premium-banner-pattern-used-on-the-directory-page-including-a-full-width-background-image-a-readable-overlay-and-prominent-display-of-the-current-school-s-name-and-location",
+      "title": "Add a responsive banner/hero section to the top of the School Detail (School Profile) page (`frontend/src/pages/SchoolDetailPage.tsx`) that visually matches the existing premium banner pattern used on the Directory page, including a full-width background image, a readable overlay, and prominent display of the current school’s name and location.",
+      "reqIds": [
+        "REQ-51"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-the-school-profile-banner-as-a-reusable-component-e-g-frontend-src-components-school-schoolprofilebanner-tsx-and-integrate-it-into-frontend-src-pages-schooldetailpage-tsx-without-modifying-any-immutable-ui-component-source-files-under-frontend-src-components-ui",
+      "title": "Implement the School Profile banner as a reusable component (e.g., `frontend/src/components/school/SchoolProfileBanner.tsx`) and integrate it into `frontend/src/pages/SchoolDetailPage.tsx` without modifying any immutable UI component source files under `frontend/src/components/ui`.",
+      "reqIds": [
+        "REQ-52"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-new-generated-static-banner-image-asset-for-the-school-profile-banner-under-frontend-public-assets-generated-and-reference-it-from-the-school-profile-banner-component-do-not-route-images-through-the-backend",
+      "title": "Add a new generated static banner image asset for the School Profile banner under `frontend/public/assets/generated/` and reference it from the School Profile banner component (do not route images through the backend).",
+      "reqIds": [
+        "REQ-53"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-reusable-inquiry-form-component-for-the-school-detail-page-that-can-be-opened-focused-from-ctas-and-collects-basic-inquiry-details-name-email-message-with-clear-english-labels-validation-and-an-accessible-success-confirmation-state-demo-non-functional-submission-is-acceptable",
+      "title": "Add a reusable inquiry form component for the School Detail page that can be opened/focused from CTAs and collects basic inquiry details (name, email, message), with clear English labels, validation, and an accessible success confirmation state (demo/non-functional submission is acceptable).",
+      "reqIds": [
+        "REQ-57"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-all-school-page-inquiry-ctas-so-clicking-them-opens-or-scrolls-to-and-focuses-the-inquiry-form-on-the-school-detail-page-including-enabling-the-currently-disabled-inquire-now-button-in-frontend-src-components-school-schooltrainingcoursessection-tsx",
+      "title": "Update all school-page inquiry CTAs so clicking them opens (or scrolls to and focuses) the inquiry form on the School Detail page, including enabling the currently-disabled “Inquire Now” button in `frontend/src/components/school/SchoolTrainingCoursesSection.tsx`.",
+      "reqIds": [
+        "REQ-58"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-an-inquiry-cta-entry-point-near-the-top-of-the-school-detail-page-e-g-within-or-directly-below-schoolprofilebanner-that-opens-scrolls-to-the-inquiry-form-using-english-button-text-and-consistent-styling-with-existing-ctas",
+      "title": "Add an inquiry CTA entry point near the top of the School Detail page (e.g., within or directly below `SchoolProfileBanner`) that opens/scrolls to the inquiry form, using English button text and consistent styling with existing CTAs.",
+      "reqIds": [
+        "REQ-59"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-new-admin-dashboard-route-e-g-admin-to-the-existing-tanstack-router-setup-in-frontend-src-app-tsx-and-implement-an-adminpage-that-is-accessible-from-the-main-app-layout",
+      "title": "Add a new Admin Dashboard route (e.g., `/admin`) to the existing TanStack Router setup in `frontend/src/App.tsx` and implement an `AdminPage` that is accessible from the main app layout.",
+      "reqIds": [
+        "REQ-60"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-gate-admin-dashboard-functionality-behind-internet-identity-authentication-using-the-existing-useinternetidentity-hook-do-not-modify-any-immutable-hook-files-if-the-user-is-not-authenticated-show-a-clear-sign-in-prompt-and-a-button-that-calls-login-if-authenticated-show-the-dashboard-ui-and-a-sign-out-control-that-calls-clear",
+      "title": "Gate Admin Dashboard functionality behind Internet Identity authentication using the existing `useInternetIdentity` hook (do not modify any immutable hook files). If the user is not authenticated, show a clear sign-in prompt and a button that calls `login()`. If authenticated, show the dashboard UI and a sign-out control that calls `clear()`.",
+      "reqIds": [
+        "REQ-61"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-an-admin-navigation-entry-point-in-frontend-src-components-layout-header-tsx-so-users-can-discover-the-dashboard-the-link-button-should-navigate-to-admin-and-use-english-label-text-e-g-admin",
+      "title": "Add an Admin navigation entry point in `frontend/src/components/layout/Header.tsx` so users can discover the dashboard. The link/button should navigate to `/admin` and use English label text (e.g., \"Admin\").",
+      "reqIds": [
+        "REQ-62"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-admin-dashboard-crud-ui-to-manage-schools-teachers-trainings-and-reviews-through-forms-and-lists-using-the-existing-backend-actor-access-useactor-and-react-query-patterns-used-elsewhere-in-the-app",
+      "title": "Implement Admin Dashboard CRUD UI to manage Schools, Teachers, Trainings, and Reviews through forms and lists, using the existing backend actor access (`useActor`) and React Query patterns used elsewhere in the app.",
+      "reqIds": [
+        "REQ-63"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-new-blog-list-route-and-page-to-the-existing-tanstack-router-setup-frontend-src-app-tsx-to-display-the-demo-blog-posts",
+      "title": "Add a new Blog list route and page to the existing TanStack Router setup (`frontend/src/App.tsx`) to display the demo blog posts.",
+      "reqIds": [
+        "REQ-69"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-new-blog-post-detail-route-and-page-to-show-a-single-blog-post-s-full-content",
+      "title": "Add a new Blog post detail route and page to show a single blog post’s full content.",
+      "reqIds": [
+        "REQ-70"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-navigation-entry-points-to-the-blog-section-from-the-existing-layout-navigation",
+      "title": "Add navigation entry points to the Blog section from the existing layout navigation.",
+      "reqIds": [
+        "REQ-71"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-small-set-of-new-generated-demo-blog-images-as-static-assets-under-frontend-public-assets-generated-for-use-in-the-blog-list-and-blog-post-detail-pages",
+      "title": "Add a small set of new generated demo blog images as static assets under `frontend/public/assets/generated/` for use in the Blog list and Blog post detail pages.",
+      "reqIds": [
+        "REQ-72"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-blog-list-ui-frontend-src-pages-blogpage-tsx-to-display-each-post-s-featured-image-and-excerpt-in-the-card-layout-with-a-consistent-aspect-ratio-responsive-sizing-and-accessible-english-alt-text",
+      "title": "Update the Blog list UI (`frontend/src/pages/BlogPage.tsx`) to display each post’s featured image and excerpt in the card layout, with a consistent aspect ratio, responsive sizing, and accessible English alt text.",
+      "reqIds": [
+        "REQ-76"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-blog-post-detail-ui-frontend-src-pages-blogpostpage-tsx-to-render-the-post-s-featured-image-when-present-prominently-near-the-top-of-the-article-and-improve-readability-of-the-richer-demo-content-multi-paragraph-content-should-display-as-separate-paragraphs-rather-than-a-single-block",
+      "title": "Update the Blog post detail UI (`frontend/src/pages/BlogPostPage.tsx`) to render the post’s featured image (when present) prominently near the top of the article, and improve readability of the richer demo content (multi-paragraph content should display as separate paragraphs rather than a single block).",
+      "reqIds": [
+        "REQ-77"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-remove-the-unwanted-top-spacing-above-the-featured-image-on-the-blog-post-detail-page-so-that-when-post-featuredimageurl-is-present-the-image-sits-flush-with-the-top-of-the-main-article-card-no-extra-top-margin-padding-introduced-by-surrounding-layout",
+      "title": "Remove the unwanted top spacing above the featured image on the Blog Post detail page so that when `post.featuredImageUrl` is present, the image sits flush with the top of the main article card (no extra top margin/padding introduced by surrounding layout).",
+      "reqIds": [
+        "REQ-78"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-remove-the-unwanted-top-spacing-above-each-post-s-featured-image-in-the-blog-archive-list-page-blog-frontend-src-pages-blogpage-tsx-so-that-when-post-featuredimageurl-is-present-the-image-sits-flush-with-the-top-border-of-the-blog-post-card-no-extra-top-margin-padding-gap",
+      "title": "Remove the unwanted top spacing above each post’s featured image in the Blog archive/list page (`/blog`, `frontend/src/pages/BlogPage.tsx`) so that when `post.featuredImageUrl` is present, the image sits flush with the top border of the blog post card (no extra top margin/padding/gap).",
+      "reqIds": [
+        "REQ-79"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-directory-page-training-hours-filter-to-include-a-100-hour-option-alongside-the-existing-200-300-500-options-so-users-can-filter-schools-by-100-hour-ytt-programs",
+      "title": "Update the Directory page training-hours filter to include a 100-hour option alongside the existing 200/300/500 options, so users can filter schools by 100-Hour YTT programs.",
+      "reqIds": [
+        "REQ-83"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-home-directory-hero-and-informational-copy-that-enumerates-hour-levels-so-it-reflects-the-available-hour-categories-including-100-hour-ytt",
+      "title": "Update home/Directory hero and informational copy that enumerates hour levels so it reflects the available hour categories including 100-Hour YTT.",
+      "reqIds": [
+        "REQ-84"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-extend-the-training-hour-levels-explained-informational-section-to-include-a-100-hour-ytt-level-entry-consistent-with-the-existing-card-based-layout-and-styling",
+      "title": "Extend the “Training Hour Levels Explained” informational section to include a 100-Hour YTT level entry consistent with the existing Card-based layout and styling.",
+      "reqIds": [
+        "REQ-85"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -507,6 +704,160 @@
       "reqIds": [
         "REQ-46"
       ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-33",
+      "summary": "Improve the Home page design to be more attractive (enhanced layout/visuals/hero/sections)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-34",
+      "summary": "Add a banner section to the School Profile (School Detail) page",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-35",
+      "summary": "Ensure the Motoko backend automatically seeds demo directory data on canister install and upgrade so the frontend Directory page can successfully load schools via the existing call path `searchSchoolsByName(\"\")` for anonymous users.",
+      "reqIds": [
+        "REQ-54"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-36",
+      "summary": "Expand and correct backend demo seeding so the canister contains at least 6 yoga schools by default, and each seeded school has at least one associated teacher and at least one associated training; across all seeded schools, trainings must collectively cover the 200/300/500 hour categories so the hour filters have matching results.",
+      "reqIds": [
+        "REQ-55"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-37",
+      "summary": "Make demo seeding idempotent and safe to run multiple times (including repeated upgrades) without trapping due to duplicate ids, and without removing or corrupting any existing stored records.",
+      "reqIds": [
+        "REQ-56"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-38",
+      "summary": "Make all CTAs open an inquiry form on the School Detail (school page) after clicking",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-39",
+      "summary": "Add an authenticated Admin Dashboard UI (e.g., Internet Identity login) to manage directory data (schools/teachers/trainings/reviews) through forms instead of editing code",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-44",
+      "summary": "Extend the Motoko backend (`backend/main.mo`) with administrative CRUD/query methods required by the Admin Dashboard for Schools, Teachers, Trainings, and Reviews, while keeping the actor single-service and ensuring methods do not trap during normal admin flows (return typed results or use safe error signaling).",
+      "reqIds": [
+        "REQ-64"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-45",
+      "summary": "Add backend authorization rules for write/admin methods so only authenticated principals can perform Admin Dashboard mutations. Define a simple admin allowlist mechanism inside `backend/main.mo` and provide a way to initialize/manage the allowlist without external dependencies.",
+      "reqIds": [
+        "REQ-65"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-46",
+      "summary": "Ensure directory data created/edited via the Admin Dashboard persists across canister upgrades by using stable storage patterns in the Motoko backend. Add `backend/migration.mo` only if required by existing stable state and the platform migration policy.",
+      "reqIds": [
+        "REQ-66"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-47",
+      "summary": "Add a Blog section and create demo blog posts (seed/sample content) so the site has example blog content to display.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-48",
+      "summary": "Extend the Motoko backend actor (`backend/main.mo`) with a BlogPost data model and public query methods so the frontend can list blog posts and fetch a single post by id/slug.",
+      "reqIds": [
+        "REQ-67"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-49",
+      "summary": "Add idempotent demo blog post seeding in the backend so the canister provides a small set of example blog posts by default without requiring manual data entry.",
+      "reqIds": [
+        "REQ-68"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-50",
+      "summary": "Add demo images and richer demo content to blog posts so the Blog section includes example visuals (e.g., featured images) and more realistic post content",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-52",
+      "summary": "Extend the backend `BlogPost` data model to support demo visuals and richer presentation metadata by adding optional fields for `featuredImageUrl` and `excerpt` (both `?Text`), and expose them through the existing blog query methods (`getAllBlogPosts`, `getBlogPost`).",
+      "reqIds": [
+        "REQ-73"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-53",
+      "summary": "Update backend demo/seed blog posts so the canister provides richer, more realistic demo blog content (multi-paragraph English content) and each demo post includes a `featuredImageUrl` pointing to one of the generated static assets (e.g., `/assets/generated/...`) and an `excerpt` suitable for the Blog list preview.",
+      "reqIds": [
+        "REQ-74"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-54",
+      "summary": "If the project uses stable state for blog posts across upgrades, add or update a conditional state migration in `backend/migration.mo` so existing stored blog posts that lack the new fields are upgraded safely by defaulting `featuredImageUrl` and `excerpt` to `null`, while preserving existing `id`, `title`, and `content`.",
+      "reqIds": [
+        "REQ-75"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-55",
+      "summary": "Ensure the backend canister persists directory data (schools, teachers, trainings, reviews, blog posts) across upgrades by using stable storage patterns compatible with a single-actor Motoko canister, so upgrading or redeploying does not reset Maps/Lists to empty and break the frontend directory.",
+      "reqIds": [
+        "REQ-80"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-56",
+      "summary": "Implement automatic, idempotent demo-data seeding for the Yoga Schools Directory in the backend so the Directory page has data immediately after install and after upgrades, and ensure the seeded schools are discoverable via the existing frontend call path `searchSchoolsByName(\"\")` for anonymous users.",
+      "reqIds": [
+        "REQ-81"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-57",
+      "summary": "Harden public query methods used by the Directory UI so anonymous users can browse without runtime traps, specifically ensuring `searchSchoolsByName(\"\")` consistently returns a `[School]` (possibly empty) and that school-related fetches invoked by the listing UI do not cause the Directory experience to fail when data is missing or partially seeded.",
+      "reqIds": [
+        "REQ-82"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-58",
+      "summary": "Add support for an additional training course option/filter: 100-Hour YTT (alongside existing 200/300/500-hour options) across the directory UI and seeded demo trainings.",
+      "reqIds": [],
       "status": "pending"
     }
   ],

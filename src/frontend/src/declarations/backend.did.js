@@ -11,6 +11,19 @@ import { IDL } from '@icp-sdk/core/candid';
 export const SchoolId = IDL.Text;
 export const TeacherId = IDL.Text;
 export const TrainingId = IDL.Text;
+export const UserRole = IDL.Variant({
+  'admin' : IDL.Null,
+  'user' : IDL.Null,
+  'guest' : IDL.Null,
+});
+export const BlogPost = IDL.Record({
+  'id' : IDL.Text,
+  'title' : IDL.Text,
+  'content' : IDL.Text,
+  'featuredImageUrl' : IDL.Opt(IDL.Text),
+  'excerpt' : IDL.Opt(IDL.Text),
+});
+export const UserProfile = IDL.Record({ 'name' : IDL.Text });
 export const Review = IDL.Record({
   'reviewerName' : IDL.Text,
   'comment' : IDL.Text,
@@ -37,22 +50,48 @@ export const Training = IDL.Record({
 });
 
 export const idlService = IDL.Service({
+  '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
   'addReview' : IDL.Func([SchoolId, IDL.Text, IDL.Nat, IDL.Text], [], []),
-  'addSchool' : IDL.Func(
+  'addTeacher' : IDL.Func([TeacherId, IDL.Text, IDL.Text, SchoolId], [], []),
+  'addTraining' : IDL.Func([TrainingId, IDL.Nat, IDL.Text, SchoolId], [], []),
+  'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+  'createSchool' : IDL.Func(
       [SchoolId, IDL.Text, IDL.Text, IDL.Opt(IDL.Text)],
       [],
       [],
     ),
-  'addTeacher' : IDL.Func([TeacherId, IDL.Text, IDL.Text, SchoolId], [], []),
-  'addTraining' : IDL.Func([TrainingId, IDL.Nat, IDL.Text, SchoolId], [], []),
+  'deleteSchool' : IDL.Func([SchoolId], [], []),
+  'deleteTeacher' : IDL.Func([TeacherId], [], []),
+  'deleteTraining' : IDL.Func([TrainingId], [], []),
+  'getAllBlogPosts' : IDL.Func([], [IDL.Vec(BlogPost)], ['query']),
+  'getBlogPost' : IDL.Func([IDL.Text], [IDL.Opt(BlogPost)], ['query']),
+  'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
+  'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
   'getReviewsForSchool' : IDL.Func([SchoolId], [IDL.Vec(Review)], ['query']),
-  'getSchool' : IDL.Func([SchoolId], [School], ['query']),
-  'getTeacher' : IDL.Func([TeacherId], [Teacher], ['query']),
+  'getSchool' : IDL.Func([SchoolId], [IDL.Opt(School)], ['query']),
+  'getTeacher' : IDL.Func([TeacherId], [IDL.Opt(Teacher)], ['query']),
   'getTeachersBySchool' : IDL.Func([SchoolId], [IDL.Vec(Teacher)], ['query']),
-  'getTraining' : IDL.Func([TrainingId], [Training], ['query']),
+  'getTraining' : IDL.Func([TrainingId], [IDL.Opt(Training)], ['query']),
   'getTrainingsBySchool' : IDL.Func([SchoolId], [IDL.Vec(Training)], ['query']),
+  'getUserProfile' : IDL.Func(
+      [IDL.Principal],
+      [IDL.Opt(UserProfile)],
+      ['query'],
+    ),
+  'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+  'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
   'searchSchoolsByName' : IDL.Func([IDL.Text], [IDL.Vec(School)], ['query']),
-  'seedSchools' : IDL.Func([], [], []),
+  'updateSchool' : IDL.Func(
+      [SchoolId, IDL.Text, IDL.Text, IDL.Opt(IDL.Text)],
+      [],
+      [],
+    ),
+  'updateTeacher' : IDL.Func([TeacherId, IDL.Text, IDL.Text, SchoolId], [], []),
+  'updateTraining' : IDL.Func(
+      [TrainingId, IDL.Nat, IDL.Text, SchoolId],
+      [],
+      [],
+    ),
 });
 
 export const idlInitArgs = [];
@@ -61,6 +100,19 @@ export const idlFactory = ({ IDL }) => {
   const SchoolId = IDL.Text;
   const TeacherId = IDL.Text;
   const TrainingId = IDL.Text;
+  const UserRole = IDL.Variant({
+    'admin' : IDL.Null,
+    'user' : IDL.Null,
+    'guest' : IDL.Null,
+  });
+  const BlogPost = IDL.Record({
+    'id' : IDL.Text,
+    'title' : IDL.Text,
+    'content' : IDL.Text,
+    'featuredImageUrl' : IDL.Opt(IDL.Text),
+    'excerpt' : IDL.Opt(IDL.Text),
+  });
+  const UserProfile = IDL.Record({ 'name' : IDL.Text });
   const Review = IDL.Record({
     'reviewerName' : IDL.Text,
     'comment' : IDL.Text,
@@ -87,26 +139,56 @@ export const idlFactory = ({ IDL }) => {
   });
   
   return IDL.Service({
+    '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
     'addReview' : IDL.Func([SchoolId, IDL.Text, IDL.Nat, IDL.Text], [], []),
-    'addSchool' : IDL.Func(
+    'addTeacher' : IDL.Func([TeacherId, IDL.Text, IDL.Text, SchoolId], [], []),
+    'addTraining' : IDL.Func([TrainingId, IDL.Nat, IDL.Text, SchoolId], [], []),
+    'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+    'createSchool' : IDL.Func(
         [SchoolId, IDL.Text, IDL.Text, IDL.Opt(IDL.Text)],
         [],
         [],
       ),
-    'addTeacher' : IDL.Func([TeacherId, IDL.Text, IDL.Text, SchoolId], [], []),
-    'addTraining' : IDL.Func([TrainingId, IDL.Nat, IDL.Text, SchoolId], [], []),
+    'deleteSchool' : IDL.Func([SchoolId], [], []),
+    'deleteTeacher' : IDL.Func([TeacherId], [], []),
+    'deleteTraining' : IDL.Func([TrainingId], [], []),
+    'getAllBlogPosts' : IDL.Func([], [IDL.Vec(BlogPost)], ['query']),
+    'getBlogPost' : IDL.Func([IDL.Text], [IDL.Opt(BlogPost)], ['query']),
+    'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
+    'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
     'getReviewsForSchool' : IDL.Func([SchoolId], [IDL.Vec(Review)], ['query']),
-    'getSchool' : IDL.Func([SchoolId], [School], ['query']),
-    'getTeacher' : IDL.Func([TeacherId], [Teacher], ['query']),
+    'getSchool' : IDL.Func([SchoolId], [IDL.Opt(School)], ['query']),
+    'getTeacher' : IDL.Func([TeacherId], [IDL.Opt(Teacher)], ['query']),
     'getTeachersBySchool' : IDL.Func([SchoolId], [IDL.Vec(Teacher)], ['query']),
-    'getTraining' : IDL.Func([TrainingId], [Training], ['query']),
+    'getTraining' : IDL.Func([TrainingId], [IDL.Opt(Training)], ['query']),
     'getTrainingsBySchool' : IDL.Func(
         [SchoolId],
         [IDL.Vec(Training)],
         ['query'],
       ),
+    'getUserProfile' : IDL.Func(
+        [IDL.Principal],
+        [IDL.Opt(UserProfile)],
+        ['query'],
+      ),
+    'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+    'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
     'searchSchoolsByName' : IDL.Func([IDL.Text], [IDL.Vec(School)], ['query']),
-    'seedSchools' : IDL.Func([], [], []),
+    'updateSchool' : IDL.Func(
+        [SchoolId, IDL.Text, IDL.Text, IDL.Opt(IDL.Text)],
+        [],
+        [],
+      ),
+    'updateTeacher' : IDL.Func(
+        [TeacherId, IDL.Text, IDL.Text, SchoolId],
+        [],
+        [],
+      ),
+    'updateTraining' : IDL.Func(
+        [TrainingId, IDL.Nat, IDL.Text, SchoolId],
+        [],
+        [],
+      ),
   });
 };
 

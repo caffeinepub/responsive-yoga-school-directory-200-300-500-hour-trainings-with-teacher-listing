@@ -1,41 +1,40 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-14T15:47:45.989Z",
-  "summary": "Frontend error state now includes a Retry control that refetches schools while preserving the exact existing error message. Backend changes add a migration module that seeds demo schools on upgrade in an idempotent way, but the diff is truncated for `searchSchoolsByName`, and there is no clear evidence that demo data is guaranteed after a fresh install (pre-upgrade) or that `searchSchoolsByName(\"\")` is made non-trapping/non-rejecting for anonymous users.",
+  "generatedAt": "2026-02-15T03:49:58.466Z",
+  "summary": "REQ-84 appears implemented (Directory hero subtitle and at least some informational copy now includes 100/200/300/500). REQ-83 (filter checklist + filtering behavior) and REQ-85 (add 100-Hour card in the Training Hour Levels section) cannot be confirmed from the provided truncated diffs; they may be implemented but are not visible in the evidence shown. The diff also includes additional UI/UX changes on DirectoryPage not requested by the BuildRequest (e.g., scroll-to-results/filters behavior and CTA buttons).",
   "missing_requirements": [
     {
-      "id": "REQ-45",
-      "requirement": "Fix the backend `searchSchoolsByName(\"\")` path so it never traps/rejects for anonymous users and consistently returns a `[School]` (possibly empty), returning `[]` when no schools exist.",
-      "reason": "The diff for `backend/main.mo` is truncated right as `searchSchoolsByName` begins, so there is no visible implementation showing that the empty-string search path is handled safely (no trap/reject) and returns an array for anonymous callers.",
+      "id": "REQ-83",
+      "requirement": "Update the Directory page training-hours filter to include a 100-hour option alongside the existing 200/300/500 options, including active filter badges and filtering behavior for trainings with hours == 100.",
+      "reason": "The provided truncated snippet of `DirectoryPage.tsx` shows the hero section and state (`selectedHours`) but does not include the actual filter checklist UI (checkbox list) nor evidence of a 100-hour option label/badge behavior in the visible portion. The file summary mentions the filter controls, but the diff excerpt does not show them, so this cannot be verified from the evidence provided.",
       "evidence": [
-        "backend/main.mo (searchSchoolsByName section is truncated)"
+        "frontend/src/pages/DirectoryPage.tsx (truncated)",
+        "frontend-file-summaries.txt (mentions filter controls but no code shown)"
       ]
     },
     {
-      "id": "REQ-46",
-      "requirement": "Ensure idempotent demo/seed data exists immediately after installation and after upgrades so Directory loads a non-empty school list by default; seeding must be safe to run multiple times and discoverable via `searchSchoolsByName(\"\")`.",
-      "reason": "`backend/migration.mo` only shows seeding in a migration `run(old)` function (upgrade path). In `backend/main.mo`, the maps are initialized empty (`Map.empty`) with no visible install-time seeding logic in the provided excerpt, so there is no clear evidence that a fresh deploy (no prior state/upgrade) will have non-empty schools by default.",
+      "id": "REQ-85",
+      "requirement": "Extend the “Training Hour Levels Explained” section to include a visible “100-Hour YTT” card entry styled consistently with existing 200/300/500 cards.",
+      "reason": "`DirectoryInfoSections.tsx` is truncated and only shows the “How It Works” section copy updated to mention 100/200/300/500. The diff excerpt does not include the “Training Hour Levels Explained” section, so the presence of a new “100-Hour YTT” card cannot be verified.",
       "evidence": [
-        "backend/migration.mo (seeding occurs in Migration.run old->new)",
-        "backend/main.mo (initializes `schools` as `Map.empty`, no install seeding shown in excerpt)"
+        "frontend/src/components/directory/DirectoryInfoSections.tsx (truncated)"
       ]
     }
   ],
   "hallucinated_features": [
     {
-      "description": "Large set of additional frontend UI/theme and feature changes unrelated to making school loading reliable (e.g., SchoolDetailPage sections like map/gallery/FAQ/similar schools; global theme/background changes; multiple new hooks/components).",
-      "reason": "The BuildRequest explicitly focuses on fixing school loading reliability and adding a retry control; it lists non-goals including unrelated directory features. The diff summary indicates many broader UI/features beyond those requirements.",
+      "description": "Added scroll-to-results and scroll-to-filters behavior with focus management, plus new hero CTA buttons (“Browse Schools” / “Filter Programs”).",
+      "reason": "These UI/UX behaviors are not part of REQ-83/84/85, which only request hour filter options and copy/info updates.",
       "evidence": [
-        "frontend-file-summaries.txt (describes extensive additions/changes across many pages/components beyond retry control)"
+        "frontend/src/pages/DirectoryPage.tsx (truncated)"
       ]
     }
   ],
-  "confidence": 0.64,
+  "confidence": 0.62,
   "changed_files": [
-    "backend/main.mo",
-    "backend/migration.mo",
     "frontend-file-summaries.txt",
+    "frontend/src/components/directory/DirectoryInfoSections.tsx",
     "frontend/src/pages/DirectoryPage.tsx",
     "project_state.json"
   ]

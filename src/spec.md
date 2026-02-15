@@ -1,11 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Stop the Directory page from repeatedly showing “Failed to load schools” by making the backend schools search reliable for anonymous users and ensuring demo/seed schools exist after deploys/upgrades, plus add an in-page retry action.
+**Goal:** Add 100-hour YTT as a first-class training hour option throughout the directory filtering and related informational copy.
 
 **Planned changes:**
-- Backend: Make `searchSchoolsByName("")` always succeed for anonymous callers and always return a `[School]` (including `[]` when no schools exist), without trapping/rejecting.
-- Backend: Add idempotent seed/demo data initialization so a fresh deploy and subsequent upgrades/redeploys result in a non-empty school list discoverable via `searchSchoolsByName("")`, without duplicate-key traps when seeding runs multiple times.
-- Frontend: Keep the existing English error message exactly as-is, and add a clearly labeled “Retry” control that triggers a React Query refetch of the schools query (no full page refresh required).
+- Update the Directory page training-hours filter checklist to include “100 Hours” alongside 200/300/500, and ensure selecting it filters results by trainings with `hours == 100` using existing filtering behavior.
+- Update Directory hero subtitle and any hour-level enumerations in directory informational sections to include 100-hour programs (English copy).
+- Extend the “Training Hour Levels Explained” section with a new “100-Hour YTT” card entry, matching the existing card layout and styling used for 200/300/500.
 
-**User-visible outcome:** The Directory page reliably loads schools by default after deploy/upgrade; if loading fails, the page shows the same error message plus a “Retry” button that can recover and load the schools list once the backend is available.
+**User-visible outcome:** Users can filter schools by 100-hour YTT programs and will see 100-hour YTT reflected across directory hero text and hour-level informational sections.

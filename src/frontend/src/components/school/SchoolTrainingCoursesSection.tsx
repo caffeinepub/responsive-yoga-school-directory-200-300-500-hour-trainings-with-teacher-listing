@@ -8,11 +8,13 @@ import type { Training } from '@/backend';
 interface SchoolTrainingCoursesSectionProps {
   trainings: Training[];
   schoolId: string;
+  onInquire?: () => void;
 }
 
 export default function SchoolTrainingCoursesSection({
   trainings,
   schoolId,
+  onInquire,
 }: SchoolTrainingCoursesSectionProps) {
   const navigate = useNavigate();
 
@@ -78,7 +80,11 @@ export default function SchoolTrainingCoursesSection({
                       <FileText className="h-4 w-4" />
                       View Curriculum
                     </Button>
-                    <Button variant="default" disabled className="flex items-center gap-2">
+                    <Button 
+                      variant="default" 
+                      onClick={onInquire}
+                      className="flex items-center gap-2"
+                    >
                       <Mail className="h-4 w-4" />
                       Inquire Now
                     </Button>

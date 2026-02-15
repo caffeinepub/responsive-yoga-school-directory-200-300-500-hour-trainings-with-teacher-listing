@@ -1,32 +1,18 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-14T15:47:45.992Z",
+  "generatedAt": "2026-02-15T03:49:58.470Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
     "total": 3,
-    "implemented": 1,
+    "implemented": 3,
     "items": [
       {
-        "id": "REQ-45",
-        "summary": "Fix the backend `searchSchoolsByName(\"\")` path so it never traps/rejects for anonymous users and consistently returns a `[School]` (possibly empty), ensuring the Directory page can load schools without triggering the generic failure banner.",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-46",
-        "summary": "Ensure the backend has idempotent demo/seed data available immediately after installation and after upgrades so the Directory page has schools to display by default. Seeding must be safe to run multiple times without trapping due to duplicates, and seeded schools must be discoverable via the existing frontend fetch path `searchSchoolsByName(\"\")`.",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-47",
-        "summary": "Update the frontend Directory error state to provide a user-actionable retry control while keeping the existing user-facing message in English. The retry must re-run the schools query without requiring a full page refresh.",
+        "id": "REQ-83",
+        "summary": "Update the Directory page training-hours filter to include a 100-hour option alongside the existing 200/300/500 options, so users can filter schools by 100-Hour YTT programs.",
         "status": "implemented",
         "plannedFiles": [
           "frontend/src/pages/DirectoryPage.tsx"
@@ -34,20 +20,39 @@
         "matchedFiles": [
           "frontend/src/pages/DirectoryPage.tsx"
         ]
+      },
+      {
+        "id": "REQ-84",
+        "summary": "Update home/Directory hero and informational copy that enumerates hour levels so it reflects the available hour categories including 100-Hour YTT.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/DirectoryPage.tsx",
+          "frontend/src/components/directory/DirectoryInfoSections.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/DirectoryPage.tsx",
+          "frontend/src/components/directory/DirectoryInfoSections.tsx"
+        ]
+      },
+      {
+        "id": "REQ-85",
+        "summary": "Extend the “Training Hour Levels Explained” informational section to include a 100-Hour YTT level entry consistent with the existing Card-based layout and styling.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/directory/DirectoryInfoSections.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/directory/DirectoryInfoSections.tsx"
+        ]
       }
     ]
   },
   "changedFiles": [
-    "backend/main.mo",
-    "backend/migration.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/backend.d.ts",
-    "frontend/src/backend.ts",
-    "frontend/src/declarations/backend.did.d.ts",
-    "frontend/src/declarations/backend.did.js",
+    "frontend/src/components/directory/DirectoryInfoSections.tsx",
     "frontend/src/pages/DirectoryPage.tsx",
     "project_state.json",
     "scratch/component-selection.json",
