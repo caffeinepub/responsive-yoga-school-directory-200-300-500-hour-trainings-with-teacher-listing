@@ -60,6 +60,10 @@ export interface _SERVICE {
     undefined
   >,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
+  'createBlogPost' : ActorMethod<
+    [string, string, string, [] | [string], [] | [string]],
+    undefined
+  >,
   'createSchool' : ActorMethod<
     [
       SchoolId,
@@ -72,6 +76,7 @@ export interface _SERVICE {
     ],
     undefined
   >,
+  'deleteBlogPost' : ActorMethod<[string], undefined>,
   'deleteSchool' : ActorMethod<[SchoolId], undefined>,
   'deleteTeacher' : ActorMethod<[TeacherId], undefined>,
   'deleteTraining' : ActorMethod<[TrainingId], undefined>,
@@ -93,6 +98,10 @@ export interface _SERVICE {
   'isCallerAdmin' : ActorMethod<[], boolean>,
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
   'searchSchoolsByName' : ActorMethod<[string], Array<School>>,
+  'updateBlogPost' : ActorMethod<
+    [string, string, string, [] | [string], [] | [string]],
+    undefined
+  >,
   'updateSchool' : ActorMethod<
     [
       SchoolId,

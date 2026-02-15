@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 85,
+  "projectStateVersion": 97,
   "summary": "Build a fully responsive Yoga Schools Directory with school listings, teacher information, custom branding using the provided logo, an FAQ section on each school page, a Google Map option per school, a similar-schools list on school detail pages, a School Review section, an Admin Dashboard (authenticated) to manage directory data without touching code, a Blog section with demo blog posts, and training course hour options including 100/200/300/500-hour YTT.",
   "architectural_notes": [
     "WordPress-based directory website with responsive design requirements.",
@@ -10,9 +10,9 @@
     "Support structured location fields (country/state/city) and enable deep-linkable URLs for location and course pages for promotion.",
     "Frontend uses TanStack Router; avoid circular dependencies where the router is created in a scope that is also referenced by the root route component (can cause app to render a blank screen).",
     "Need a workflow to ingest school details (text, photos, video links) from an external website URL and map them into the directory’s School/Teacher/Training models (likely store media as URLs or static assets, not fetched from backend at runtime).",
-    "Potential content source: Google Business Profile share link for a school (images + reviews) to be curated/seeded into the directory.",
     "Consider reusing existing School gallery/curated media mapping as the source for the School Profile banner background and for a School Card image slider (frontend-only; no backend image routing).",
-    "Custom domain to connect: yogaschooldirectory.com (requires IC domain configuration via ic-domains/.well-known and DNS records at registrar)."
+    "Custom domain to connect: yogaschooldirectory.com (requires IC domain configuration via ic-domains/.well-known and DNS records at registrar).",
+    "User requirement: do not show a banner on the Home/Directory page; banner/multi-image carousel work should apply to the School Detail (School Profile) page instead."
   ],
   "known_issues": [
     "Users see \"Failed to load schools. Please try again later.\" indicating the frontend cannot fetch school listings from the backend (actor/load error, backend error, or empty/unseeded data).",
@@ -26,7 +26,7 @@
     "Blog archive (Blog list) featured image has unwanted margin/spacing that needs to be removed/adjusted.",
     "After deploying Version 35, schools and blog posts are not showing in the UI (directory listings and blog section appear empty or fail to load)."
   ],
-  "isFixRequest": false,
+  "isFixRequest": true,
   "existing_features": [
     {
       "id": "feature-build-a-fully-responsive-frontend-directory-ui-that-lists-yoga-schools-and-allows-filtering-by-training-hour-categories-200-300-500",
@@ -699,6 +699,62 @@
         "REQ-116"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-fix-the-root-cause-of-the-directory-page-showing-no-schools-by-ensuring-the-backend-always-has-browseable-school-data-for-anonymous-users-and-that-searchschoolsbyname-reliably-returns-a-school-without-trapping",
+      "title": "Fix the root cause of the Directory page showing no schools by ensuring the backend always has browseable School data for anonymous users and that `searchSchoolsByName(\"\")` reliably returns a `[School]` without trapping.",
+      "reqIds": [
+        "REQ-117"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-home-directory-page-banner-implemented-in-frontend-src-pages-directorypage-tsx-to-display-multiple-banner-images-instead-of-a-single-full-width-image-ensuring-that-images-never-appear-stretched-preserve-aspect-ratio-using-appropriate-object-fit-sizing-while-keeping-the-existing-hero-overlay-title-subtitle-and-cta-buttons-unchanged",
+      "title": "Update the Home/Directory page banner (implemented in `frontend/src/pages/DirectoryPage.tsx`) to display multiple banner images instead of a single full-width image, ensuring that images never appear stretched (preserve aspect ratio using appropriate object-fit sizing) while keeping the existing hero overlay, title/subtitle, and CTA buttons unchanged.",
+      "reqIds": [
+        "REQ-121"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-the-required-banner-images-as-static-assets-under-frontend-public-assets-generated-and-wire-the-updated-directory-banner-to-use-those-images-without-routing-images-through-the-backend",
+      "title": "Add the required banner images as static assets under `frontend/public/assets/generated/` and wire the updated Directory banner to use those images without routing images through the backend.",
+      "reqIds": [
+        "REQ-122"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-remove-the-banner-carousel-hero-from-the-home-page-route-frontend-src-pages-directorypage-tsx-so-the-home-page-renders-with-no-banner-images-and-no-banner-navigation-controls-while-keeping-the-rest-of-the-page-content-functional-filters-results-list-error-loading-empty-states-and-existing-ctas-to-browse-filter",
+      "title": "Remove the banner/carousel hero from the Home page (route `/`, `frontend/src/pages/DirectoryPage.tsx`) so the Home page renders with no banner images and no banner navigation controls, while keeping the rest of the page content functional (filters, results list, error/loading/empty states, and existing CTAs to browse/filter).",
+      "reqIds": [
+        "REQ-123"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-school-detail-page-banner-remains-implemented-on-school-profile-pages-route-school-schoolid-e-g-school-vinyasa-yogashala-using-the-existing-schoolprofilebanner-component-and-its-curated-gallery-image-carousel-behavior",
+      "title": "Ensure the School Detail page banner remains implemented on school profile pages (route `/school/$schoolId`, e.g., `/school/vinyasa-yogashala`) using the existing `SchoolProfileBanner` component and its curated-gallery-image carousel behavior.",
+      "reqIds": [
+        "REQ-124"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-school-profile-banner-carousel-ui-on-school-detail-pages-component-frontend-src-components-school-schoolprofilebanner-tsx-used-by-frontend-src-pages-schooldetailpage-tsx-so-it-visually-matches-the-reference-banner-style-shown-on-https-yogaschooldirectory-com-directory-shiva-yoga-peeth-and-the-uploaded-screenshot-image-5-png-keep-the-existing-behavior-of-using-curated-gallery-images-when-available-via-getcuratedgalleryimages-school-id-and-falling-back-to-the-default-banner-image-when-not-ensure-any-user-facing-text-and-accessibility-labels-remain-in-english",
+      "title": "Update the School Profile banner carousel UI on school detail pages (component: `frontend/src/components/school/SchoolProfileBanner.tsx`, used by `frontend/src/pages/SchoolDetailPage.tsx`) so it visually matches the reference banner style shown on https://yogaschooldirectory.com/directory/shiva-yoga-peeth/ and the uploaded screenshot (`image-5.png`). Keep the existing behavior of using curated gallery images when available (via `getCuratedGalleryImages(school.id)`) and falling back to the default banner image when not. Ensure any user-facing text and accessibility labels remain in English.",
+      "reqIds": [
+        "REQ-128"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-frontend-directory-experience-frontend-src-hooks-useschools-ts-frontend-src-pages-directorypage-tsx-correctly-renders-schools-once-the-backend-returns-seeded-data-and-does-not-show-the-destructive-error-banner-for-the-normal-empty-directory-case-i-e-a-successful-backend-response-of-an-empty-array",
+      "title": "Ensure the frontend Directory experience (`frontend/src/hooks/useSchools.ts` + `frontend/src/pages/DirectoryPage.tsx`) correctly renders schools once the backend returns seeded data, and does not show the destructive error banner for the normal empty-directory case (i.e., a successful backend response of an empty array).",
+      "reqIds": [
+        "REQ-131"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -1184,6 +1240,76 @@
       "id": "AR-77",
       "summary": "Update the School Detail page banner (School Profile banner/hero) to visually match the School Card media style (e.g., use similar imagery treatment such as curated photos and/or carousel-style presentation)",
       "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-79",
+      "summary": "Implement stable persistence for directory and blog data in `backend/main.mo` so that Schools, Teachers, Trainings, Reviews, UserProfiles, and BlogPosts survive canister upgrades (use `system func preupgrade()` to write stable snapshots and `system func postupgrade()` to restore in-memory Maps/Lists).",
+      "reqIds": [
+        "REQ-118"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-80",
+      "summary": "Add automatic, idempotent demo seeding in `backend/main.mo` so that when the canister has no schools (e.g., on first install or after restoring state), the backend seeds at least 6 demo yoga schools, each with at least one associated teacher and one associated training; collectively, trainings must cover the hour categories 100/200/300/500 so the Directory filters have matching results. Ensure seeding is safe to run multiple times without duplicate-id traps.",
+      "reqIds": [
+        "REQ-119"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-81",
+      "summary": "Ensure `backend/main.mo` upgrade hooks do not unintentionally delete or overwrite existing non-demo data when applying demo seeding and the existing seeded reviews behavior; demo seeding must only add missing demo records when appropriate and must preserve any existing schools/teachers/trainings/reviews/blog posts already stored.",
+      "reqIds": [
+        "REQ-120"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-82",
+      "summary": "Update `backend/main.mo` so the canister always has browseable School data for anonymous users after install and after upgrades, without requiring any Admin Dashboard action. Implement automatic, idempotent demo seeding that runs when the canister has no schools, creating at least 6 demo yoga schools, each with at least one associated teacher and at least one associated training; across all seeded trainings, cover the hour categories 100/200/300/500 so the Directory filters have matching results.",
+      "reqIds": [
+        "REQ-125"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-83",
+      "summary": "Update `backend/main.mo` to persist directory data across canister upgrades by implementing stable snapshots in `system func preupgrade()` and restoration in `system func postupgrade()` for Schools, Teachers, Trainings, Reviews, UserProfiles, and BlogPosts. Ensure the upgrade path does not erase existing records and that demo seeding (REQ-125) only adds missing demo records when appropriate.",
+      "reqIds": [
+        "REQ-126"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-84",
+      "summary": "Harden `backend/main.mo` public browsing query methods used by the Directory to ensure they never trap during normal anonymous browsing and consistently return typed values: `searchSchoolsByName(\"\")`, `getSchool`, `getTeachersBySchool`, and `getTrainingsBySchool`. If any internal operation could fail, return a safe empty result instead of trapping.",
+      "reqIds": [
+        "REQ-127"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-85",
+      "summary": "Update the School Profile banner to display images in the same style/behavior as the reference page (https://yogaschooldirectory.com/directory/shiva-yoga-peeth/), i.e., a photo-based banner presentation (likely multi-image/carousel) on the school detail page.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-86",
+      "summary": "Fix the root cause of the Directory page showing no schools by ensuring the Motoko backend always has browseable School data for anonymous users immediately after canister install and after upgrades, and that `searchSchoolsByName(\"\")` reliably returns a `[School]` without trapping.",
+      "reqIds": [
+        "REQ-129"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-87",
+      "summary": "Implement stable persistence for directory data in `backend/main.mo` so Schools, Teachers, Trainings, Reviews, UserProfiles, and BlogPosts survive canister upgrades (use `system func preupgrade()` to store stable snapshots and `system func postupgrade()` to restore in-memory structures), without erasing existing stored records.",
+      "reqIds": [
+        "REQ-130"
+      ],
       "status": "pending"
     }
   ],

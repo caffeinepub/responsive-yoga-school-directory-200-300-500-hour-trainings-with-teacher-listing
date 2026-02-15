@@ -140,7 +140,9 @@ export interface backendInterface {
     addTeacher(id: TeacherId, name: string, specialization: string, schoolId: SchoolId): Promise<void>;
     addTraining(id: TrainingId, hours: bigint, description: string, schoolId: SchoolId): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
+    createBlogPost(id: string, title: string, content: string, featuredImageUrl: string | null, excerpt: string | null): Promise<void>;
     createSchool(id: SchoolId, name: string, location: string, country: string | null, state: string | null, city: string | null, videoUrl: string | null): Promise<void>;
+    deleteBlogPost(id: string): Promise<void>;
     deleteSchool(id: SchoolId): Promise<void>;
     deleteTeacher(id: TeacherId): Promise<void>;
     deleteTraining(id: TrainingId): Promise<void>;
@@ -159,6 +161,7 @@ export interface backendInterface {
     isCallerAdmin(): Promise<boolean>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
     searchSchoolsByName(nameQuery: string): Promise<Array<School>>;
+    updateBlogPost(id: string, title: string, content: string, featuredImageUrl: string | null, excerpt: string | null): Promise<void>;
     updateSchool(id: SchoolId, name: string, location: string, country: string | null, state: string | null, city: string | null, videoUrl: string | null): Promise<void>;
     updateTeacher(id: TeacherId, name: string, specialization: string, schoolId: SchoolId): Promise<void>;
     updateTraining(id: TrainingId, hours: bigint, description: string, schoolId: SchoolId): Promise<void>;
@@ -236,6 +239,20 @@ export class Backend implements backendInterface {
             return result;
         }
     }
+    async createBlogPost(arg0: string, arg1: string, arg2: string, arg3: string | null, arg4: string | null): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.createBlogPost(arg0, arg1, arg2, to_candid_opt_n3(this._uploadFile, this._downloadFile, arg3), to_candid_opt_n3(this._uploadFile, this._downloadFile, arg4));
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.createBlogPost(arg0, arg1, arg2, to_candid_opt_n3(this._uploadFile, this._downloadFile, arg3), to_candid_opt_n3(this._uploadFile, this._downloadFile, arg4));
+            return result;
+        }
+    }
     async createSchool(arg0: SchoolId, arg1: string, arg2: string, arg3: string | null, arg4: string | null, arg5: string | null, arg6: string | null): Promise<void> {
         if (this.processError) {
             try {
@@ -247,6 +264,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.createSchool(arg0, arg1, arg2, to_candid_opt_n3(this._uploadFile, this._downloadFile, arg3), to_candid_opt_n3(this._uploadFile, this._downloadFile, arg4), to_candid_opt_n3(this._uploadFile, this._downloadFile, arg5), to_candid_opt_n3(this._uploadFile, this._downloadFile, arg6));
+            return result;
+        }
+    }
+    async deleteBlogPost(arg0: string): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.deleteBlogPost(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.deleteBlogPost(arg0);
             return result;
         }
     }
@@ -500,6 +531,20 @@ export class Backend implements backendInterface {
         } else {
             const result = await this.actor.searchSchoolsByName(arg0);
             return from_candid_vec_n15(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async updateBlogPost(arg0: string, arg1: string, arg2: string, arg3: string | null, arg4: string | null): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.updateBlogPost(arg0, arg1, arg2, to_candid_opt_n3(this._uploadFile, this._downloadFile, arg3), to_candid_opt_n3(this._uploadFile, this._downloadFile, arg4));
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.updateBlogPost(arg0, arg1, arg2, to_candid_opt_n3(this._uploadFile, this._downloadFile, arg3), to_candid_opt_n3(this._uploadFile, this._downloadFile, arg4));
+            return result;
         }
     }
     async updateSchool(arg0: SchoolId, arg1: string, arg2: string, arg3: string | null, arg4: string | null, arg5: string | null, arg6: string | null): Promise<void> {

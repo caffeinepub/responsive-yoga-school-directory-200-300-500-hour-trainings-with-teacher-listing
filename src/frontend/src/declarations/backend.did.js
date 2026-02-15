@@ -58,6 +58,11 @@ export const idlService = IDL.Service({
   'addTeacher' : IDL.Func([TeacherId, IDL.Text, IDL.Text, SchoolId], [], []),
   'addTraining' : IDL.Func([TrainingId, IDL.Nat, IDL.Text, SchoolId], [], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+  'createBlogPost' : IDL.Func(
+      [IDL.Text, IDL.Text, IDL.Text, IDL.Opt(IDL.Text), IDL.Opt(IDL.Text)],
+      [],
+      [],
+    ),
   'createSchool' : IDL.Func(
       [
         SchoolId,
@@ -71,6 +76,7 @@ export const idlService = IDL.Service({
       [],
       [],
     ),
+  'deleteBlogPost' : IDL.Func([IDL.Text], [], []),
   'deleteSchool' : IDL.Func([SchoolId], [], []),
   'deleteTeacher' : IDL.Func([TeacherId], [], []),
   'deleteTraining' : IDL.Func([TrainingId], [], []),
@@ -97,6 +103,11 @@ export const idlService = IDL.Service({
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
   'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
   'searchSchoolsByName' : IDL.Func([IDL.Text], [IDL.Vec(School)], ['query']),
+  'updateBlogPost' : IDL.Func(
+      [IDL.Text, IDL.Text, IDL.Text, IDL.Opt(IDL.Text), IDL.Opt(IDL.Text)],
+      [],
+      [],
+    ),
   'updateSchool' : IDL.Func(
       [
         SchoolId,
@@ -171,6 +182,11 @@ export const idlFactory = ({ IDL }) => {
     'addTeacher' : IDL.Func([TeacherId, IDL.Text, IDL.Text, SchoolId], [], []),
     'addTraining' : IDL.Func([TrainingId, IDL.Nat, IDL.Text, SchoolId], [], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+    'createBlogPost' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text, IDL.Opt(IDL.Text), IDL.Opt(IDL.Text)],
+        [],
+        [],
+      ),
     'createSchool' : IDL.Func(
         [
           SchoolId,
@@ -184,6 +200,7 @@ export const idlFactory = ({ IDL }) => {
         [],
         [],
       ),
+    'deleteBlogPost' : IDL.Func([IDL.Text], [], []),
     'deleteSchool' : IDL.Func([SchoolId], [], []),
     'deleteTeacher' : IDL.Func([TeacherId], [], []),
     'deleteTraining' : IDL.Func([TrainingId], [], []),
@@ -214,6 +231,11 @@ export const idlFactory = ({ IDL }) => {
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
     'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
     'searchSchoolsByName' : IDL.Func([IDL.Text], [IDL.Vec(School)], ['query']),
+    'updateBlogPost' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text, IDL.Opt(IDL.Text), IDL.Opt(IDL.Text)],
+        [],
+        [],
+      ),
     'updateSchool' : IDL.Func(
         [
           SchoolId,

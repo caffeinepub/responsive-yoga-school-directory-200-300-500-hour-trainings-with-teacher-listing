@@ -1,23 +1,50 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-15T14:49:48.207Z",
-  "summary": "REQ-114/115/116 appear largely implemented: SchoolProfileBanner now supports multiple slides with prev/next controls, keyboard arrow handling, and an image-load fallback; SchoolDetailPage now passes curated gallery images via getCuratedGalleryImages(school.id) with fallback to the existing default banner image. New aria-labels are in English. Due to truncation, exact preservation of the previous overlay/name/location/button layout cannot be fully verified from the diff excerpt.",
-  "missing_requirements": [],
-  "hallucinated_features": [
+  "generatedAt": "2026-02-15T16:00:02.550Z",
+  "summary": "REQ-131 frontend behavior for distinguishing empty results vs true errors appears implemented in useSchools.ts and DirectoryPage.tsx. Backend changes do not yet satisfy the core seeding and upgrade-persistence requirements: demo seeding only covers Schools (not Teachers/Trainings), only runs in postupgrade (not fresh install), and stable persistence via preupgrade/postupgrade snapshots is not implemented (preupgrade is empty and no stable state restoration is shown).",
+  "missing_requirements": [
     {
-      "description": "Added pagination/dot navigation buttons (\"Go to photo N\") for direct slide selection in the School Profile banner carousel.",
-      "reason": "BuildRequest/AC only asked for Previous/Next controls and keyboard cycling; dot-based direct navigation was not explicitly requested.",
+      "id": "REQ-129",
+      "requirement": "Backend must always have browseable seeded School data immediately after fresh install and after upgrades; seeding must be idempotent; include at least one Training and one Teacher per demo school and ensure hour categories 100/200/300/500 are represented; searchSchoolsByName(\"\")/getTeachersBySchool/getTrainingsBySchool must not trap and return safe arrays when missing.",
+      "reason": "The diff shows demo seeding only in system func postupgrade() and only seeds 6 demo schools. There is no evidence of seeding on fresh install, no seeding of Teachers or Trainings, and no evidence that seeded trainings cover 100/200/300/500. Also, the diff summary does not show changes ensuring getTeachersBySchool/getTrainingsBySchool/searchSchoolsByName return safe empty arrays when data is missing (file is truncated).",
       "evidence": [
-        "frontend/src/components/school/SchoolProfileBanner.tsx"
+        "backend/main.mo (system func postupgrade() seeds only demoSchools; no teachers/trainings seeding shown)"
+      ]
+    },
+    {
+      "id": "REQ-130",
+      "requirement": "Implement stable persistence in backend/main.mo for Schools, Teachers, Trainings, Reviews, UserProfiles, and BlogPosts using preupgrade/postupgrade snapshots, preserving existing records and avoiding traps.",
+      "reason": "system func preupgrade() is empty in the diff, and there is no evidence of stable variables/snapshots or restoration logic for the listed datasets. The shown postupgrade() only seeds demo schools when schools.size()==0 and does not restore persisted data.",
+      "evidence": [
+        "backend/main.mo (\"system func preupgrade() { }\"; postupgrade() contains only demo school seeding)"
       ]
     }
   ],
-  "confidence": 0.74,
+  "hallucinated_features": [
+    {
+      "description": "Added extra Directory page UI behaviors (scroll-to-results / scroll-to-filters CTAs, focus management, additional hero buttons/icons) beyond what is necessary to confirm schools render again.",
+      "reason": "REQ-131 focuses on correct rendering and error/empty-state handling; the diff introduces new hero CTA buttons and scrolling/focus behavior not requested and potentially constitutes UI redesign beyond necessity (a stated non-goal).",
+      "evidence": [
+        "frontend/src/pages/DirectoryPage.tsx (scrollToResults/scrollToFilters, new hero CTAs, added icons)"
+      ]
+    },
+    {
+      "description": "Introduced backend/migration.mo passthrough migration module.",
+      "reason": "BuildRequest constraint says to create backend/migration.mo only if required by platform migration policy and existing stable state changes; the diff adds it, but no corresponding stable-state migration logic is evidenced in backend/main.mo (preupgrade is empty).",
+      "evidence": [
+        "backend/migration.mo",
+        "backend/main.mo (imports Migration; preupgrade empty)"
+      ]
+    }
+  ],
+  "confidence": 0.72,
   "changed_files": [
+    "backend/main.mo",
+    "backend/migration.mo",
     "frontend-file-summaries.txt",
-    "frontend/src/components/school/SchoolProfileBanner.tsx",
-    "frontend/src/pages/SchoolDetailPage.tsx",
+    "frontend/src/hooks/useSchools.ts",
+    "frontend/src/pages/DirectoryPage.tsx",
     "project_state.json"
   ]
 }

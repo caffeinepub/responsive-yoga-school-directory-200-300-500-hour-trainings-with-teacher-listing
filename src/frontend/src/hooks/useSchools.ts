@@ -13,13 +13,18 @@ export function useSchools(selectedHours: number[]) {
   return useQuery<SchoolWithTrainings[]>({
     queryKey: ['schools', selectedHours],
     queryFn: async () => {
-      if (!actor) return [];
+      if (!actor) {
+        console.warn('[useSchools] Actor not available, returning empty array');
+        return [];
+      }
 
       try {
+        console.log('[useSchools] Fetching schools with searchSchoolsByName("")');
         // Fetch all schools using empty search query
         const schools = await actor.searchSchoolsByName('');
+        console.log('[useSchools] Fetched schools:', schools.length);
 
-        // If no filters, return all schools
+        // If no filters, return all schools (including empty array if backend returns empty)
         if (selectedHours.length === 0) {
           return schools;
         }
@@ -38,11 +43,14 @@ export function useSchools(selectedHours: number[]) {
         );
 
         // Filter schools that have at least one matching training
-        return schoolsWithTrainings.filter((school) =>
+        const filtered = schoolsWithTrainings.filter((school) =>
           school.trainings?.some((training) =>
             selectedHours.includes(Number(training.hours))
           )
         );
+        
+        console.log('[useSchools] Filtered schools:', filtered.length);
+        return filtered;
       } catch (error) {
         // Log structured diagnostic information for the failure
         logBackendCallFailure({
@@ -50,10 +58,15 @@ export function useSchools(selectedHours: number[]) {
           error,
           hasActor: !!actor,
         });
+        
+        // Always throw errors to trigger error UI - let React Query handle retries
+        console.error('[useSchools] Backend call failed, throwing error:', error);
         throw error;
       }
     },
     enabled: !!actor && !isActorFetching,
     staleTime: 30000, // 30 seconds
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 }

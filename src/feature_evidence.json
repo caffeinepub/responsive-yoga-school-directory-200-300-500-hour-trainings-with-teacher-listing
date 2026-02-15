@@ -2,10 +2,11 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-update-the-school-profile-banner-component-frontend-src-components-school-schoolprofilebanner-tsx-so-it-can-display-a-carousel-slider-of-multiple-photos-visually-and-interactively-similar-to-the-existing-directory-school-card-media-carousel-while-preserving-the-existing-overlay-readability-treatment-school-name-location-and-optional-inquire-now-button-behavior",
-      "featureTitle": "Update the School Profile banner component (`frontend/src/components/school/SchoolProfileBanner.tsx`) so it can display a carousel/slider of multiple photos (visually and interactively similar to the existing directory School Card media carousel), while preserving the existing overlay readability treatment, school name + location, and optional “Inquire Now” button behavior.",
+      "featureId": "feature-ensure-the-frontend-directory-experience-frontend-src-hooks-useschools-ts-frontend-src-pages-directorypage-tsx-correctly-renders-schools-once-the-backend-returns-seeded-data-and-does-not-show-the-destructive-error-banner-for-the-normal-empty-directory-case-i-e-a-successful-backend-response-of-an-empty-array",
+      "featureTitle": "Ensure the frontend Directory experience (`frontend/src/hooks/useSchools.ts` + `frontend/src/pages/DirectoryPage.tsx`) correctly renders schools once the backend returns seeded data, and does not show the destructive error banner for the normal empty-directory case (i.e., a successful backend response of an empty array).",
       "files": [
-        "frontend/src/components/school/SchoolProfileBanner.tsx"
+        "frontend/src/hooks/useSchools.ts",
+        "frontend/src/pages/DirectoryPage.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -16,46 +17,7 @@
         "authorization@4.0.0"
       ],
       "testIds": [
-        "REQ-114"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-wire-the-school-detail-page-frontend-src-pages-schooldetailpage-tsx-to-pass-a-list-of-curated-gallery-images-when-available-via-getcuratedgalleryimages-school-id-into-the-school-profile-banner-so-the-banner-carousel-uses-the-same-curated-media-as-the-school-card-with-a-sensible-fallback-to-the-existing-default-banner-image-when-curated-images-are-not-present",
-      "featureTitle": "Wire the School Detail page (`frontend/src/pages/SchoolDetailPage.tsx`) to pass a list of curated gallery images (when available via `getCuratedGalleryImages(school.id)`) into the School Profile banner so the banner carousel uses the same curated media as the School Card, with a sensible fallback to the existing default banner image when curated images are not present.",
-      "files": [
-        "frontend/src/components/school/SchoolProfileBanner.tsx",
-        "frontend/src/pages/SchoolDetailPage.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "authorization@4.0.0"
-      ],
-      "testIds": [
-        "REQ-115"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-keep-user-facing-text-in-english-for-any-new-accessibility-labels-or-fallback-messaging-introduced-by-the-school-profile-banner-carousel",
-      "featureTitle": "Keep user-facing text in English for any new accessibility labels or fallback messaging introduced by the School Profile banner carousel.",
-      "files": [
-        "frontend/src/components/school/SchoolProfileBanner.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "authorization@4.0.0"
-      ],
-      "testIds": [
-        "REQ-116"
+        "REQ-131"
       ],
       "confidence": "high"
     }

@@ -57,7 +57,9 @@ export interface backendInterface {
     addTeacher(id: TeacherId, name: string, specialization: string, schoolId: SchoolId): Promise<void>;
     addTraining(id: TrainingId, hours: bigint, description: string, schoolId: SchoolId): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
+    createBlogPost(id: string, title: string, content: string, featuredImageUrl: string | null, excerpt: string | null): Promise<void>;
     createSchool(id: SchoolId, name: string, location: string, country: string | null, state: string | null, city: string | null, videoUrl: string | null): Promise<void>;
+    deleteBlogPost(id: string): Promise<void>;
     deleteSchool(id: SchoolId): Promise<void>;
     deleteTeacher(id: TeacherId): Promise<void>;
     deleteTraining(id: TrainingId): Promise<void>;
@@ -76,6 +78,7 @@ export interface backendInterface {
     isCallerAdmin(): Promise<boolean>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
     searchSchoolsByName(nameQuery: string): Promise<Array<School>>;
+    updateBlogPost(id: string, title: string, content: string, featuredImageUrl: string | null, excerpt: string | null): Promise<void>;
     updateSchool(id: SchoolId, name: string, location: string, country: string | null, state: string | null, city: string | null, videoUrl: string | null): Promise<void>;
     updateTeacher(id: TeacherId, name: string, specialization: string, schoolId: SchoolId): Promise<void>;
     updateTraining(id: TrainingId, hours: bigint, description: string, schoolId: SchoolId): Promise<void>;

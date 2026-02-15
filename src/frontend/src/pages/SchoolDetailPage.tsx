@@ -71,9 +71,12 @@ export default function SchoolDetailPage() {
   // Get curated gallery images if available
   const curatedGallery = getCuratedGalleryImages(school.id);
   
-  // Build banner images array from curated gallery
+  // Build banner images array from curated gallery with defensive normalization
   const bannerImages = curatedGallery && curatedGallery.length > 0
-    ? curatedGallery.map(img => ({ src: img.src, alt: img.alt }))
+    ? curatedGallery.map(img => ({ 
+        src: img.src || '', 
+        alt: img.alt || `${school.name} gallery image` 
+      })).filter(img => img.src)
     : undefined;
 
   return (
@@ -147,40 +150,36 @@ export default function SchoolDetailPage() {
             </Card>
 
             {trainings && trainings.length > 0 && (
-              <SchoolTrainingCoursesSection
-                trainings={trainings}
-                schoolId={school.id}
-                onInquire={handleInquire}
-              />
+              <SchoolTrainingCoursesSection trainings={trainings} schoolId={school.id} />
             )}
 
             {teachers && teachers.length > 0 && (
               <Card>
                 <CardContent className="pt-6">
-                  <h2 className="mb-6 text-2xl font-bold">Our Teachers</h2>
+                  <h2 className="mb-6 flex items-center gap-2 text-2xl font-bold">
+                    <Users className="h-6 w-6 text-primary" />
+                    Our Teachers
+                  </h2>
                   <TeacherList teachers={teachers} />
                 </CardContent>
               </Card>
             )}
 
-            <ImageGallerySection images={curatedGallery ?? undefined} />
-
-            {school.videoUrl && <SchoolVideoEmbedSection videoUrl={school.videoUrl} />}
-
-            <SchoolMapSection 
-              location={displayLocation}
-              schoolName={school.name}
-            />
+            <SchoolReviewsSection schoolId={school.id} />
 
             <FAQSection faqs={defaultSchoolFAQs} />
 
-            <SchoolReviewsSection schoolId={school.id} />
+            <ImageGallerySection images={curatedGallery || undefined} />
           </div>
 
           <div className="space-y-8">
             <div ref={inquiryFormRef}>
               <SchoolInquiryFormSection schoolName={school.name} />
             </div>
+
+            {school.videoUrl && <SchoolVideoEmbedSection videoUrl={school.videoUrl} />}
+
+            <SchoolMapSection location={displayLocation} schoolName={school.name} />
 
             <SimilarSchoolsSection currentSchoolId={school.id} />
           </div>

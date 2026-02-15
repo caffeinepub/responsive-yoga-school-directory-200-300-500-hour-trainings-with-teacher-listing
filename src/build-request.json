@@ -1,73 +1,75 @@
 {
   "kind": "build_request",
-  "title": "Make School Detail banner match School Card carousel style",
-  "priority": "normal",
+  "title": "Fix Directory schools not showing by ensuring backend always serves seeded school data",
+  "priority": "high",
   "requirements": [
     {
-      "id": "REQ-114",
-      "text": "Update the School Profile banner component (`frontend/src/components/school/SchoolProfileBanner.tsx`) so it can display a carousel/slider of multiple photos (visually and interactively similar to the existing directory School Card media carousel), while preserving the existing overlay readability treatment, school name + location, and optional “Inquire Now” button behavior.",
-      "target": "frontend",
+      "id": "REQ-129",
+      "text": "Fix the root cause of the Directory page showing no schools by ensuring the Motoko backend always has browseable School data for anonymous users immediately after canister install and after upgrades, and that `searchSchoolsByName(\"\")` reliably returns a `[School]` without trapping.",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-21"
+          "msg-1"
         ],
         "quotes": [
-          "school card is fine  i want to school banner is also like this"
+          "schools are not showing fix this issue"
         ]
       },
       "acceptanceCriteria": [
-        "When multiple banner images are available, the banner shows one image at a time and provides accessible Previous/Next controls (with English aria-labels) to cycle through images.",
-        "When only one banner image is available, the banner renders a single image with no carousel controls.",
-        "The banner continues to display the existing gradient overlay, school name, location, and the optional “Inquire Now” button exactly as before.",
-        "Keyboard interaction is supported for cycling slides (e.g., left/right arrow behavior consistent with the SchoolCard carousel).",
-        "If an image fails to load, the banner shows a graceful fallback state instead of breaking layout."
+        "After a fresh canister install (no prior state), calling `searchSchoolsByName(\"\")` returns a non-empty `[School]` (at least 6 demo schools) for an anonymous caller.",
+        "After a canister upgrade, calling `searchSchoolsByName(\"\")` still returns schools (does not depend on manual Admin actions).",
+        "Demo seeding is idempotent: redeploying/upgrading multiple times does not trap due to duplicate IDs and does not create duplicate demo records.",
+        "Seeded demo data includes at least one Training and at least one Teacher per demo school; across all seeded trainings, the hour categories 100/200/300/500 are represented so frontend filters can match results.",
+        "`searchSchoolsByName(\"\")`, `getTeachersBySchool`, and `getTrainingsBySchool` do not trap during normal anonymous browsing; when data is missing they return safe empty arrays."
       ]
     },
     {
-      "id": "REQ-115",
-      "text": "Wire the School Detail page (`frontend/src/pages/SchoolDetailPage.tsx`) to pass a list of curated gallery images (when available via `getCuratedGalleryImages(school.id)`) into the School Profile banner so the banner carousel uses the same curated media as the School Card, with a sensible fallback to the existing default banner image when curated images are not present.",
-      "target": "frontend",
+      "id": "REQ-130",
+      "text": "Implement stable persistence for directory data in `backend/main.mo` so Schools, Teachers, Trainings, Reviews, UserProfiles, and BlogPosts survive canister upgrades (use `system func preupgrade()` to store stable snapshots and `system func postupgrade()` to restore in-memory structures), without erasing existing stored records.",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-21"
+          "msg-1"
         ],
         "quotes": [
-          "school card is fine  i want to school banner is also like this"
+          "schools are not showing fix this issue"
         ]
       },
       "acceptanceCriteria": [
-        "For schools with curated gallery images, the School Profile banner uses those images as the carousel slides (not just the first image).",
-        "For schools without curated gallery images, the School Profile banner uses the existing default banner image (`/assets/generated/school-profile-banner.dim_1600x420.png`).",
-        "No backend changes are required to support the banner carousel."
+        "After creating or updating records (e.g., via existing admin methods), a canister upgrade preserves Schools/Teachers/Trainings/Reviews/UserProfiles/BlogPosts and they remain queryable afterward.",
+        "Upgrade logic does not overwrite or clear existing non-demo data; demo seeding only adds missing demo records when appropriate.",
+        "No `Runtime.trap` occurs during `preupgrade()`/`postupgrade()` in normal operation (including when state is empty)."
       ]
     },
     {
-      "id": "REQ-116",
-      "text": "Keep user-facing text in English for any new accessibility labels or fallback messaging introduced by the School Profile banner carousel.",
+      "id": "REQ-131",
+      "text": "Ensure the frontend Directory experience (`frontend/src/hooks/useSchools.ts` + `frontend/src/pages/DirectoryPage.tsx`) correctly renders schools once the backend returns seeded data, and does not show the destructive error banner for the normal empty-directory case (i.e., a successful backend response of an empty array).",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-21"
+          "msg-1"
         ],
         "quotes": [
-          "school card is fine  i want to school banner is also like this"
+          "schools are not showing fix this issue"
         ]
       },
       "acceptanceCriteria": [
-        "All newly introduced aria-labels and any visible fallback text added for the banner carousel are in English.",
-        "No existing user-facing text is changed to a non-English language."
+        "When `actor.searchSchoolsByName(\"\")` succeeds and returns a non-empty array, the Directory page displays the school grid with cards.",
+        "When `actor.searchSchoolsByName(\"\")` succeeds and returns `[]`, the Directory page shows the existing empty state (not the destructive error banner).",
+        "When `actor.searchSchoolsByName(\"\")` fails (throws), the Directory page shows the existing English error message \"Failed to load schools. Please try again later.\" and the Retry button re-runs the query without a full refresh."
       ]
     }
   ],
   "constraints": [
-    "Do not modify any files under `frontend/src/components/ui` (immutable shadcn UI sources).",
-    "Do not route images through the backend; continue using existing static assets and curated media mappings.",
-    "Respect the existing styling/theme conventions and do not introduce breaking layout changes to the School Detail page."
+    "Backend must remain a single Motoko actor in `backend/main.mo`; do not introduce additional backend services.",
+    "Only create `backend/migration.mo` if required by the platform migration policy and existing stable state changes.",
+    "Do not modify any files under `frontend/src/components/ui` or any frontend immutable paths listed in SYSTEM_CONTEXT.",
+    "Use English for any user-facing text."
   ],
   "nonGoals": [
-    "Do not change the existing directory School Card carousel behavior or layout.",
-    "Do not add new backend endpoints, fields, or data models for banner images.",
-    "Do not add new generated image assets unless explicitly requested later."
+    "Redesigning the Directory page UI/visual theme beyond what is necessary to confirm schools render again.",
+    "Adding new third-party services, external databases, or non-Internet-Identity authentication.",
+    "Implementing real-time updates (WebSockets/push) for directory listings."
   ],
   "imageRequirements": {
     "required": [],

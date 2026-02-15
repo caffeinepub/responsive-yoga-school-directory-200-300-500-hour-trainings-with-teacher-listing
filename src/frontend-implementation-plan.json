@@ -1,59 +1,26 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "School Profile banner carousel using curated gallery media",
+  "title": "Fix Directory empty/error rendering when school list is empty vs backend failure",
   "requirements": [
     {
-      "id": "REQ-114",
-      "summary": "Enhance SchoolProfileBanner to render an interactive, accessible photo carousel matching the SchoolCard media carousel behavior while preserving existing overlay and content.",
+      "id": "REQ-131",
+      "summary": "Ensure Directory page renders schools from backend, treats successful empty results as empty state (not error), and supports retry on failures without full refresh.",
       "acceptanceCriteria": [
-        "When multiple banner images are available, the banner shows one image at a time and provides accessible Previous/Next controls (with English aria-labels) to cycle through images.",
-        "When only one banner image is available, the banner renders a single image with no carousel controls.",
-        "The banner continues to display the existing gradient overlay, school name, location, and the optional “Inquire Now” button exactly as before.",
-        "Keyboard interaction is supported for cycling slides (e.g., left/right arrow behavior consistent with the SchoolCard carousel).",
-        "If an image fails to load, the banner shows a graceful fallback state instead of breaking layout."
+        "When `actor.searchSchoolsByName(\"\")` succeeds and returns a non-empty array, the Directory page displays the school grid with cards.",
+        "When `actor.searchSchoolsByName(\"\")` succeeds and returns `[]`, the Directory page shows the existing empty state (not the destructive error banner).",
+        "When `actor.searchSchoolsByName(\"\")` fails (throws), the Directory page shows the existing English error message \"Failed to load schools. Please try again later.\" and the Retry button re-runs the query without a full refresh."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/school/SchoolProfileBanner.tsx",
+          "path": "frontend/src/hooks/useSchools.ts",
           "operation": "modify",
-          "description": "Update the banner API to accept multiple images (e.g., an array of {src, alt} or similar) and implement carousel behavior aligned with the existing SchoolCard carousel: one slide visible at a time, show Previous/Next controls only when there are multiple slides, support left/right arrow key cycling, and keep the existing gradient overlay + school name/location + optional “Inquire Now” button unchanged. Add per-slide image error handling to render a non-breaking fallback UI when an image fails to load (e.g., icon/placeholder). Keep all new aria-labels in English."
-        }
-      ]
-    },
-    {
-      "id": "REQ-115",
-      "summary": "Pass curated gallery images into SchoolProfileBanner from SchoolDetailPage with a fallback to the existing default banner asset.",
-      "acceptanceCriteria": [
-        "For schools with curated gallery images, the School Profile banner uses those images as the carousel slides (not just the first image).",
-        "For schools without curated gallery images, the School Profile banner uses the existing default banner image (`/assets/generated/school-profile-banner.dim_1600x420.png`).",
-        "No backend changes are required to support the banner carousel."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/SchoolDetailPage.tsx",
-          "operation": "modify",
-          "description": "Change SchoolDetailPage to pass the full list from getCuratedGalleryImages(school.id) into SchoolProfileBanner (to populate all carousel slides). When curated images are absent/empty, do not pass curated slides so SchoolProfileBanner falls back to its existing default static banner image (/assets/generated/school-profile-banner.dim_1600x420.png). Ensure no layout-breaking changes to the School Detail page."
+          "description": "Adjust the React Query behavior so a previously-thrown error does not cause the Directory to show a destructive error banner when a subsequent successful response returns an empty array (e.g., ensure UI can distinguish \"no data yet\" vs \"successful empty\"). Keep thrown errors reserved for genuine failures; continue returning `[]` for non-fatal anonymous browsing conditions. Verify the component's usage instructions before implementing."
         },
         {
-          "path": "frontend/src/components/school/SchoolProfileBanner.tsx",
+          "path": "frontend/src/pages/DirectoryPage.tsx",
           "operation": "modify",
-          "description": "Adjust prop handling to accept the curated gallery image list from SchoolDetailPage and build the banner slide list from it, with a sensible fallback to the existing default banner image when no curated images are provided."
-        }
-      ]
-    },
-    {
-      "id": "REQ-116",
-      "summary": "Ensure all newly introduced accessibility labels and fallback messaging for the banner carousel are English-only.",
-      "acceptanceCriteria": [
-        "All newly introduced aria-labels and any visible fallback text added for the banner carousel are in English.",
-        "No existing user-facing text is changed to a non-English language."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/school/SchoolProfileBanner.tsx",
-          "operation": "modify",
-          "description": "Audit and enforce English-only strings for any newly added aria-labels (e.g., Previous photo/Next photo/Go to photo N) and any visible fallback text used when an image fails to load, without changing existing non-accessibility user-facing copy."
+          "description": "Refine error-banner gating to show the destructive error banner only for genuine query failures (not merely when the schools array is empty). Ensure the Retry button triggers `refetch()` and updates the list without a full page refresh. Verify the component's usage instructions before implementing."
         }
       ]
     }

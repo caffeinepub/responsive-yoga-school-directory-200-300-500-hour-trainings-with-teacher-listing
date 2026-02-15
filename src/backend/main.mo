@@ -1,18 +1,29 @@
-import Map "mo:core/Map";
+import Runtime "mo:core/Runtime";
 import List "mo:core/List";
+import Map "mo:core/Map";
 import Iter "mo:core/Iter";
 import Principal "mo:core/Principal";
-import Runtime "mo:core/Runtime";
+import Migration "migration";
 
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
 
+(with migration = Migration.run)
 actor {
+  var schools = Map.empty<Text, { id : Text; name : Text; location : Text; country : ?Text; state : ?Text; city : ?Text; videoUrl : ?Text }>();
+  var teachers = Map.empty<Text, { id : Text; name : Text; specialization : Text; schoolId : Text }>();
+  var trainings = Map.empty<Text, { id : Text; hours : Nat; description : Text; schoolId : Text }>();
+  var reviews = List.empty<{ reviewerName : Text; rating : Nat; comment : Text; schoolId : Text }>();
+  var userProfiles = Map.empty<Principal, { name : Text }>();
+  var blogPosts = Map.empty<Text, { id : Text; title : Text; content : Text; featuredImageUrl : ?Text; excerpt : ?Text }>();
+
   // Access control state
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
 
-  public type UserProfile = { name : Text };
+  public type UserProfile = {
+    name : Text;
+  };
 
   type SchoolId = Text;
   type TeacherId = Text;
@@ -57,24 +68,86 @@ actor {
     excerpt : ?Text;
   };
 
-  var schools = Map.empty<SchoolId, School>();
-  var teachers = Map.empty<TeacherId, Teacher>();
-  var trainings = Map.empty<TrainingId, Training>();
-  var reviews = List.empty<Review>();
-  var userProfiles = Map.empty<Principal, UserProfile>();
-  var blogPosts = Map.empty<Text, BlogPost>();
+  // SYSTEM FUNCTIONS FOR UPGRADE-PERSISTENCE
+  system func preupgrade() { };
+
+  system func postupgrade() {
+    // Always trigger automatic demo data seeding after empty install/upgrade
+    let currentSchools = schools.size();
+    if (currentSchools == 0) {
+      let demoSchools : [School] = [
+        {
+          id = "demo-school-1";
+          name = "Yoga Bliss Academy";
+          location = "San Francisco, CA, USA";
+          country = ?"USA";
+          state = ?"CA";
+          city = ?"San Francisco";
+          videoUrl = null;
+        },
+        {
+          id = "demo-school-2";
+          name = "Mindful Movement Institute";
+          location = "Austin, TX, USA";
+          country = ?"USA";
+          state = ?"TX";
+          city = ?"Austin";
+          videoUrl = null;
+        },
+        {
+          id = "demo-school-3";
+          name = "Sacred Flow Yoga";
+          location = "Boulder, CO, USA";
+          country = ?"USA";
+          state = ?"CO";
+          city = ?"Boulder";
+          videoUrl = null;
+        },
+        {
+          id = "demo-school-4";
+          name = "Zen Yoga Center";
+          location = "Portland, OR, USA";
+          country = ?"USA";
+          state = ?"OR";
+          city = ?"Portland";
+          videoUrl = null;
+        },
+        {
+          id = "demo-school-5";
+          name = "Inner Peace Yoga School";
+          location = "Seattle, WA, USA";
+          country = ?"USA";
+          state = ?"WA";
+          city = ?"Seattle";
+          videoUrl = null;
+        },
+        {
+          id = "demo-school-6";
+          name = "Harmony Yoga Academy";
+          location = "Denver, CO, USA";
+          country = ?"USA";
+          state = ?"CO";
+          city = ?"Denver";
+          videoUrl = null;
+        },
+      ];
+      for (school in demoSchools.vals()) {
+        schools.add(school.id, school);
+      };
+    };
+  };
 
   // USER PROFILE METHODS
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      return null;
+      Runtime.trap("Unauthorized: Only users can access their profile");
     };
     userProfiles.get(caller);
   };
 
   public query ({ caller }) func getUserProfile(user : Principal) : async ?UserProfile {
     if (caller != user and not AccessControl.isAdmin(accessControlState, caller)) {
-      return null;
+      Runtime.trap("Unauthorized: Can only view your own profile");
     };
     userProfiles.get(user);
   };
@@ -232,6 +305,51 @@ actor {
     trainings.remove(id);
   };
 
+  // ADMIN CRUD METHODS - BLOG POSTS
+  public shared ({ caller }) func createBlogPost(
+    id : Text,
+    title : Text,
+    content : Text,
+    featuredImageUrl : ?Text,
+    excerpt : ?Text,
+  ) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can create blog posts");
+    };
+    if (blogPosts.containsKey(id)) {
+      Runtime.trap("Blog post already exists");
+    };
+    let post : BlogPost = { id; title; content; featuredImageUrl; excerpt };
+    blogPosts.add(id, post);
+  };
+
+  public shared ({ caller }) func updateBlogPost(
+    id : Text,
+    title : Text,
+    content : Text,
+    featuredImageUrl : ?Text,
+    excerpt : ?Text,
+  ) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can update blog posts");
+    };
+    if (not blogPosts.containsKey(id)) {
+      Runtime.trap("Blog post does not exist");
+    };
+    let post : BlogPost = { id; title; content; featuredImageUrl; excerpt };
+    blogPosts.add(id, post);
+  };
+
+  public shared ({ caller }) func deleteBlogPost(id : Text) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can delete blog posts");
+    };
+    if (not blogPosts.containsKey(id)) {
+      Runtime.trap("Blog post does not exist");
+    };
+    blogPosts.remove(id);
+  };
+
   // ------------ QUERY METHODS (PUBLIC ACCESS) -----------------
 
   public query ({ caller }) func getSchool(id : SchoolId) : async ?School {
@@ -347,108 +465,5 @@ actor {
 
   public query ({ caller }) func getAllBlogPosts() : async [BlogPost] {
     blogPosts.values().toArray();
-  };
-
-  system func preupgrade() { };
-
-  system func postupgrade() {
-    let seededReviews = List.fromArray<Review>([
-      {
-        reviewerName = "Jessica Smith";
-        rating = 5;
-        comment = "Life-changing experience at Vinyasa Yogashala! The teachers are incredibly knowledgeable and supportive. Highly recommend the 200-hour teacher training.";
-        schoolId = "vinyasa-yogashala";
-      },
-      {
-        reviewerName = "Rahul Gupta";
-        rating = 4;
-        comment = "Great location and facilities. The 300-hour course was challenging but very rewarding. Only wish there were more advanced workshops.";
-        schoolId = "vinyasa-yogashala";
-      },
-      {
-        reviewerName = "Emily Chen";
-        rating = 5;
-        comment = "Absolutely loved my time here. The teachers are passionate and approachable, and the curriculum is comprehensive.";
-        schoolId = "vinyasa-yogashala";
-      },
-      {
-        reviewerName = "Carlos Mendez";
-        rating = 5;
-        comment = "Perfect blend of traditional and modern yoga. The meditation sessions were especially transformative.";
-        schoolId = "vinyasa-yogashala";
-      },
-      {
-        reviewerName = "Priya Sharma";
-        rating = 4;
-        comment = "Wonderful community of practitioners. I appreciated the focus on personal growth and mindfulness.";
-        schoolId = "vinyasa-yogashala";
-      },
-      {
-        reviewerName = "Marta Rodriguez";
-        rating = 3;
-        comment = "Great teachers and content, but I found the accommodations to be a bit modest for the price.";
-        schoolId = "vinyasa-yogashala";
-      },
-      {
-        reviewerName = "Liam O&acute;Connor";
-        rating = 5;
-        comment = "Incredible energy, beautiful setting. The advanced asana workshops were intense but very rewarding.";
-        schoolId = "vinyasa-yogashala";
-      },
-      {
-        reviewerName = "Anna Müller";
-        rating = 5;
-        comment = "Holistic approach to yoga. The philosophy classes were eye-opening and thought-provoking.";
-        schoolId = "vinyasa-yogashala";
-      },
-      {
-        reviewerName = "Vikram Patel";
-        rating = 4;
-        comment = "Balanced curriculum with focus on both practice and theory. The Pranayama sessions were excellent.";
-        schoolId = "vinyasa-yogashala";
-      },
-      {
-        reviewerName = "Sara Williams";
-        rating = 4;
-        comment = "Supportive teachers and a welcoming atmosphere. I gained so much confidence in my teaching abilities.";
-        schoolId = "vinyasa-yogashala";
-      },
-      {
-        reviewerName = "Akash Singh";
-        rating = 5;
-        comment = "Traditional Hatha yoga with modern insights. The Ayurveda workshops were both informative and practical.";
-        schoolId = "vinyasa-yogashala";
-      },
-      {
-        reviewerName = "Olivia Johnson";
-        rating = 4;
-        comment = "Great value for the quality of teaching. I wish there were more options for advanced classes.";
-        schoolId = "vinyasa-yogashala";
-      },
-      {
-        reviewerName = "Mei Li";
-        rating = 5;
-        comment = "Experienced and passionate instructors. The Yoga Nidra sessions were deeply relaxing and restorative.";
-        schoolId = "vinyasa-yogashala";
-      },
-      {
-        reviewerName = "Arjun Kumar";
-        rating = 5;
-        comment = "Comprehensive training program that covers all aspects of yoga. The food and atmosphere were excellent.";
-        schoolId = "vinyasa-yogashala";
-      },
-      {
-        reviewerName = "Samantha Lee";
-        rating = 4;
-        comment = "Transformative experience that improved my physical and mental well-being. I learned so much from the instructors.";
-        schoolId = "vinyasa-yogashala";
-      },
-    ]);
-
-    // Filter out existing reviews for "vinyasa-yogashala" and add new ones
-    let filteredOldReviews = reviews.filter(func(existingReview) { existingReview.schoolId != "vinyasa-yogashala" });
-    filteredOldReviews.addAll(seededReviews.values());
-    reviews.clear();
-    reviews.addAll(filteredOldReviews.values());
   };
 };

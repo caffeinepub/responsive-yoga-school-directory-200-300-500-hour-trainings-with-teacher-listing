@@ -40,22 +40,18 @@ export default function DirectoryPage() {
     }, 500);
   };
 
+  // Safely handle schools data - ensure it's always an array
+  const schoolsList = schools ?? [];
+  
+  // Show error banner only when there's a genuine query failure (error is set)
+  // Do NOT show error banner when query succeeds with empty array
+  const showErrorBanner = !!error && !isLoading;
+
   return (
     <div className="bg-background">
-      {/* Banner Section */}
-      <section className="relative overflow-hidden">
-        {/* Background Banner Image with Overlay */}
-        <div className="absolute inset-0 z-0">
-          <img
-            src="/assets/generated/directory-banner.dim_1600x500.png"
-            alt=""
-            className="h-full w-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/95 via-background/85 to-background dark:from-background/98 dark:via-background/90 dark:to-background" />
-        </div>
-
-        {/* Hero Content */}
-        <div className="relative z-10 container mx-auto px-4 py-20 md:py-28 lg:py-36">
+      {/* Hero Section */}
+      <section className="relative overflow-hidden bg-gradient-to-b from-muted/30 to-background">
+        <div className="container mx-auto px-4 py-20 md:py-28 lg:py-36">
           <div className="mx-auto max-w-4xl text-center">
             <Badge className="mb-6 px-4 py-1.5 text-sm font-medium" variant="secondary">
               Yoga Alliance Certified Programs
@@ -91,7 +87,7 @@ export default function DirectoryPage() {
         </div>
 
         {/* Decorative bottom wave */}
-        <div className="absolute bottom-0 left-0 right-0 z-10 h-16 bg-gradient-to-t from-background to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-background to-transparent" />
       </section>
 
       {/* Informational Sections */}
@@ -138,8 +134,8 @@ export default function DirectoryPage() {
           )}
         </div>
 
-        {/* Error State */}
-        {!isLoading && error && (
+        {/* Error State - only show for genuine backend failures */}
+        {showErrorBanner && (
           <Alert variant="destructive" className="mb-8">
             <AlertCircle className="h-4 w-4" />
             <AlertDescription className="flex items-center justify-between gap-4">
@@ -182,24 +178,24 @@ export default function DirectoryPage() {
         )}
 
         {/* Schools Grid */}
-        {!isLoading && !error && schools && schools.length > 0 && (
+        {!isLoading && !showErrorBanner && schoolsList.length > 0 && (
           <div ref={resultsRef} className="scroll-mt-24">
             <div className="mb-6 flex items-center gap-2">
               <h2 className="text-2xl font-bold text-foreground">Available Schools</h2>
               <Badge variant="outline" className="text-base">
-                {schools.length} {schools.length === 1 ? 'school' : 'schools'}
+                {schoolsList.length} {schoolsList.length === 1 ? 'school' : 'schools'}
               </Badge>
             </div>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {schools.map((school) => (
+              {schoolsList.map((school) => (
                 <SchoolCard key={school.id} school={school} />
               ))}
             </div>
           </div>
         )}
 
-        {/* Empty State */}
-        {!isLoading && !error && schools && schools.length === 0 && (
+        {/* Empty State - show when query succeeds but returns no schools */}
+        {!isLoading && !showErrorBanner && schoolsList.length === 0 && (
           <div className="rounded-xl border-2 border-dashed border-border bg-muted/20 p-12 text-center">
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-muted">
               <Filter className="h-8 w-8 text-muted-foreground" />
@@ -207,9 +203,13 @@ export default function DirectoryPage() {
             <p className="mb-2 text-lg font-semibold text-foreground">
               No schools found matching your criteria
             </p>
-            {selectedHours.length > 0 && (
+            {selectedHours.length > 0 ? (
               <p className="text-sm text-muted-foreground">
                 Try adjusting your filters to see more results
+              </p>
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                No schools are currently available in the directory
               </p>
             )}
           </div>

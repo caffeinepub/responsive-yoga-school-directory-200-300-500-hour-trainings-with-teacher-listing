@@ -1,59 +1,53 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-15T14:49:48.212Z",
+  "generatedAt": "2026-02-15T16:00:02.555Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
     "total": 3,
-    "implemented": 3,
+    "implemented": 1,
     "items": [
       {
-        "id": "REQ-114",
-        "summary": "Update the School Profile banner component (`frontend/src/components/school/SchoolProfileBanner.tsx`) so it can display a carousel/slider of multiple photos (visually and interactively similar to the existing directory School Card media carousel), while preserving the existing overlay readability treatment, school name + location, and optional “Inquire Now” button behavior.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/school/SchoolProfileBanner.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/school/SchoolProfileBanner.tsx"
-        ]
+        "id": "REQ-129",
+        "summary": "Fix the root cause of the Directory page showing no schools by ensuring the Motoko backend always has browseable School data for anonymous users immediately after canister install and after upgrades, and that `searchSchoolsByName(\"\")` reliably returns a `[School]` without trapping.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
       },
       {
-        "id": "REQ-115",
-        "summary": "Wire the School Detail page (`frontend/src/pages/SchoolDetailPage.tsx`) to pass a list of curated gallery images (when available via `getCuratedGalleryImages(school.id)`) into the School Profile banner so the banner carousel uses the same curated media as the School Card, with a sensible fallback to the existing default banner image when curated images are not present.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/SchoolDetailPage.tsx",
-          "frontend/src/components/school/SchoolProfileBanner.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/SchoolDetailPage.tsx",
-          "frontend/src/components/school/SchoolProfileBanner.tsx"
-        ]
+        "id": "REQ-130",
+        "summary": "Implement stable persistence for directory data in `backend/main.mo` so Schools, Teachers, Trainings, Reviews, UserProfiles, and BlogPosts survive canister upgrades (use `system func preupgrade()` to store stable snapshots and `system func postupgrade()` to restore in-memory structures), without erasing existing stored records.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
       },
       {
-        "id": "REQ-116",
-        "summary": "Keep user-facing text in English for any new accessibility labels or fallback messaging introduced by the School Profile banner carousel.",
+        "id": "REQ-131",
+        "summary": "Ensure the frontend Directory experience (`frontend/src/hooks/useSchools.ts` + `frontend/src/pages/DirectoryPage.tsx`) correctly renders schools once the backend returns seeded data, and does not show the destructive error banner for the normal empty-directory case (i.e., a successful backend response of an empty array).",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/school/SchoolProfileBanner.tsx"
+          "frontend/src/hooks/useSchools.ts",
+          "frontend/src/pages/DirectoryPage.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/school/SchoolProfileBanner.tsx"
+          "frontend/src/hooks/useSchools.ts",
+          "frontend/src/pages/DirectoryPage.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
+    "backend/main.mo",
+    "backend/migration.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/components/school/SchoolProfileBanner.tsx",
-    "frontend/src/pages/SchoolDetailPage.tsx",
+    "frontend/src/hooks/useSchools.ts",
+    "frontend/src/pages/DirectoryPage.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",
